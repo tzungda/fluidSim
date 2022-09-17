@@ -1,2 +1,0 @@
-- Implmented the fluid solvers mostly based on this book: Fluid Engine Development - Doyub Kim
-https://www.amazon.ca/Fluid-Engine-Development-Doyub-Kim/dp/1498719929/ref=tmm_hrd_swatch_0?_encoding=UTF8&qid=1662332845&sr=1-1
