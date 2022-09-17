@@ -11,6 +11,9 @@ Fluid grid-based and hybrid solvers with a simple OpenGL viewport to display it
 3. Open a Command Prompt and go to the /particleDisplay/external then run the cmake command, eg. cmake -G "Visual Studio 17 2022" -A x64, to generate the VS projects and solutions.
 4. Open the particleDisplay solution and compile.
 
+## Next
+Rewrite part of the computation to CUDA, OpenMP or TBB.
+
 ## Images
 ![alt text](https://github.com/tzungda/fluidSim/blob/main/outputImages/outputImage.0006.png)
 ![alt text](https://github.com/tzungda/fluidSim/blob/main/outputImages/outputImage.0018.png)
@@ -20,5 +23,3 @@ Fluid grid-based and hybrid solvers with a simple OpenGL viewport to display it
 ![alt text](https://github.com/tzungda/fluidSim/blob/main/outputImages/outputImage.0051.png)
 ![alt text](https://github.com/tzungda/fluidSim/blob/main/outputImages/outputImage.0067.png)
 
-## Next
-Rewrite part of the computation to CUDA, OpenMP or TBB.
