@@ -7,8 +7,11 @@ https://www.amazon.ca/Fluid-Engine-Development-Doyub-Kim/dp/1498719929/ref=tmm_h
 - The OpenGL viewport is based on the sample code(Chap10) of OpenGL 4 Shading Language Cookbook - David Wolff
 https://www.amazon.ca/OpenGL-Shading-Language-Cookbook-high-quality-ebook/dp/B07HXYJ9VT
 
-Buil steps:
+# Buil steps:
 1. Unzip the libs in /particleDisplay/external
 2. In /particleDisplay/external/CMakeLists.txt modify the glfw lib path according to the Visual Studio version, eg. ${CMAKE_CURRENT_SOURCE_DIR}/external/glfw-3.3.8.bin.WIN64/lib-vc2022.
 3. Open a Command Prompt and go to the /particleDisplay/external then run the cmake command, eg. cmake -G "Visual Studio 17 2022" -A x64, to generate the VS projects and solutions.
 4. Open the particleDisplay solution and compile.
+
+# Images
+![alt text](https://github.com/tzungda/fluidSim/blob/main/outputImages/outputImage.0006.png?raw=true)
