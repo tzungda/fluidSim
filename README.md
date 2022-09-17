@@ -6,7 +6,7 @@ Fluid grid-based and hybrid solvers with a simple OpenGL viewport to display it
 - The OpenGL viewport is modified from the sample code(Chap10) of [OpenGL 4 Shading Language Cookbook - David Wolff](https://www.amazon.ca/OpenGL-Shading-Language-Cookbook-high-quality-ebook/dp/B07HXYJ9VT)
 
 # Buil steps:
-1. Unzip the libs in /particleDisplay/external
+1. Unzip the libs( [GLFW](https://www.glfw.org/) and ([glm](https://github.com/g-truc/glm)) ) in /particleDisplay/external
 2. In /particleDisplay/external/CMakeLists.txt modify the glfw lib path according to the Visual Studio version, eg. ${CMAKE_CURRENT_SOURCE_DIR}/external/glfw-3.3.8.bin.WIN64/lib-vc2022.
 3. Open a Command Prompt and go to the /particleDisplay/external then run the cmake command, eg. cmake -G "Visual Studio 17 2022" -A x64, to generate the VS projects and solutions.
 4. Open the particleDisplay solution and compile.
