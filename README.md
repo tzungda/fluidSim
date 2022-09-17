@@ -14,4 +14,4 @@ https://www.amazon.ca/OpenGL-Shading-Language-Cookbook-high-quality-ebook/dp/B07
 4. Open the particleDisplay solution and compile.
 
 # Images
-![alt text](https://github.com/tzungda/fluidSim/blob/main/outputImages/outputImage.0006.png?raw=true)
+![alt text](https://github.com/tzungda/fluidSim/blob/main/outputImages/outputImage.0006.png)
