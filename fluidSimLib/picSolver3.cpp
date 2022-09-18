@@ -2,6 +2,7 @@
 
 #include "picSolver3.h"
 #include "mathUtil.h"
+#include "timer.h"
 
 picSolver3::picSolver3() : picSolver3({1, 1, 1}, {1, 1, 1}, {0, 0, 0})
 {
@@ -52,15 +53,30 @@ void picSolver3::onInitialize()
 
 void picSolver3::onBeginAdvanceTimeStep(double timeIntervalInSeconds)
 {
-    updateParticleEmitter(timeIntervalInSeconds);
+    {
+        timer t("      picSolver3::updateParticleEmitter" );
+        updateParticleEmitter(timeIntervalInSeconds);
+    }
 
-    transferFromParticlesToGrids();
+    {
+        timer t("      picSolver3::transferFromParticlesToGrids" );
+        transferFromParticlesToGrids();
+    }
 
-    buildSignedDistanceField();
+    {
+        timer t("      picSolver3::buildSignedDistanceField" );
+        buildSignedDistanceField();
+    }
 
-    extrapolateVelocityToAir();
+    {
+        timer t("      picSolver3::extrapolateVelocityToAir" );
+        extrapolateVelocityToAir();
+    }
 
-    applyBoundaryCondition();
+    {
+        timer t("      picSolver3::applyBoundaryCondition" );
+        applyBoundaryCondition();
+    }
 }
 
 void picSolver3::computeAdvection(double timeIntervalInSeconds)
