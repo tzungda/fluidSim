@@ -96,11 +96,13 @@ public:
             return;
         }
 
-        printf( "fluid sim updating frame: %d\n", frameNumber );
+        printf( "\nfluid sim updating frame: %d\n", frameNumber );
 
         frame f(0, 1.0 / mFPS);
         f.index = (size_t)frameNumber;
         mSolver->update( f );
+
+        printf( "number of particles: %d\n", (int)mSolver->particleSystemData()->positions().size() );
     }
 
     const std::vector<vector3>& positions( )
