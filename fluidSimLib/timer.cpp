@@ -1,10 +1,17 @@
 //---timer.cpp
 
+#include <iostream>
 #include "timer.h"
 
-timer::timer()
+timer::timer( const std::string &info )
 {
+    mInfo = info;
     mStartingPoint = mClock.now();
+}
+
+timer::~timer( )
+{
+    std::cout << mInfo << " took " << durationInSeconds() << " seconds" << std::endl;
 }
 
 double timer::durationInSeconds() const 

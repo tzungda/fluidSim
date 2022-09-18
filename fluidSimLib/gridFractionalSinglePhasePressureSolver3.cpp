@@ -3,7 +3,7 @@
 #include "gridFractionalSinglePhasePressureSolver3.h"
 #include "fdmIccgSolver3.h"
 #include "gridFractionalBoundaryConditionSolver3.h"
-
+#include "timer.h"
 
 const double kDefaultTolerance = 1e-6;
 const double kMinWeight = 0.01;
@@ -21,16 +21,29 @@ void gridFractionalSinglePhasePressureSolver3::solve(
     faceCenteredGrid3 *output, const scalarField3& boundarySdf,
     const vectorField3& boundaryVelocity, const scalarField3& fluidSdf) 
 {
-    buildWeights(input, boundarySdf, boundaryVelocity, fluidSdf);
-    buildSystem(input);
+    {
+        timer t( "    buildWeights" );
+        buildWeights(input, boundarySdf, boundaryVelocity, fluidSdf);
+    }
+
+    {
+        timer t( "    buildSystem" );
+        buildSystem(input);
+    }
 
     if (mSystemSolver != nullptr) 
     {
         // solve the system
-        mSystemSolver->solve(&mSystem);
+        {
+            timer t( "    mSystemSolver->solve" );
+            mSystemSolver->solve(&mSystem);
+        }
 
         // apply pressure gradient
-        applyPressureGradient(input, output);
+        {
+            timer t( "    applyPressureGradient" );
+            applyPressureGradient(input, output);
+        }
     }
 }
 

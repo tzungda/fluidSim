@@ -165,14 +165,35 @@ void gridFluidSolver3::onInitialize()
 
 void gridFluidSolver3::onAdvanceTimeStep(double timeIntervalInSeconds)
 {
-    beginAdvanceTimeStep(timeIntervalInSeconds);
+    {
+        timer t( "  beginAdvanceTimeStep" );
+        beginAdvanceTimeStep(timeIntervalInSeconds);
+    }
 
-    computeExternalForces(timeIntervalInSeconds);
-    computeViscosity(timeIntervalInSeconds);
-    computePressure(timeIntervalInSeconds);
-    computeAdvection(timeIntervalInSeconds);
+    {
+        timer t( "  computeExternalForces" );
+        computeExternalForces(timeIntervalInSeconds);
+    }
 
-    endAdvanceTimeStep(timeIntervalInSeconds);
+    {
+        timer t( "  computeViscosity" );
+        computeViscosity(timeIntervalInSeconds);
+    }
+
+    {
+        timer t( "  computePressure" );
+        computePressure(timeIntervalInSeconds);
+    }
+
+    {
+        timer t( "  computeAdvection" );
+        computeAdvection(timeIntervalInSeconds);
+    }
+
+    {
+        timer t( "  endAdvanceTimeStep" );
+        endAdvanceTimeStep(timeIntervalInSeconds);
+    }
 }
 
 void gridFluidSolver3::onBeginAdvanceTimeStep(double timeIntervalInSeconds)
@@ -399,16 +420,24 @@ void gridFluidSolver3::beginAdvanceTimeStep(double timeIntervalInSeconds)
     vector3 o = mGrids->origin();
 
     // reserve memory
-    mColliderSdf.resize(res, h, o);
-    mColliderVel.resize(res, h, o);
+    {
+        timer t("    reserve memory");
+        mColliderSdf.resize(res, h, o);
+        mColliderVel.resize(res, h, o);
+    }
 
     // update collider and emitter
-    updateCollider(timeIntervalInSeconds);
-    updateEmitter(timeIntervalInSeconds);
+    {
+        timer t( "    update collider and emitter");
+        updateCollider(timeIntervalInSeconds);
+        updateEmitter(timeIntervalInSeconds);
+    }
 
     // rasterize collider into SDF
     if (mCollider != nullptr)
     {
+        timer t( "    rasterize collider into SDF with collider");
+        //
         auto pos = mColliderSdf.dataPosition();
         surface3Ptr surface = mCollider->surface();
         implicitSurface3Ptr implicitSurface
@@ -427,6 +456,7 @@ void gridFluidSolver3::beginAdvanceTimeStep(double timeIntervalInSeconds)
     }
     else
     {
+        timer t("    rasterize collider into SDF without collider");
         mColliderSdf.fill(mathUtil::maxFloat());
         mColliderVel.fill({ 0, 0, 0 });
     }
@@ -434,6 +464,7 @@ void gridFluidSolver3::beginAdvanceTimeStep(double timeIntervalInSeconds)
     // update boundary condition solver
     if (mBoundaryConditionSolver != nullptr)
     {
+        timer t("    update boundary condition solver");
         mBoundaryConditionSolver->updateCollider(
             mCollider,
             mGrids->resolution(),
@@ -441,12 +472,18 @@ void gridFluidSolver3::beginAdvanceTimeStep(double timeIntervalInSeconds)
             mGrids->origin());
     }
 
-    // Apply boundary condition to the velocity field in case the field got
+    // apply boundary condition to the velocity field in case the field got
     // updated externally.
-    applyBoundaryCondition();
+    {
+        timer t("    applyBoundaryCondition");
+        applyBoundaryCondition();
+    }
 
     // Invoke callback
-    onBeginAdvanceTimeStep(timeIntervalInSeconds);
+    {
+        timer t("    onBeginAdvanceTimeStep");
+        onBeginAdvanceTimeStep(timeIntervalInSeconds);
+    }
 }
 
 void gridFluidSolver3::endAdvanceTimeStep(double timeIntervalInSeconds)
