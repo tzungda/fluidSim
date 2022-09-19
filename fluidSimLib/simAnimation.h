@@ -40,8 +40,10 @@ public:
    
     virtual void onInitialize();
 
-private:
+protected:
     frame mCurrentFrame;
+private:
+    
     bool mIsUsingFixedSubTimeSteps = true;
     unsigned int mNumberOfFixedSubTimeSteps = 1;
     bool mHasInitialized = false;
