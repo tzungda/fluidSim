@@ -227,12 +227,12 @@ bool vector3::isSimilar( const vector3& other, FloatType eps ) const
         (std::fabs(z - other.z) < eps);
 }
 
-FloatType& vector3::operator[](size_t i)
+FloatType& vector3::operator[](SizeType i)
 {
     return (&x)[i];
 }
 
-const FloatType& vector3::operator[](size_t i) const
+const FloatType& vector3::operator[](SizeType i) const
 {
     return (&x)[i];
 }

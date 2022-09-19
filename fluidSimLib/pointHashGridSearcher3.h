@@ -15,9 +15,9 @@ public:
     pointHashGridSearcher3(const size3& resolution, FloatType gridSpacing);
 
     pointHashGridSearcher3(
-        size_t resolutionX,
-        size_t resolutionY,
-        size_t resolutionZ,
+        SizeType resolutionX,
+        SizeType resolutionY,
+        SizeType resolutionZ,
         FloatType gridSpacing);
 
     pointHashGridSearcher3(const pointHashGridSearcher3& other);
@@ -34,9 +34,9 @@ public:
 
     void add(const vector3& point);
 
-    const std::vector<std::vector<size_t>>& buckets() const;
+    const std::vector<std::vector<SizeType>>& buckets() const;
 
-    size_t getHashKeyFromBucketIndex(const size3& bucketIndex) const;
+    SizeType getHashKeyFromBucketIndex(const size3& bucketIndex) const;
 
     size3 getBucketIndex(const vector3& position) const;
 
@@ -51,11 +51,11 @@ private:
     FloatType mGridSpacing = (FloatType)1.0;
     size3 mResolution = size3(1, 1, 1);
     std::vector<vector3> mPoints;
-    std::vector<std::vector<size_t>> mBuckets;
+    std::vector<std::vector<SizeType>> mBuckets;
 
-    size_t getHashKeyFromPosition(const vector3& position) const;
+    SizeType getHashKeyFromPosition(const vector3& position) const;
 
-    void getNearbyKeys(const vector3& position, size_t* bucketIndices) const;
+    void getNearbyKeys(const vector3& position, SizeType* bucketIndices) const;
 };
 
 typedef std::shared_ptr< pointHashGridSearcher3 > pointHashGridSearcher3Ptr;

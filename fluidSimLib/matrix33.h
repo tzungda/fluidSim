@@ -26,8 +26,8 @@ public:
 
     matrix33 rmul(const matrix33& mtx) const;
 
-    FloatType& operator()(size_t i, size_t j);
-    const FloatType& operator()(size_t i, size_t j) const;
+    FloatType& operator()(SizeType i, SizeType j);
+    const FloatType& operator()(SizeType i, SizeType j) const;
 
 private:
     std::array<FloatType, 9> m;

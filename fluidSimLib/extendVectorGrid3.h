@@ -21,22 +21,22 @@ public:
 
     virtual vector3 dataOrigin() const = 0;
 
-    FloatType divergenceByIndex(size_t i, size_t j, size_t k) const;
+    FloatType divergenceByIndex(SizeType i, SizeType j, SizeType k) const;
 
-    vector3 curlByIndex(size_t i, size_t j, size_t k) const;
+    vector3 curlByIndex(SizeType i, SizeType j, SizeType k) const;
 
     void forEachDataPointIndex(
-        const std::function<void(size_t, size_t, size_t)>& func) const;
+        const std::function<void(SizeType, SizeType, SizeType)>& func) const;
 
     DataPositionFunc dataPosition() const;
 
-    //const vector3& operator() ( size_t i, size_t j, size_t k ) const;
+    //const vector3& operator() ( SizeType i, SizeType j, SizeType k ) const;
     vecDataBuffer3& data();
     const vecDataBuffer3& data() const;
-    vector3& operator() (size_t i, size_t j, size_t k);
-    const vector3& operator() (size_t i, size_t j, size_t k) const;
+    vector3& operator() (SizeType i, SizeType j, SizeType k);
+    const vector3& operator() (SizeType i, SizeType j, SizeType k) const;
 
-    // void valueByIndex( size_t i, size_t j, size_t k )
+    // void valueByIndex( SizeType i, SizeType j, SizeType k )
 
     vector3 sample(const vector3& x) const override;
 

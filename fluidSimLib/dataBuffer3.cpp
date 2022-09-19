@@ -12,7 +12,7 @@ dataBuffer3::dataBuffer3( const size3& size, const FloatType initValue )
     resize(size, initValue);
 }
 
-dataBuffer3::dataBuffer3( size_t width, size_t height, size_t depth, const FloatType initValue )
+dataBuffer3::dataBuffer3( SizeType width, SizeType height, SizeType depth, const FloatType initValue )
 {
     resize(width, height, depth, initValue);
 }
@@ -21,16 +21,16 @@ dataBuffer3::dataBuffer3( size_t width, size_t height, size_t depth, const Float
 void dataBuffer3::resize( const size3& size, const FloatType initValue )
 {
     dataBuffer3 tempBuffer;
-    tempBuffer.mData.resize( (size_t)size.x * size.y * size.z, initValue );
+    tempBuffer.mData.resize( (SizeType)size.x * size.y * size.z, initValue );
     tempBuffer.mSize = size;
-    size_t iMin = (size_t)std::min(size.x, mSize.x);
-    size_t jMin = (size_t)std::min(size.y, mSize.y);
-    size_t kMin = (size_t)std::min(size.z, mSize.z);
-    for (size_t k = 0; k < kMin; ++k)
+    SizeType iMin = (SizeType)std::min(size.x, mSize.x);
+    SizeType jMin = (SizeType)std::min(size.y, mSize.y);
+    SizeType kMin = (SizeType)std::min(size.z, mSize.z);
+    for (SizeType k = 0; k < kMin; ++k)
     {
-        for (size_t j = 0; j < jMin; ++j)
+        for (SizeType j = 0; j < jMin; ++j)
         {
-            for (size_t i = 0; i < iMin; ++i)
+            for (SizeType i = 0; i < iMin; ++i)
             {
                 tempBuffer(i, j, k) = valueByIndex(i, j, k);
             }
@@ -40,17 +40,17 @@ void dataBuffer3::resize( const size3& size, const FloatType initValue )
     swap(tempBuffer);
 }
 
-void dataBuffer3::resize( size_t width, size_t height, size_t depth, const FloatType initValue )
+void dataBuffer3::resize( SizeType width, SizeType height, SizeType depth, const FloatType initValue )
 {
     resize( size3(width, height, depth), initValue );
 }
 
-const FloatType dataBuffer3::valueByIndex( size_t i, size_t j, size_t k ) const
+const FloatType dataBuffer3::valueByIndex( SizeType i, SizeType j, SizeType k ) const
 {
     return mData[i + mSize.x * (j + mSize.y * k)];
 }
 
-FloatType& dataBuffer3::valueByIndex( size_t i, size_t j, size_t k )
+FloatType& dataBuffer3::valueByIndex( SizeType i, SizeType j, SizeType k )
 {
     return mData[i + mSize.x * (j + mSize.y * k)];
 }
@@ -75,17 +75,17 @@ size3 dataBuffer3::size( ) const
     return mSize;
 }
 
-size_t dataBuffer3::width( ) const
+SizeType dataBuffer3::width( ) const
 {
     return mSize.x;
 }
 
-size_t dataBuffer3::height( ) const
+SizeType dataBuffer3::height( ) const
 {
     return mSize.y;
 }
 
-size_t dataBuffer3::depth( ) const
+SizeType dataBuffer3::depth( ) const
 {
     return mSize.z;
 }
@@ -122,12 +122,12 @@ void dataBuffer3::swap( dataBuffer3& other )
 }
 
 
-FloatType& dataBuffer3::operator()(size_t i, size_t j, size_t k)
+FloatType& dataBuffer3::operator()(SizeType i, SizeType j, SizeType k)
 {
     return mData[i + mSize.x * (j + mSize.y * k)];
 }
 
-const FloatType& dataBuffer3::operator()( size_t i, size_t j, size_t k ) const
+const FloatType& dataBuffer3::operator()( SizeType i, SizeType j, SizeType k ) const
 {
     return mData[i + mSize.x * (j + mSize.y * k)];
 }

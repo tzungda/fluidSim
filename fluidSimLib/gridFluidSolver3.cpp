@@ -120,21 +120,21 @@ void gridFluidSolver3::computeGravity(FloatType timeIntervalInSeconds)
 
         if (std::abs(mGravity.x) > mathUtil::eps())
         {
-            vel->forEachUIndex([&](size_t i, size_t j, size_t k) {
+            vel->forEachUIndex([&](SizeType i, SizeType j, SizeType k) {
                 mGrids->velocity()->u(i, j, k) += timeIntervalInSeconds * mGravity.x;
             });
         }
 
         if (std::abs(mGravity.y) > mathUtil::eps())
         {
-            vel->forEachVIndex([&](size_t i, size_t j, size_t k) {
+            vel->forEachVIndex([&](SizeType i, SizeType j, SizeType k) {
                 mGrids->velocity()->v(i, j, k) += timeIntervalInSeconds * mGravity.y;
             });
         }
 
         if (std::abs(mGravity.z) > mathUtil::eps())
         {
-            vel->forEachWIndex([&](size_t i, size_t j, size_t k) {
+            vel->forEachWIndex([&](SizeType i, SizeType j, SizeType k) {
                 mGrids->velocity()->w(i, j, k) += timeIntervalInSeconds * mGravity.z;
             });
         }
@@ -253,8 +253,8 @@ void gridFluidSolver3::computeAdvection(FloatType timeIntervalInSeconds)
     faceCenteredGrid3Ptr vel = velocity();
     if (mAdvectionSolver != nullptr) {
         // Solve advections for custom scalar fields
-        size_t n = mGrids->numberOfAdvectableScalarData();
-        for (size_t i = 0; i < n; ++i) {
+        SizeType n = mGrids->numberOfAdvectableScalarData();
+        for (SizeType i = 0; i < n; ++i) {
             scalarGrid3Ptr grid = mGrids->advectableScalarDataAt(i);
             scalarGrid3Ptr grid0 = grid->clone();
             mAdvectionSolver->advect(
@@ -269,8 +269,8 @@ void gridFluidSolver3::computeAdvection(FloatType timeIntervalInSeconds)
 
         // Solve advections for custom vector fields
         n = mGrids->numberOfAdvectableVectorData();
-        size_t velIdx = mGrids->velocityIndex();
-        for (size_t i = 0; i < n; ++i) {
+        SizeType velIdx = mGrids->velocityIndex();
+        for (SizeType i = 0; i < n; ++i) {
             // Handle velocity layer separately.
             if (i == velIdx) {
                 continue;
@@ -326,7 +326,7 @@ void gridFluidSolver3::extrapolateIntoCollider(scalarGrid3* grid)
 {
     markers3 marker(grid->dataSize());
     auto pos = grid->dataPosition();
-    marker.forEachIndex([&](size_t i, size_t j, size_t k) {
+    marker.forEachIndex([&](SizeType i, SizeType j, SizeType k) {
         if (mathUtil::isInsideSdf(mColliderSdf.sample(pos(i, j, k)))) {
             marker(i, j, k) = 0;
         }
@@ -344,7 +344,7 @@ void gridFluidSolver3::extrapolateIntoCollider(extendVectorGrid3* grid)
 {
     markers3 marker(grid->dataSize());
     auto pos = grid->dataPosition();
-    marker.forEachIndex([&](size_t i, size_t j, size_t k) {
+    marker.forEachIndex([&](SizeType i, SizeType j, SizeType k) {
         if (mathUtil::isInsideSdf(mColliderSdf.sample(pos(i, j, k)))) {
             marker(i, j, k) = 0;
         }
@@ -368,7 +368,7 @@ void gridFluidSolver3::extrapolateIntoCollider(faceCenteredGrid3* grid)
     markers3 vMarker(grid->vData().size());
     markers3 wMarker(grid->wData().size());
 
-    uMarker.forEachIndex([&](size_t i, size_t j, size_t k) {
+    uMarker.forEachIndex([&](SizeType i, SizeType j, SizeType k) {
         if (mathUtil::isInsideSdf(mColliderSdf.sample(uPos(i, j, k)))) {
             uMarker(i, j, k) = 0;
         }
@@ -377,7 +377,7 @@ void gridFluidSolver3::extrapolateIntoCollider(faceCenteredGrid3* grid)
         }
     });
 
-    vMarker.forEachIndex([&](size_t i, size_t j, size_t k) {
+    vMarker.forEachIndex([&](SizeType i, SizeType j, SizeType k) {
         if (mathUtil::isInsideSdf(mColliderSdf.sample(vPos(i, j, k)))) {
             vMarker(i, j, k) = 0;
         }
@@ -386,7 +386,7 @@ void gridFluidSolver3::extrapolateIntoCollider(faceCenteredGrid3* grid)
         }
     });
 
-    wMarker.forEachIndex([&](size_t i, size_t j, size_t k) {
+    wMarker.forEachIndex([&](SizeType i, SizeType j, SizeType k) {
         if (mathUtil::isInsideSdf(mColliderSdf.sample(wPos(i, j, k)))) {
             wMarker(i, j, k) = 0;
         }

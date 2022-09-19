@@ -17,20 +17,20 @@ public:
    
     particleSystemData3();
 
-    explicit particleSystemData3(size_t numberOfParticles);
+    explicit particleSystemData3(SizeType numberOfParticles);
 
     particleSystemData3(const particleSystemData3& other);
 
     virtual ~particleSystemData3();
 
-    void resize(size_t newNumberOfParticles);
+    void resize(SizeType newNumberOfParticles);
 
     //! Returns the number of particles.
-    size_t numberOfParticles() const;
+    SizeType numberOfParticles() const;
 
-    size_t addScalarData(FloatType initialVal = 0.0);
+    SizeType addScalarData(FloatType initialVal = 0.0);
 
-    size_t addVectorData(const vector3& initialVal = vector3());
+    SizeType addVectorData(const vector3& initialVal = vector3());
 
     FloatType radius() const;
 
@@ -52,13 +52,13 @@ public:
 
     std::vector<vector3>& forces();
 
-    const std::vector<FloatType>& scalarDataAt(size_t idx) const;
+    const std::vector<FloatType>& scalarDataAt(SizeType idx) const;
 
-    std::vector<FloatType>& scalarDataAt(size_t idx);
+    std::vector<FloatType>& scalarDataAt(SizeType idx);
 
-    const std::vector<vector3>& vectorDataAt(size_t idx) const;
+    const std::vector<vector3>& vectorDataAt(SizeType idx) const;
 
-    std::vector<vector3>& vectorDataAt(size_t idx);
+    std::vector<vector3>& vectorDataAt(SizeType idx);
 
     void addParticle(
         const vector3& newPosition,
@@ -80,7 +80,7 @@ public:
         const pointNeighborSearcher3Ptr& newNeighborSearcher);
 
 
-    const std::vector<std::vector<size_t>>& neighborLists() const;
+    const std::vector<std::vector<SizeType>>& neighborLists() const;
 
 
     void buildNeighborSearcher(FloatType maxSearchRadius);
@@ -97,16 +97,16 @@ public:
 private:
     FloatType mRadius = (FloatType)1e-3;
     FloatType mMass = (FloatType)1e-3;
-    size_t mNumberOfParticles = 0;
-    size_t mPositionIdx;
-    size_t mVelocityIdx;
-    size_t mForceIdx;
+    SizeType mNumberOfParticles = 0;
+    SizeType mPositionIdx;
+    SizeType mVelocityIdx;
+    SizeType mForceIdx;
 
     std::vector<ScalarData> mScalarDataList;
     std::vector<VectorData> mVectorDataList;
 
     pointNeighborSearcher3Ptr mNeighborSearcher;
-    std::vector<std::vector<size_t>> mNeighborLists;
+    std::vector<std::vector<SizeType>> mNeighborLists;
 };
 
 typedef std::shared_ptr<particleSystemData3> particleSystemData3Ptr;

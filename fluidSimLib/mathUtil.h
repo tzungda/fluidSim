@@ -62,9 +62,9 @@ public:
 
     static void getBarycentric(
         FloatType x,
-        SSIZE_T iLow,
-        SSIZE_T iHigh,
-        SSIZE_T* i,
+        SSizeType iLow,
+        SSizeType iHigh,
+        SSizeType* i,
         FloatType* f);
 
     static FloatType lerp(const FloatType& a, const FloatType& b, FloatType c);

@@ -12,7 +12,7 @@
 class pointNeighborSearcher3
 {
 public:
-    typedef std::function<void(size_t, const vector3&)>
+    typedef std::function<void(SizeType, const vector3&)>
         ForEachNearbyPointFunc;
 
     pointNeighborSearcher3();

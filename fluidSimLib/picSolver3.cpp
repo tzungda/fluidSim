@@ -103,7 +103,7 @@ void picSolver3::transferFromParticlesToGrids()
     const faceCenteredGrid3Ptr& flow = gridSystemData()->velocity();
     std::vector<vector3>& positions = mParticles->positions();
     std::vector<vector3>& velocities = mParticles->velocities();
-    size_t numberOfParticles = mParticles->numberOfParticles();
+    SizeType numberOfParticles = mParticles->numberOfParticles();
 
     // Clear velocity to zero
     flow->fill(vector3());
@@ -125,7 +125,7 @@ void picSolver3::transferFromParticlesToGrids()
     LinearBufferSampler wSampler(
         &flow->wData(), flow->gridSpacing(), flow->wOrigin() );
     //
-    for (size_t i = 0; i < numberOfParticles; ++i) {
+    for (SizeType i = 0; i < numberOfParticles; ++i) {
         std::array<size3, 8> indices;
         std::array<FloatType, 8> weights;
 
@@ -151,17 +151,17 @@ void picSolver3::transferFromParticlesToGrids()
         }
     }
     //
-    uWeight.forEachIndex([&](size_t i, size_t j, size_t k) {
+    uWeight.forEachIndex([&](SizeType i, SizeType j, SizeType k) {
         if (uWeight(i, j, k) > 0.0) {
             flow->u(i, j, k) /= uWeight(i, j, k);
         }
     });
-    vWeight.forEachIndex([&](size_t i, size_t j, size_t k) {
+    vWeight.forEachIndex([&](SizeType i, SizeType j, SizeType k) {
         if (vWeight(i, j, k) > 0.0) {
             flow->v(i, j, k) /= vWeight(i, j, k);
         }
     });
-    wWeight.forEachIndex([&](size_t i, size_t j, size_t k) {
+    wWeight.forEachIndex([&](SizeType i, SizeType j, SizeType k) {
         if (wWeight(i, j, k) > 0.0) {
             flow->w(i, j, k) /= wWeight(i, j, k);
         }
@@ -173,12 +173,12 @@ void picSolver3::transferFromGridsToParticles()
     const faceCenteredGrid3Ptr& flow = gridSystemData()->velocity();
     std::vector<vector3>& positions = mParticles->positions();
     std::vector<vector3>& velocities = mParticles->velocities();
-    size_t numberOfParticles = mParticles->numberOfParticles();
+    SizeType numberOfParticles = mParticles->numberOfParticles();
 
-    //parallelFor(kZeroSize, numberOfParticles, [&](size_t i) {
+    //parallelFor(kZeroSize, numberOfParticles, [&](SizeType i) {
     //    velocities[i] = flow->sample(positions[i]);
     //    });
-    for ( size_t i = 0; i < numberOfParticles; ++i )
+    for ( SizeType i = 0; i < numberOfParticles; ++i )
     {
         velocities[i] = flow->sample(positions[i]);
     }
@@ -189,12 +189,12 @@ void picSolver3::moveParticles(FloatType timeIntervalInSeconds)
     const faceCenteredGrid3Ptr& flow = gridSystemData()->velocity();
     std::vector<vector3>& positions = mParticles->positions();
     std::vector<vector3>& velocities = mParticles->velocities();
-    size_t numberOfParticles = mParticles->numberOfParticles();
+    SizeType numberOfParticles = mParticles->numberOfParticles();
     int domainBoundaryFlag = closedDomainBoundaryFlag();
     boundingBox3 boundingBox = flow->boundingBox();
 
-    //parallelFor(kZeroSize, numberOfParticles, [&](size_t i) {
-    for ( size_t i = 0; i < numberOfParticles; ++i )
+    //parallelFor(kZeroSize, numberOfParticles, [&](SizeType i) {
+    for ( SizeType i = 0; i < numberOfParticles; ++i )
     {
         vector3 pt0 = positions[i];
         vector3 pt1 = pt0;
@@ -252,7 +252,7 @@ void picSolver3::moveParticles(FloatType timeIntervalInSeconds)
 
     collider3Ptr col = collider();
     if (col != nullptr) {
-        for ( size_t i = 0; i < numberOfParticles; ++i )
+        for ( SizeType i = 0; i < numberOfParticles; ++i )
         {
             col->resolveCollision(
                 0.0,
@@ -264,7 +264,7 @@ void picSolver3::moveParticles(FloatType timeIntervalInSeconds)
         /* parallelFor(
         kZeroSize,
         numberOfParticles,
-        [&](size_t i) {
+        [&](SizeType i) {
         col->resolveCollision(
         0.0,
         0.0,
@@ -302,11 +302,11 @@ void picSolver3::buildSignedDistanceField()
 
     {
         timer t("        picSolver3::sdf->forEachDataPointIndex" );
-        sdf->forEachDataPointIndex([&] (size_t i, size_t j, size_t k) {
+        sdf->forEachDataPointIndex([&] (SizeType i, SizeType j, SizeType k) {
             vector3 pt = sdfPos(i, j, k);
             FloatType minDist = sdfBandRadius;
             searcher->forEachNearbyPoint(
-                pt, sdfBandRadius, [&] (size_t, const vector3& x) {
+                pt, sdfBandRadius, [&] (SizeType, const vector3& x) {
                 minDist = std::min(minDist, pt.distanceTo(x));
             });
             (*sdf)(i, j, k) = minDist - radius;

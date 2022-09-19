@@ -25,7 +25,7 @@ void boundingBox3::reset()
 }
 
 
-vector3 boundingBox3::corner(size_t idx) const
+vector3 boundingBox3::corner(SizeType idx) const
 {
     vector3 result;
     if (idx & 1)

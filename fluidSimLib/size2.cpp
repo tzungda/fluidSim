@@ -7,7 +7,7 @@ size2::size2()
     x = y = 0;
 }
 
-size2::size2(size_t _x, size_t _y)
+size2::size2(SizeType _x, SizeType _y)
 {
     x = _x, y = _y;
 }

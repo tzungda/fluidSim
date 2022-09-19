@@ -11,9 +11,9 @@ public:
 
 
     cellCenteredVectorGrid3(
-        size_t resolutionX,
-        size_t resolutionY,
-        size_t resolutionZ,
+        SizeType resolutionX,
+        SizeType resolutionY,
+        SizeType resolutionZ,
         FloatType gridSpacingX = 1.0,
         FloatType gridSpacingY = 1.0,
         FloatType gridSpacingZ = 1.0,

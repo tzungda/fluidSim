@@ -17,25 +17,25 @@ public:
 
     dataBuffer3( const size3& size, const FloatType initValue = 0.0 );
 
-    dataBuffer3( size_t width, size_t height, size_t depth, const FloatType initValue = 0.0 );
+    dataBuffer3( SizeType width, SizeType height, SizeType depth, const FloatType initValue = 0.0 );
 
 public:
     void resize( const size3& size, const FloatType initValue = 0.0 );
 
-    void resize( size_t width, size_t height, size_t depth, const FloatType initValue = 0.0 );
+    void resize( SizeType width, SizeType height, SizeType depth, const FloatType initValue = 0.0 );
 
-    const FloatType valueByIndex( size_t i, size_t j, size_t k ) const;
+    const FloatType valueByIndex( SizeType i, SizeType j, SizeType k ) const;
 
-    FloatType& valueByIndex( size_t i, size_t j, size_t k );
+    FloatType& valueByIndex( SizeType i, SizeType j, SizeType k );
 
     template <typename Callback>
     void forEachIndex(Callback func) const
     {
-        for (size_t k = 0; k < mSize.z; ++k)
+        for (SizeType k = 0; k < mSize.z; ++k)
         {
-            for (size_t j = 0; j < mSize.y; ++j)
+            for (SizeType j = 0; j < mSize.y; ++j)
             {
-                for (size_t i = 0; i < mSize.x; ++i)
+                for (SizeType i = 0; i < mSize.x; ++i)
                 {
                     func(i, j, k);
                 }
@@ -46,11 +46,11 @@ public:
     template <typename Callback>
     void forEach(Callback func) const
     {
-        for (size_t k = 0; k < mSize.z; ++k)
+        for (SizeType k = 0; k < mSize.z; ++k)
         {
-            for (size_t j = 0; j < mSize.y; ++j)
+            for (SizeType j = 0; j < mSize.y; ++j)
             {
-                for (size_t i = 0; i < mSize.x; ++i)
+                for (SizeType i = 0; i < mSize.x; ++i)
                 {
                     func((*this)(i, j, k));
                 }
@@ -63,11 +63,11 @@ public:
 
     size3 size( ) const;
 
-    size_t width( ) const;
+    SizeType width( ) const;
 
-    size_t height( ) const;
+    SizeType height( ) const;
 
-    size_t depth( ) const;
+    SizeType depth( ) const;
 
     FloatType *data( );
 
@@ -78,8 +78,8 @@ public:
 
     void swap( dataBuffer3& other );
 
-    FloatType& operator()(size_t i, size_t j, size_t k);
-    const FloatType& operator()( size_t i, size_t j, size_t k ) const;
+    FloatType& operator()(SizeType i, SizeType j, SizeType k);
+    const FloatType& operator()( SizeType i, SizeType j, SizeType k ) const;
     //
     FloatType& operator()( const size3& pt );
     const FloatType& operator()( const size3& pt ) const;

@@ -56,7 +56,7 @@ protected:
     virtual void moveParticles(FloatType timeIntervalInSeconds);
 
 private:
-    size_t mSignedDistanceFieldId;
+    SizeType mSignedDistanceFieldId;
     particleSystemData3Ptr mParticles;
     particleEmitter3Ptr mParticleEmitter;
 

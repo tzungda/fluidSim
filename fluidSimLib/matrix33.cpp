@@ -99,12 +99,12 @@ matrix33 matrix33::rmul(const matrix33& mtx ) const
     return mtx.mul(*this);
 }
 
-FloatType& matrix33::operator()(size_t i, size_t j)
+FloatType& matrix33::operator()(SizeType i, SizeType j)
 {
     return m[3 * i + j];
 }
 
-const FloatType& matrix33::operator()(size_t i, size_t j) const
+const FloatType& matrix33::operator()(SizeType i, SizeType j) const
 {
     return m[3 * i + j];
 }

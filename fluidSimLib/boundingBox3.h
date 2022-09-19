@@ -28,7 +28,7 @@ public:
 
     void reset();
 
-    vector3 corner(size_t idx) const;
+    vector3 corner(SizeType idx) const;
 
     FloatType width( ) const;
     FloatType height( ) const;

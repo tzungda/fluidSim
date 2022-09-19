@@ -105,32 +105,32 @@ void faceCenteredGrid3::set( const faceCenteredGrid3 &other )
     resetSampler();
 }
 
-FloatType &faceCenteredGrid3::u( size_t i, size_t j, size_t k )
+FloatType &faceCenteredGrid3::u( SizeType i, SizeType j, SizeType k )
 {
     return mDataU(i, j, k);
 }
 
-FloatType &faceCenteredGrid3::v( size_t i, size_t j, size_t k )
+FloatType &faceCenteredGrid3::v( SizeType i, SizeType j, SizeType k )
 {
     return mDataV(i, j, k);
 }
 
-FloatType &faceCenteredGrid3::w( size_t i, size_t j, size_t k )
+FloatType &faceCenteredGrid3::w( SizeType i, SizeType j, SizeType k )
 {
     return mDataW(i, j, k);
 }
 
-const FloatType &faceCenteredGrid3::u( size_t i, size_t j, size_t k ) const
+const FloatType &faceCenteredGrid3::u( SizeType i, SizeType j, SizeType k ) const
 {
     return mDataU(i, j, k);
 }
 
-const FloatType &faceCenteredGrid3::v( size_t i, size_t j, size_t k ) const
+const FloatType &faceCenteredGrid3::v( SizeType i, SizeType j, SizeType k ) const
 {
     return mDataV(i, j, k);
 }
 
-const FloatType &faceCenteredGrid3::w( size_t i, size_t j, size_t k ) const
+const FloatType &faceCenteredGrid3::w( SizeType i, SizeType j, SizeType k ) const
 {
     return mDataW(i, j, k);
 }
@@ -165,19 +165,19 @@ const FloatType &faceCenteredGrid3::w( const size3& pt ) const
     return mDataW( pt );
 }
 
-vector3 faceCenteredGrid3::uPosition( size_t i, size_t j, size_t k ) const
+vector3 faceCenteredGrid3::uPosition( SizeType i, SizeType j, SizeType k ) const
 {
     vector3 h = gridSpacing();
     return mDataOriginU + h * vector3({(FloatType)i, (FloatType)j, (FloatType)k});
 }
 
-vector3 faceCenteredGrid3::vPosition( size_t i, size_t j, size_t k ) const
+vector3 faceCenteredGrid3::vPosition( SizeType i, SizeType j, SizeType k ) const
 {
     vector3 h = gridSpacing();
     return mDataOriginV + h * vector3({(FloatType)i, (FloatType)j, (FloatType)k});
 }
 
-vector3 faceCenteredGrid3::wPosition( size_t i, size_t j, size_t k ) const
+vector3 faceCenteredGrid3::wPosition( SizeType i, SizeType j, SizeType k ) const
 {
     vector3 h = gridSpacing();
     return mDataOriginW + h * vector3({(FloatType)i, (FloatType)j, (FloatType)k});
@@ -186,7 +186,7 @@ vector3 faceCenteredGrid3::wPosition( size_t i, size_t j, size_t k ) const
 vectorGrid3::DataPositionFunc faceCenteredGrid3::uPosition() const
 {
     vector3 h = gridSpacing();
-    return [this, h](size_t i, size_t j, size_t k) -> vector3 {
+    return [this, h](SizeType i, SizeType j, SizeType k) -> vector3 {
         return mDataOriginU + h * vector3({(FloatType)i, (FloatType)j, (FloatType)k});
     };
 }
@@ -194,7 +194,7 @@ vectorGrid3::DataPositionFunc faceCenteredGrid3::uPosition() const
 vectorGrid3::DataPositionFunc faceCenteredGrid3::vPosition() const
 {
     vector3 h = gridSpacing();
-    return [this, h](size_t i, size_t j, size_t k) -> vector3 {
+    return [this, h](SizeType i, SizeType j, SizeType k) -> vector3 {
         return mDataOriginV + h * vector3({(FloatType)i, (FloatType)j, (FloatType)k});
     };
 }
@@ -202,7 +202,7 @@ vectorGrid3::DataPositionFunc faceCenteredGrid3::vPosition() const
 vectorGrid3::DataPositionFunc faceCenteredGrid3::wPosition() const
 {
     vector3 h = gridSpacing();
-    return [this, h](size_t i, size_t j, size_t k) -> vector3 {
+    return [this, h](SizeType i, SizeType j, SizeType k) -> vector3 {
         return mDataOriginW + h * vector3({(FloatType)i, (FloatType)j, (FloatType)k});
     };
 }
@@ -253,24 +253,24 @@ const dataBuffer3& faceCenteredGrid3::wData() const
 }
 
 void faceCenteredGrid3::forEachUIndex(
-    const std::function<void(size_t, size_t, size_t)>& func) const
+    const std::function<void(SizeType, SizeType, SizeType)>& func) const
 {
     mDataU.forEachIndex(func);
 }
 
 void faceCenteredGrid3::forEachVIndex(
-    const std::function<void(size_t, size_t, size_t)>& func) const
+    const std::function<void(SizeType, SizeType, SizeType)>& func) const
 {
     mDataV.forEachIndex(func);
 }
 
 void faceCenteredGrid3::forEachWIndex(
-    const std::function<void(size_t, size_t, size_t)>& func) const
+    const std::function<void(SizeType, SizeType, SizeType)>& func) const
 {
     mDataW.forEachIndex(func);
 }
 
-FloatType faceCenteredGrid3::divergenceAtCellCenterByIndex( size_t i, size_t j, size_t k ) const
+FloatType faceCenteredGrid3::divergenceAtCellCenterByIndex( SizeType i, SizeType j, SizeType k ) const
 {
     const vector3& gs = gridSpacing();
     FloatType leftU = mDataU( i, j, k );
@@ -283,14 +283,14 @@ FloatType faceCenteredGrid3::divergenceAtCellCenterByIndex( size_t i, size_t j, 
     return ( rightU - leftU ) / gs.x + ( upV - downV )/gs.y + (frontW - backW)/gs.z;
 }
 
-vector3 faceCenteredGrid3::valueAtCellCenterByIndex( size_t i, size_t j, size_t k ) const
+vector3 faceCenteredGrid3::valueAtCellCenterByIndex( SizeType i, SizeType j, SizeType k ) const
 {
     return 0.5 * vector3( mDataU( i, j, k ) + mDataU( i + 1, j, k ),
         mDataV( i, j, k ) + mDataV( i, j + 1, k ),
         mDataW( i, j, k ) + mDataW( i, j, k + 1 ) );
 }
 
-vector3 faceCenteredGrid3::curlAtCellCenterByIndex( size_t i, size_t j, size_t k ) const
+vector3 faceCenteredGrid3::curlAtCellCenterByIndex( SizeType i, SizeType j, SizeType k ) const
 {
     const size3 s = resolution();
     const vector3& gs = gridSpacing();
@@ -352,33 +352,33 @@ vector3 faceCenteredGrid3::sample(const vector3& x) const
 void faceCenteredGrid3::fill(const vector3& value)
 {
     //
-    for ( size_t i = 0; i < mDataU.width(); ++i )
+    for ( SizeType i = 0; i < mDataU.width(); ++i )
     {
-        for ( size_t j = 0; j < mDataU.height(); ++j )
+        for ( SizeType j = 0; j < mDataU.height(); ++j )
         {
-            for ( size_t k = 0; k < mDataU.depth(); ++k )
+            for ( SizeType k = 0; k < mDataU.depth(); ++k )
             {
                 mDataU(i, j, k) = value.x;
             }
         }
     }
     //
-    for ( size_t i = 0; i < mDataV.width(); ++i )
+    for ( SizeType i = 0; i < mDataV.width(); ++i )
     {
-        for ( size_t j = 0; j < mDataV.height(); ++j )
+        for ( SizeType j = 0; j < mDataV.height(); ++j )
         {
-            for ( size_t k = 0; k < mDataV.depth(); ++k )
+            for ( SizeType k = 0; k < mDataV.depth(); ++k )
             {
                 mDataV(i, j, k) = value.y;
             }
         }
     }
     //
-    for ( size_t i = 0; i < mDataW.width(); ++i )
+    for ( SizeType i = 0; i < mDataW.width(); ++i )
     {
-        for ( size_t j = 0; j < mDataW.height(); ++j )
+        for ( SizeType j = 0; j < mDataW.height(); ++j )
         {
-            for ( size_t k = 0; k < mDataW.depth(); ++k )
+            for ( SizeType k = 0; k < mDataW.depth(); ++k )
             {
                 mDataW(i, j, k) = value.z;
             }
@@ -389,11 +389,11 @@ void faceCenteredGrid3::fill(const vector3& value)
 void faceCenteredGrid3::fill(const std::function<vector3(const vector3&)>& func)
 {
     DataPositionFunc uPos = uPosition();
-    for ( size_t i = 0; i < mDataU.width(); ++i )
+    for ( SizeType i = 0; i < mDataU.width(); ++i )
     {
-        for ( size_t j = 0; j < mDataU.height(); ++j )
+        for ( SizeType j = 0; j < mDataU.height(); ++j )
         {
-            for ( size_t k = 0; k < mDataU.depth(); ++k )
+            for ( SizeType k = 0; k < mDataU.depth(); ++k )
             {
                 mDataU(i, j, k) = func(uPos(i, j, k)).x;
             }
@@ -401,11 +401,11 @@ void faceCenteredGrid3::fill(const std::function<vector3(const vector3&)>& func)
     }
 
     DataPositionFunc vPos = vPosition();
-    for ( size_t i = 0; i < mDataV.width(); ++i )
+    for ( SizeType i = 0; i < mDataV.width(); ++i )
     {
-        for ( size_t j = 0; j < mDataV.height(); ++j )
+        for ( SizeType j = 0; j < mDataV.height(); ++j )
         {
-            for ( size_t k = 0; k < mDataV.depth(); ++k )
+            for ( SizeType k = 0; k < mDataV.depth(); ++k )
             {
                 mDataV(i, j, k) = func(vPos(i, j, k)).y;
             }
@@ -413,11 +413,11 @@ void faceCenteredGrid3::fill(const std::function<vector3(const vector3&)>& func)
     }
 
     DataPositionFunc wPos = wPosition();
-    for ( size_t i = 0; i < mDataW.width(); ++i )
+    for ( SizeType i = 0; i < mDataW.width(); ++i )
     {
-        for ( size_t j = 0; j < mDataW.height(); ++j )
+        for ( SizeType j = 0; j < mDataW.height(); ++j )
         {
-            for ( size_t k = 0; k < mDataW.depth(); ++k )
+            for ( SizeType k = 0; k < mDataW.depth(); ++k )
             {
                 mDataW(i, j, k) = func(wPos(i, j, k)).z;
             }
@@ -450,12 +450,12 @@ void faceCenteredGrid3::swap(grid3* other)
 
 void faceCenteredGrid3::getData(std::vector<FloatType>* data) const
 {
-    size_t size
+    SizeType size
         = uSize().x * uSize().y * uSize().z
         + vSize().x * vSize().y * vSize().z
         + wSize().x * wSize().y * wSize().z;
     data->resize(size);
-    size_t cnt = 0;
+    SizeType cnt = 0;
     mDataU.forEach([&] (FloatType value) {
         (*data)[cnt++] = value;
     });
@@ -470,14 +470,14 @@ void faceCenteredGrid3::getData(std::vector<FloatType>* data) const
 
 void faceCenteredGrid3::setData(const std::vector<FloatType>& data)
 {
-    size_t cnt = 0;
-    mDataU.forEachIndex([&] (size_t i, size_t j, size_t k) {
+    SizeType cnt = 0;
+    mDataU.forEachIndex([&] (SizeType i, SizeType j, SizeType k) {
         mDataU(i, j, k) = data[cnt++];
     });
-    mDataV.forEachIndex([&] (size_t i, size_t j, size_t k) {
+    mDataV.forEachIndex([&] (SizeType i, SizeType j, SizeType k) {
         mDataV(i, j, k) = data[cnt++];
     });
-    mDataW.forEachIndex([&] (size_t i, size_t j, size_t k) {
+    mDataW.forEachIndex([&] (SizeType i, SizeType j, SizeType k) {
         mDataW(i, j, k) = data[cnt++];
     });
 }

@@ -65,7 +65,7 @@ private:
 
     void buildMarkers(
         const size3& size,
-        const std::function<vector3(size_t, size_t, size_t)>& pos,
+        const std::function<vector3(SizeType, SizeType, SizeType)>& pos,
         const scalarField3& boundarySdf,
         const scalarField3& fluidSdf);
 
@@ -80,7 +80,7 @@ private:
     void buildVectors(
         const vecDataBuffer3& f,
         const vector3& c,
-        size_t component);
+        SizeType component);
 };
 
 #endif

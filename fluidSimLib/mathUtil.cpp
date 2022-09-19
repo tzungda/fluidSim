@@ -255,14 +255,14 @@ void mathUtil::extrapolateToRegion( const dataBuffer3 &input, const markers3& va
     markers3 valid0(size);
     markers3 valid1(size);
 
-    valid0.forEachIndex([&](size_t i, size_t j, size_t k) {
+    valid0.forEachIndex([&](SizeType i, SizeType j, SizeType k) {
         valid0(i, j, k) = valid(i, j, k);
         output(i, j, k) = input(i, j, k);
     });
 
     for (unsigned int iter = 0; iter < numberOfIterations; ++iter)
     {
-        valid0.forEachIndex([&](size_t i, size_t j, size_t k) {
+        valid0.forEachIndex([&](SizeType i, SizeType j, SizeType k) {
             FloatType sum = 0.0;//zero<T>();
             unsigned int count = 0;
 
@@ -329,14 +329,14 @@ void mathUtil::extrapolateToRegion( const vecDataBuffer3 &input, const markers3&
     markers3 valid0(size);
     markers3 valid1(size);
 
-    valid0.forEachIndex([&](size_t i, size_t j, size_t k) {
+    valid0.forEachIndex([&](SizeType i, SizeType j, SizeType k) {
         valid0(i, j, k) = valid(i, j, k);
         output(i, j, k) = input(i, j, k);
     });
 
     for (unsigned int iter = 0; iter < numberOfIterations; ++iter)
     {
-        valid0.forEachIndex([&](size_t i, size_t j, size_t k) {
+        valid0.forEachIndex([&](SizeType i, SizeType j, SizeType k) {
             vector3 sum = vector3( 0.0, 0.0, 0.0 );
             unsigned int count = 0;
 
@@ -398,15 +398,15 @@ void mathUtil::extrapolateToRegion( const vecDataBuffer3 &input, const markers3&
 
 void mathUtil::getBarycentric(
     FloatType x,
-    SSIZE_T iLow,
-    SSIZE_T iHigh,
-    SSIZE_T* i,
+    SSizeType iLow,
+    SSizeType iHigh,
+    SSizeType* i,
     FloatType* f)
 {
     FloatType s = std::floor(x);
-    *i = static_cast<SSIZE_T>(s);
+    *i = static_cast<SSizeType>(s);
 
-    SSIZE_T offset = -iLow;
+    SSizeType offset = -iLow;
     iLow += offset;
     iHigh += offset;
 

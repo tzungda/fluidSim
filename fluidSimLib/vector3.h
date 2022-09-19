@@ -100,8 +100,8 @@ public:
 
     bool isSimilar( const vector3& other, FloatType eps = 0.000001f ) const;
 
-    FloatType& operator[](size_t i);
-    const FloatType& operator[](size_t i) const;
+    FloatType& operator[](SizeType i);
+    const FloatType& operator[](SizeType i) const;
 
     //! SeFloatType x and y with other vector3 \p pt.
     vector3& operator=(const vector3& v);

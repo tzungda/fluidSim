@@ -33,21 +33,21 @@ public:
 
     DataPositionFunc dataPosition() const;
 
-    //const FloatType& operator()( size_t i, size_t j, size_t k ) const;
-    vector3 gradientByIndex(size_t i, size_t j, size_t k) const;
+    //const FloatType& operator()( SizeType i, SizeType j, SizeType k ) const;
+    vector3 gradientByIndex(SizeType i, SizeType j, SizeType k) const;
 
     vector3 gradientAtPoint(const vector3& x) const;
 
-    FloatType laplacianByIndex(size_t i, size_t j, size_t k) const;
+    FloatType laplacianByIndex(SizeType i, SizeType j, SizeType k) const;
 
     void forEachDataPointIndex(
-        const std::function<void(size_t, size_t, size_t)>& func) const;
+        const std::function<void(SizeType, SizeType, SizeType)>& func) const;
 
     //size3 size( ) const;
     dataBuffer3& data();
     const dataBuffer3& data() const;
-    FloatType& operator()(size_t i, size_t j, size_t k);
-    const FloatType& operator()(size_t i, size_t j, size_t k) const;
+    FloatType& operator()(SizeType i, SizeType j, SizeType k);
+    const FloatType& operator()(SizeType i, SizeType j, SizeType k) const;
 
     FloatType sample(const vector3 &x) const override;
 

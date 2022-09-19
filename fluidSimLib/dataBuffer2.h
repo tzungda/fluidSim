@@ -17,23 +17,23 @@ public:
 
     dataBuffer2( const size2& size, const FloatType initValue = 0.0 );
 
-    dataBuffer2( size_t width, size_t height, const FloatType initValue = 0.0 );
+    dataBuffer2( SizeType width, SizeType height, const FloatType initValue = 0.0 );
 
 public:
     void resize( const size2& size, const FloatType initValue = 0.0 );
 
-    void resize( size_t width, size_t height, const FloatType initValue = 0.0 );
+    void resize( SizeType width, SizeType height, const FloatType initValue = 0.0 );
 
-    const FloatType valueByIndex( size_t i, size_t j ) const;
+    const FloatType valueByIndex( SizeType i, SizeType j ) const;
 
-    FloatType& valueByIndex( size_t i, size_t j );
+    FloatType& valueByIndex( SizeType i, SizeType j );
 
     template <typename Callback>
     void forEachIndex(Callback func) const
     {
-        for (size_t j = 0; j < mSize.y; ++j) 
+        for (SizeType j = 0; j < mSize.y; ++j) 
         {
-            for (size_t i = 0; i < mSize.x; ++i) 
+            for (SizeType i = 0; i < mSize.x; ++i) 
             {
                 func(i, j);
             }
@@ -43,9 +43,9 @@ public:
     template <typename Callback>
     void forEach(Callback func) const
     {
-        for (size_t j = 0; j < mSize.y; ++j) 
+        for (SizeType j = 0; j < mSize.y; ++j) 
         {
-            for (size_t i = 0; i < mSize.x; ++i) 
+            for (SizeType i = 0; i < mSize.x; ++i) 
             {
                 func((*this)(i, j));
             }
@@ -57,9 +57,9 @@ public:
 
     size2 size( ) const;
 
-    size_t width( ) const;
+    SizeType width( ) const;
 
-    size_t height( ) const;
+    SizeType height( ) const;
 
     FloatType *data( );
 
@@ -70,8 +70,8 @@ public:
 
     void swap( dataBuffer2& other );
 
-    FloatType& operator()(size_t i, size_t j);
-    const FloatType& operator()( size_t i, size_t j ) const;
+    FloatType& operator()(SizeType i, SizeType j);
+    const FloatType& operator()( SizeType i, SizeType j ) const;
 };
 
 #endif

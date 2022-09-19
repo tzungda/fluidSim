@@ -32,11 +32,11 @@ FloatType fdmBlas3::dot(const dataBuffer3& a, const dataBuffer3& b)
 
     FloatType result = 0.0;
 
-    for (size_t k = 0; k < size.z; ++k) 
+    for (SizeType k = 0; k < size.z; ++k) 
     {
-        for (size_t j = 0; j < size.y; ++j) 
+        for (SizeType j = 0; j < size.y; ++j) 
         {
-            for (size_t i = 0; i < size.x; ++i) 
+            for (SizeType i = 0; i < size.x; ++i) 
             {
                 result += a(i, j, k) * b(i, j, k);
             }
@@ -54,7 +54,7 @@ void fdmBlas3::axpy(
 {
     size3 size = x.size();
 
-    x.forEachIndex([&](size_t i, size_t j, size_t k) {
+    x.forEachIndex([&](SizeType i, SizeType j, SizeType k) {
         (*result)(i, j, k) = a * x(i, j, k) + y(i, j, k);
         });
 }
@@ -66,7 +66,7 @@ void fdmBlas3::mvm(
 {
     size3 size = m.size();
 
-    m.forEachIndex([&](size_t i, size_t j, size_t k) {
+    m.forEachIndex([&](SizeType i, SizeType j, SizeType k) {
         (*result)(i, j, k)
             = m(i, j, k).center * v(i, j, k)
             + ((i > 0) ? m(i - 1, j, k).right * v(i - 1, j, k) : (FloatType)0.0)
@@ -86,7 +86,7 @@ void fdmBlas3::residual(
 {
     size3 size = a.size();
 
-    a.forEachIndex([&](size_t i, size_t j, size_t k) {
+    a.forEachIndex([&](SizeType i, SizeType j, SizeType k) {
         (*result)(i, j, k)
             = b(i, j, k)
             - a(i, j, k).center * x(i, j, k)
@@ -110,11 +110,11 @@ FloatType fdmBlas3::lInfNorm(const dataBuffer3& v)
 
     FloatType result = 0.0;
 
-    for (size_t k = 0; k < size.z; ++k)
+    for (SizeType k = 0; k < size.z; ++k)
     {
-        for (size_t j = 0; j < size.y; ++j) 
+        for (SizeType j = 0; j < size.y; ++j) 
         {
-            for (size_t i = 0; i < size.x; ++i) 
+            for (SizeType i = 0; i < size.x; ++i) 
             {
                 result = mathUtil::absmax(result, v(i, j, k));
             }

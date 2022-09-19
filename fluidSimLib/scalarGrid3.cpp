@@ -24,12 +24,12 @@ void scalarGrid3::resize(const size3& resolution, const vector3 &gridSpacing,
 scalarGrid3::DataPositionFunc scalarGrid3::dataPosition() const
 {
     vector3 o = dataOrigin();
-    return [this, o](size_t i, size_t j, size_t k) -> vector3 {
+    return [this, o](SizeType i, SizeType j, SizeType k) -> vector3 {
         return o + gridSpacing() * vector3({ (FloatType)i, (FloatType)j, (FloatType)k });
     };
 }
 
-vector3 scalarGrid3::gradientByIndex(size_t i, size_t j, size_t k) const
+vector3 scalarGrid3::gradientByIndex(SizeType i, SizeType j, SizeType k) const
 {
     const size3 s = mData.size();
 
@@ -57,7 +57,7 @@ vector3 scalarGrid3::gradientAtPoint(const vector3& x) const
     return result;
 }
 
-FloatType scalarGrid3::laplacianByIndex(size_t i, size_t j, size_t k) const
+FloatType scalarGrid3::laplacianByIndex(SizeType i, SizeType j, SizeType k) const
 {
     const FloatType center = mData(i, j, k);
     const size3 s = mData.size();
@@ -90,7 +90,7 @@ FloatType scalarGrid3::laplacianByIndex(size_t i, size_t j, size_t k) const
 
 
 void scalarGrid3::forEachDataPointIndex(
-    const std::function<void(size_t, size_t, size_t)>& func) const
+    const std::function<void(SizeType, SizeType, SizeType)>& func) const
 {
     mData.forEachIndex(func);
 }
@@ -106,12 +106,12 @@ const dataBuffer3& scalarGrid3::data() const
 }
 
 
-FloatType& scalarGrid3::operator()(size_t i, size_t j, size_t k)
+FloatType& scalarGrid3::operator()(SizeType i, SizeType j, SizeType k)
 {
     return mData(i, j, k);
 }
 
-const FloatType& scalarGrid3::operator()(size_t i, size_t j, size_t k) const
+const FloatType& scalarGrid3::operator()(SizeType i, SizeType j, SizeType k) const
 {
     return mData(i, j, k);
 }
@@ -137,11 +137,11 @@ std::function<FloatType(const vector3&)> scalarGrid3::sampler() const
 
 void scalarGrid3::fill(FloatType value)
 {
-    for (size_t i = 0; i < mData.width(); ++i)
+    for (SizeType i = 0; i < mData.width(); ++i)
     {
-        for (size_t j = 0; j < mData.height(); ++j)
+        for (SizeType j = 0; j < mData.height(); ++j)
         {
-            for (size_t k = 0; k < mData.depth(); ++k)
+            for (SizeType k = 0; k < mData.depth(); ++k)
             {
                 mData(i, j, k) = value;
             }
@@ -152,11 +152,11 @@ void scalarGrid3::fill(FloatType value)
 void scalarGrid3::fill(const std::function<FloatType(const vector3&)>& func)
 {
     DataPositionFunc pos = dataPosition();
-    for (size_t i = 0; i < mData.width(); ++i)
+    for (SizeType i = 0; i < mData.width(); ++i)
     {
-        for (size_t j = 0; j < mData.height(); ++j)
+        for (SizeType j = 0; j < mData.height(); ++j)
         {
-            for (size_t k = 0; k < mData.depth(); ++k)
+            for (SizeType k = 0; k < mData.depth(); ++k)
             {
                 mData(i, j, k) = func(pos(i, j, k));
             }
@@ -184,7 +184,7 @@ void scalarGrid3::setScalarGrid(const scalarGrid3& other)
 
 void scalarGrid3::getData(std::vector<FloatType>* data) const 
 {
-    size_t size = dataSize().x * dataSize().y * dataSize().z;
+    SizeType size = dataSize().x * dataSize().y * dataSize().z;
     data->resize(size);
     std::copy(mData.begin(), mData.end(), data->begin());
 }

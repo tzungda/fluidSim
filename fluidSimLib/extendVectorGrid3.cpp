@@ -11,7 +11,7 @@ extendVectorGrid3::~extendVectorGrid3()
 }
 
 
-FloatType extendVectorGrid3::divergenceByIndex(size_t i, size_t j, size_t k) const
+FloatType extendVectorGrid3::divergenceByIndex(SizeType i, SizeType j, SizeType k) const
 {
     const size3 s = mData.size();
     const vector3& gs = gridSpacing();
@@ -28,7 +28,7 @@ FloatType extendVectorGrid3::divergenceByIndex(size_t i, size_t j, size_t k) con
 }
 
 
-vector3 extendVectorGrid3::curlByIndex(size_t i, size_t j, size_t k) const
+vector3 extendVectorGrid3::curlByIndex(SizeType i, SizeType j, SizeType k) const
 {
     const size3 s = mData.size();
     const vector3 &gs = gridSpacing();
@@ -61,7 +61,7 @@ vector3 extendVectorGrid3::curlByIndex(size_t i, size_t j, size_t k) const
 }
 
 void extendVectorGrid3::forEachDataPointIndex(
-    const std::function<void(size_t, size_t, size_t)>& func) const
+    const std::function<void(SizeType, SizeType, SizeType)>& func) const
 {
     mData.forEachIndex(func);
 }
@@ -69,7 +69,7 @@ void extendVectorGrid3::forEachDataPointIndex(
 vectorGrid3::DataPositionFunc extendVectorGrid3::dataPosition() const
 {
     vector3 dataOrigin_ = dataOrigin();
-    return [this, dataOrigin_](size_t i, size_t j, size_t k) -> vector3 
+    return [this, dataOrigin_](SizeType i, SizeType j, SizeType k) -> vector3 
     {
         return dataOrigin_ + gridSpacing() * vector3((FloatType)i, (FloatType)j, (FloatType)k);
     };
@@ -85,12 +85,12 @@ const vecDataBuffer3& extendVectorGrid3::data() const
     return mData;
 }
 
-vector3& extendVectorGrid3::operator() (size_t i, size_t j, size_t k)
+vector3& extendVectorGrid3::operator() (SizeType i, SizeType j, SizeType k)
 {
     return mData(i, j, k);
 }
 
-const vector3& extendVectorGrid3::operator() (size_t i, size_t j, size_t k) const
+const vector3& extendVectorGrid3::operator() (SizeType i, SizeType j, SizeType k) const
 {
     return mData(i, j, k);
 }
@@ -119,9 +119,9 @@ void extendVectorGrid3::setExtendVectorGrid(const extendVectorGrid3& other)
 
 void extendVectorGrid3::getData(std::vector<FloatType>* data) const
 {
-    size_t size = 3 * dataSize().x * dataSize().y * dataSize().z;
+    SizeType size = 3 * dataSize().x * dataSize().y * dataSize().z;
     data->resize(size);
-    size_t cnt = 0;
+    SizeType cnt = 0;
     mData.forEach([&](const vector3& value) {
         (*data)[cnt++] = value.x;
         (*data)[cnt++] = value.y;

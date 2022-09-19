@@ -88,7 +88,7 @@ void volumeGridEmitter3::emit()
 
         auto pos = grid->dataPosition();
         grid->forEachDataPointIndex(
-            [&] (size_t i, size_t j, size_t k) {
+            [&] (SizeType i, SizeType j, SizeType k) {
             vector3 gx = pos(i, j, k);
             FloatType sdf = sourceRegion()->signedDistance(gx);
             (*grid)(i, j, k) = mapper(sdf, gx, (*grid)(i, j, k));
@@ -104,7 +104,7 @@ void volumeGridEmitter3::emit()
         if (extendVecGrid != nullptr) {
             vectorGrid3::DataPositionFunc pos = extendVecGrid->dataPosition();
             extendVecGrid->forEachDataPointIndex(
-                [&] (size_t i, size_t j, size_t k) {
+                [&] (SizeType i, SizeType j, SizeType k) {
                 vector3 gx = pos(i, j, k);
                 FloatType sdf = sourceRegion()->signedDistance(gx);
                 if ( mathUtil::isInsideSdf(sdf)) {
@@ -123,7 +123,7 @@ void volumeGridEmitter3::emit()
             vectorGrid3::DataPositionFunc wPos = faceCentered->wPosition();
 
             faceCentered->forEachUIndex(
-                [&] (size_t i, size_t j, size_t k) {
+                [&] (SizeType i, SizeType j, SizeType k) {
                 vector3 gx = uPos(i, j, k);
                 FloatType sdf = sourceRegion()->signedDistance(gx);
                 vector3 oldVal = faceCentered->sample(gx);
@@ -131,7 +131,7 @@ void volumeGridEmitter3::emit()
                 faceCentered->u(i, j, k) = newVal.x;
             });
             faceCentered->forEachVIndex(
-                [&] (size_t i, size_t j, size_t k) {
+                [&] (SizeType i, SizeType j, SizeType k) {
                 vector3 gx = vPos(i, j, k);
                 FloatType sdf = sourceRegion()->signedDistance(gx);
                 vector3 oldVal = faceCentered->sample(gx);
@@ -139,7 +139,7 @@ void volumeGridEmitter3::emit()
                 faceCentered->v(i, j, k) = newVal.y;
             });
             faceCentered->forEachWIndex(
-                [&] (size_t i, size_t j, size_t k) {
+                [&] (SizeType i, SizeType j, SizeType k) {
                 vector3 gx = wPos(i, j, k);
                 FloatType sdf = sourceRegion()->signedDistance(gx);
                 vector3 oldVal = faceCentered->sample(gx);

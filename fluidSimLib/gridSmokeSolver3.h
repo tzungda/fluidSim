@@ -51,8 +51,8 @@ protected:
     void computeExternalForces(FloatType timeIntervalInSeconds) override;
 
 private:
-    size_t mSmokeDensityDataId;
-    size_t mTemperatureDataId;
+    SizeType mSmokeDensityDataId;
+    SizeType mTemperatureDataId;
     FloatType mSmokeDiffusionCoefficient = 0.0;
     FloatType mTemperatureDiffusionCoefficient = 0.0;
     FloatType mBuoyancySmokeDensityFactor = (FloatType)-0.000625;

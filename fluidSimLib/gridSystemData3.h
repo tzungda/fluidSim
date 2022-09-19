@@ -14,7 +14,7 @@ private:
     vector3 mOrigin;
     //
     faceCenteredGrid3Ptr mVelocity;
-    size_t mVelocityIdx;
+    SizeType mVelocityIdx;
     std::vector<scalarGrid3Ptr> mScalarGrid3DataList;
     std::vector<vectorGrid3Ptr> mVectorGrid3DataList;
     std::vector<scalarGrid3Ptr> mAdvectableScalarDataList;
@@ -35,23 +35,23 @@ public:
 
     boundingBox3 boundingBox() const;
 
-    size_t addScalarGrid3Data(const scalarGrid3Ptr scalarGrid3Data, FloatType initValue = 0.0);
-    size_t addVectorGrid3Data(const vectorGrid3Ptr vectorGrid3Data, const vector3& initValue = vector3());
-    size_t addAdvectableScalarData(const scalarGrid3Ptr& scalarGrid3Data, FloatType initialVal = 0.0);
-    size_t addAdvectableVectorGrid3Data(const vectorGrid3Ptr vectorGrid3Data, const vector3& initValue = vector3());
+    SizeType addScalarGrid3Data(const scalarGrid3Ptr scalarGrid3Data, FloatType initValue = 0.0);
+    SizeType addVectorGrid3Data(const vectorGrid3Ptr vectorGrid3Data, const vector3& initValue = vector3());
+    SizeType addAdvectableScalarData(const scalarGrid3Ptr& scalarGrid3Data, FloatType initialVal = 0.0);
+    SizeType addAdvectableVectorGrid3Data(const vectorGrid3Ptr vectorGrid3Data, const vector3& initValue = vector3());
 
     const faceCenteredGrid3Ptr& velocity() const;
-    size_t velocityIndex() const;
+    SizeType velocityIndex() const;
 
-    const scalarGrid3Ptr& scalarGrid3DataAt(size_t ind) const;
-    const vectorGrid3Ptr& vectorGrid3DataAt(size_t ind) const;
-    const scalarGrid3Ptr& advectableScalarDataAt(size_t idx) const;
-    const vectorGrid3Ptr& advectableVectorDataAt(size_t idx) const;
+    const scalarGrid3Ptr& scalarGrid3DataAt(SizeType ind) const;
+    const vectorGrid3Ptr& vectorGrid3DataAt(SizeType ind) const;
+    const scalarGrid3Ptr& advectableScalarDataAt(SizeType idx) const;
+    const vectorGrid3Ptr& advectableVectorDataAt(SizeType idx) const;
 
-    size_t numOfScalarGrid3Data() const;
-    size_t numOfVectorGrid3Data() const;
-    size_t numberOfAdvectableScalarData() const;
-    size_t numberOfAdvectableVectorData() const;
+    SizeType numOfScalarGrid3Data() const;
+    SizeType numOfVectorGrid3Data() const;
+    SizeType numberOfAdvectableScalarData() const;
+    SizeType numberOfAdvectableVectorData() const;
 };
 
 typedef std::shared_ptr<gridSystemData3> gridSystemData3Ptr;

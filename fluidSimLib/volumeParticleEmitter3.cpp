@@ -6,14 +6,14 @@
 #include "pointHashGridSearcher3.h"
 #include "mathUtil.h"
 
-static const size_t kDefaultHashGridResolution = 64;
+static const SizeType kDefaultHashGridResolution = 64;
 
 volumeParticleEmitter3::volumeParticleEmitter3(
     const implicitSurface3Ptr& implicitSurface,
     const boundingBox3& bounds,
     FloatType spacing,
     const vector3& initialVel,
-    size_t maxNumberOfParticles,
+    SizeType maxNumberOfParticles,
     FloatType jitter,
     bool isOneShot,
     bool allowOverlapping,
@@ -160,12 +160,12 @@ void volumeParticleEmitter3::setAllowOverlapping(bool newValue)
     mAllowOverlapping = newValue;
 }
 
-size_t volumeParticleEmitter3::maxNumberOfParticles() const
+SizeType volumeParticleEmitter3::maxNumberOfParticles() const
 {
     return mMaxNumberOfParticles;
 }
 
-void volumeParticleEmitter3::setMaxNumberOfParticles( size_t newMaxNumberOfParticles )
+void volumeParticleEmitter3::setMaxNumberOfParticles( SizeType newMaxNumberOfParticles )
 {
     mMaxNumberOfParticles = newMaxNumberOfParticles;
 }

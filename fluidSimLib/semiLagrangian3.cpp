@@ -25,7 +25,7 @@ void semiLagrangian3::advect(
 
     FloatType h = std::min(std::min(output->gridSpacing().x, output->gridSpacing().y), output->gridSpacing().z);
 
-    output->forEachDataPointIndex([&](size_t i, size_t j, size_t k) {
+    output->forEachDataPointIndex([&](SizeType i, SizeType j, SizeType k) {
         if (boundarySdf.sample(inputDataPos(i, j, k)) > 0.0) {
             vector3 pt = backTrace(
                 flow, dt, h, outputDataPos(i, j, k), boundarySdf);
@@ -48,7 +48,7 @@ void semiLagrangian3::advect(
     vectorGrid3::DataPositionFunc outputDataPos = output->dataPosition();
     vectorGrid3::DataPositionFunc inputDataPos = input.dataPosition();
 
-    output->forEachDataPointIndex([&](size_t i, size_t j, size_t k) {
+    output->forEachDataPointIndex([&](SizeType i, SizeType j, SizeType k) {
         if (boundarySdf.sample(inputDataPos(i, j, k)) > 0.0) {
             vector3 pt = backTrace(
                 flow, dt, h, outputDataPos(i, j, k), boundarySdf);
@@ -63,7 +63,7 @@ void semiLagrangian3::advect( const faceCenteredGrid3& input, const vectorField3
     auto inputSamplerFunc = getVectorSamplerFunc(input);
     FloatType h = std::min(std::min(output->gridSpacing().x, output->gridSpacing().y), output->gridSpacing().z);
 
-    output->forEachUIndex([&](size_t i, size_t j, size_t k) {
+    output->forEachUIndex([&](SizeType i, SizeType j, SizeType k) {
         if (boundarySdf.sample(input.uPosition(i, j, k)) > 0.0) {
             vector3 pt = backTrace(
                 flow, dt, h, output->uPosition(i, j, k), boundarySdf);
@@ -71,7 +71,7 @@ void semiLagrangian3::advect( const faceCenteredGrid3& input, const vectorField3
         }
     });
 
-    output->forEachVIndex([&](size_t i, size_t j, size_t k) {
+    output->forEachVIndex([&](SizeType i, SizeType j, SizeType k) {
         if (boundarySdf.sample(input.vPosition(i, j, k)) > 0.0) {
             vector3 pt = backTrace(
                 flow, dt, h, output->vPosition(i, j, k), boundarySdf);
@@ -79,7 +79,7 @@ void semiLagrangian3::advect( const faceCenteredGrid3& input, const vectorField3
         }
     });
 
-    output->forEachWIndex([&](size_t i, size_t j, size_t k) {
+    output->forEachWIndex([&](SizeType i, SizeType j, SizeType k) {
         if (boundarySdf.sample(input.wPosition(i, j, k)) > 0.0) {
             vector3 pt = backTrace(
                 flow, dt, h, output->wPosition(i, j, k), boundarySdf);

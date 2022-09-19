@@ -140,12 +140,12 @@ void gridSmokeSolver3::computeDiffusion(FloatType timeIntervalInSeconds)
 
     scalarGrid3Ptr den = smokeDensity();
     den->forEachDataPointIndex(
-        [&](size_t i, size_t j, size_t k) {
+        [&](SizeType i, SizeType j, SizeType k) {
         (*den)(i, j, k) *= (FloatType)1.0 - mSmokeDecayFactor;
     });
     scalarGrid3Ptr temp = temperature();
     temp->forEachDataPointIndex(
-        [&](size_t i, size_t j, size_t k) {
+        [&](SizeType i, SizeType j, SizeType k) {
         (*temp)(i, j, k) *= (FloatType)1.0 - mTemperatureDecayFactor;
     });
 }
@@ -168,7 +168,7 @@ void gridSmokeSolver3::computeBuoyancyForce(FloatType timeIntervalInSeconds)
         scalarGrid3Ptr temp = temperature();
 
         FloatType tAmb = 0.0;
-        temp->forEachCellIndex([&](size_t i, size_t j, size_t k) {
+        temp->forEachCellIndex([&](SizeType i, SizeType j, SizeType k) {
             tAmb += (*temp)(i, j, k);
         });
         tAmb /= static_cast<FloatType>(
@@ -180,7 +180,7 @@ void gridSmokeSolver3::computeBuoyancyForce(FloatType timeIntervalInSeconds)
 
         if (std::abs(up.x) > mathUtil::eps())
         {
-            vel->forEachUIndex([&](size_t i, size_t j, size_t k) {
+            vel->forEachUIndex([&](SizeType i, SizeType j, SizeType k) {
                 vector3 pt = uPos(i, j, k);
                 FloatType fBuoy
                     = mBuoyancySmokeDensityFactor * den->sample(pt)
@@ -191,7 +191,7 @@ void gridSmokeSolver3::computeBuoyancyForce(FloatType timeIntervalInSeconds)
 
         if (std::abs(up.y) > mathUtil::eps())
         {
-            vel->forEachVIndex([&](size_t i, size_t j, size_t k) {
+            vel->forEachVIndex([&](SizeType i, SizeType j, SizeType k) {
                 vector3 pt = vPos(i, j, k);
                 FloatType fBuoy
                     = mBuoyancySmokeDensityFactor * den->sample(pt)
@@ -202,7 +202,7 @@ void gridSmokeSolver3::computeBuoyancyForce(FloatType timeIntervalInSeconds)
 
         if (std::abs(up.z) > mathUtil::eps())
         {
-            vel->forEachWIndex([&](size_t i, size_t j, size_t k) {
+            vel->forEachWIndex([&](SizeType i, SizeType j, SizeType k) {
                 vector3 pt = wPos(i, j, k);
                 FloatType fBuoy
                     = mBuoyancySmokeDensityFactor * den->sample(pt)

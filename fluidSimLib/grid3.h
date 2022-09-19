@@ -17,7 +17,7 @@ private:
     vector3 mOrigin;
     boundingBox3 mBoundingBox;
 public:
-    typedef std::function<vector3( size_t, size_t, size_t )> DataPositionFunc;
+    typedef std::function<vector3( SizeType, SizeType, SizeType )> DataPositionFunc;
 
     grid3();
 
@@ -37,11 +37,11 @@ public:
 
     virtual void swap(grid3* other) = 0;
 
-    vector3 cellCenterPosition( size_t i, size_t j, size_t k ) const;
+    vector3 cellCenterPosition( SizeType i, SizeType j, SizeType k ) const;
     DataPositionFunc cellCenterPosition() const;
 
     void forEachCellIndex(
-        const std::function<void(size_t, size_t, size_t)>& func) const;
+        const std::function<void(SizeType, SizeType, SizeType)>& func) const;
 
 protected:
     void swapGrid(grid3* other);

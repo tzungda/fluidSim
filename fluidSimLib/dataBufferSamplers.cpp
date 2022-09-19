@@ -30,23 +30,23 @@ LinearBufferSampler::LinearBufferSampler( const LinearBufferSampler& other )
 // return sampled value at the given point
 FloatType LinearBufferSampler::operator()( const vector3& pt ) const
 {
-    SSIZE_T i, j, k;
+    SSizeType i, j, k;
     FloatType cx, cy, cz;
 
     vector3 tmp( pt.x - mOrigin.x, pt.y - mOrigin.y, pt.z - mOrigin.z );
     vector3 normalizedX( tmp.x / mGridSpacing.x, tmp.y / mGridSpacing.y, tmp.z / mGridSpacing.z );
 
-    SSIZE_T isize = mDataBuffer->size().x;
-    SSIZE_T jsize = mDataBuffer->size().y;
-    SSIZE_T ksize = mDataBuffer->size().z;
+    SSizeType isize = mDataBuffer->size().x;
+    SSizeType jsize = mDataBuffer->size().y;
+    SSizeType ksize = mDataBuffer->size().z;
 
     mathUtil::getBarycentric( normalizedX.x, 0, isize - 1, &i, &cx );
     mathUtil::getBarycentric( normalizedX.y, 0, jsize - 1, &j, &cy );
     mathUtil::getBarycentric( normalizedX.z, 0, ksize - 1, &k, &cz );
 
-    SSIZE_T i1 = std::min(i + 1, isize - 1);
-    SSIZE_T j1 = std::min(j + 1, jsize - 1);
-    SSIZE_T k1 = std::min(k + 1, ksize - 1);
+    SSizeType i1 = std::min(i + 1, isize - 1);
+    SSizeType j1 = std::min(j + 1, jsize - 1);
+    SSizeType k1 = std::min(k + 1, ksize - 1);
 
    
     return mathUtil::trilerp( (*mDataBuffer)( i, j, k ),
@@ -65,22 +65,22 @@ FloatType LinearBufferSampler::operator()( const vector3& pt ) const
 // return the indices of points and their sampling weight for given point.
 void LinearBufferSampler::getCoordinatesAndWeights( const vector3& pt, std::array<size3, 8>* indices, std::array<FloatType, 8>* weights) const
 {
-    SSIZE_T i, j, k;
+    SSizeType i, j, k;
     FloatType fx, fy, fz;
 
     const vector3 normalizedX( (pt.x - mOrigin.x)*mInvGridSpacing.x, (pt.y - mOrigin.y)*mInvGridSpacing.y, (pt.z - mOrigin.z)*mInvGridSpacing.z );
 
-    const SSIZE_T isize = static_cast<SSIZE_T>(mDataBuffer->size().x);
-    const SSIZE_T jsize = static_cast<SSIZE_T>(mDataBuffer->size().y);
-    const SSIZE_T ksize = static_cast<SSIZE_T>(mDataBuffer->size().z);
+    const SSizeType isize = static_cast<SSizeType>(mDataBuffer->size().x);
+    const SSizeType jsize = static_cast<SSizeType>(mDataBuffer->size().y);
+    const SSizeType ksize = static_cast<SSizeType>(mDataBuffer->size().z);
 
     mathUtil::getBarycentric(normalizedX.x, 0, isize - 1, &i, &fx);
     mathUtil::getBarycentric(normalizedX.y, 0, jsize - 1, &j, &fy);
     mathUtil::getBarycentric(normalizedX.z, 0, ksize - 1, &k, &fz);
 
-    const SSIZE_T i1 = std::min(i + 1, isize - 1);
-    const SSIZE_T j1 = std::min(j + 1, jsize - 1);
-    const SSIZE_T k1 = std::min(k + 1, ksize - 1);
+    const SSizeType i1 = std::min(i + 1, isize - 1);
+    const SSizeType j1 = std::min(j + 1, jsize - 1);
+    const SSizeType k1 = std::min(k + 1, ksize - 1);
 
 
     (*indices)[0] = size3(i, j, k);
@@ -136,23 +136,23 @@ LinearVecBufferSampler::LinearVecBufferSampler( const LinearVecBufferSampler& ot
 // return sampled value at the given point
 vector3 LinearVecBufferSampler::operator()( const vector3& pt ) const
 {
-    SSIZE_T i, j, k;
+    SSizeType i, j, k;
     FloatType cx, cy, cz;
 
     vector3 tmp( pt.x - mOrigin.x, pt.y - mOrigin.y, pt.z - mOrigin.z );
     vector3 normalizedX( tmp.x / mGridSpacing.x, tmp.y / mGridSpacing.y, tmp.z / mGridSpacing.z );
 
-    SSIZE_T isize = mDataBuffer->size().x;
-    SSIZE_T jsize = mDataBuffer->size().y;
-    SSIZE_T ksize = mDataBuffer->size().z;
+    SSizeType isize = mDataBuffer->size().x;
+    SSizeType jsize = mDataBuffer->size().y;
+    SSizeType ksize = mDataBuffer->size().z;
 
     mathUtil::getBarycentric( normalizedX.x, 0, isize - 1, &i, &cx );
     mathUtil::getBarycentric( normalizedX.y, 0, jsize - 1, &j, &cy );
     mathUtil::getBarycentric( normalizedX.z, 0, ksize - 1, &k, &cz );
 
-    SSIZE_T i1 = std::min(i + 1, isize - 1);
-    SSIZE_T j1 = std::min(j + 1, jsize - 1);
-    SSIZE_T k1 = std::min(k + 1, ksize - 1);
+    SSizeType i1 = std::min(i + 1, isize - 1);
+    SSizeType j1 = std::min(j + 1, jsize - 1);
+    SSizeType k1 = std::min(k + 1, ksize - 1);
 
     vector3 v_i_j_k = (*mDataBuffer)( i, j, k );
     vector3 v_i1_j_k = (*mDataBuffer)( i1, j, k );
@@ -203,22 +203,22 @@ vector3 LinearVecBufferSampler::operator()( const vector3& pt ) const
 // return the indices of points and their sampling weight for given point.
 void LinearVecBufferSampler::getCoordinatesAndWeights( const vector3& pt, std::array<size3, 8>* indices, std::array<FloatType, 8>* weights) const
 {
-    SSIZE_T i, j, k;
+    SSizeType i, j, k;
     FloatType fx, fy, fz;
 
     const vector3 normalizedX( (pt.x - mOrigin.x)*mInvGridSpacing.x, (pt.y - mOrigin.y)*mInvGridSpacing.y, (pt.z - mOrigin.z)*mInvGridSpacing.z );
 
-    const SSIZE_T isize = static_cast<SSIZE_T>(mDataBuffer->size().x);
-    const SSIZE_T jsize = static_cast<SSIZE_T>(mDataBuffer->size().y);
-    const SSIZE_T ksize = static_cast<SSIZE_T>(mDataBuffer->size().z);
+    const SSizeType isize = static_cast<SSizeType>(mDataBuffer->size().x);
+    const SSizeType jsize = static_cast<SSizeType>(mDataBuffer->size().y);
+    const SSizeType ksize = static_cast<SSizeType>(mDataBuffer->size().z);
 
     mathUtil::getBarycentric(normalizedX.x, 0, isize - 1, &i, &fx);
     mathUtil::getBarycentric(normalizedX.y, 0, jsize - 1, &j, &fy);
     mathUtil::getBarycentric(normalizedX.z, 0, ksize - 1, &k, &fz);
 
-    const SSIZE_T i1 = std::min(i + 1, isize - 1);
-    const SSIZE_T j1 = std::min(j + 1, jsize - 1);
-    const SSIZE_T k1 = std::min(k + 1, ksize - 1);
+    const SSizeType i1 = std::min(i + 1, isize - 1);
+    const SSizeType j1 = std::min(j + 1, jsize - 1);
+    const SSizeType k1 = std::min(k + 1, ksize - 1);
 
 
     (*indices)[0] = size3(i, j, k);
@@ -267,32 +267,32 @@ cubicBufferSamplerVec::cubicBufferSamplerVec(
 }
 
 vector3 cubicBufferSamplerVec::operator()(const vector3& x) const {
-    SSIZE_T i, j, k;
-    SSIZE_T iSize = static_cast<SSIZE_T>(mDataBuffer->size().x);
-    SSIZE_T jSize = static_cast<SSIZE_T>(mDataBuffer->size().y);
-    SSIZE_T kSize = static_cast<SSIZE_T>(mDataBuffer->size().z);
+    SSizeType i, j, k;
+    SSizeType iSize = static_cast<SSizeType>(mDataBuffer->size().x);
+    SSizeType jSize = static_cast<SSizeType>(mDataBuffer->size().y);
+    SSizeType kSize = static_cast<SSizeType>(mDataBuffer->size().z);
     FloatType fx, fy, fz;
 
-    SSIZE_T kZeroSSize = 0;
+    SSizeType kZeroSSize = 0;
     vector3 normalizedX = (x - mOrigin) / mGridSpacing;
 
     mathUtil::getBarycentric(normalizedX.x, 0, iSize - 1, &i, &fx);
     mathUtil::getBarycentric(normalizedX.y, 0, jSize - 1, &j, &fy);
     mathUtil::getBarycentric(normalizedX.z, 0, kSize - 1, &k, &fz);
 
-    SSIZE_T is[4] = {
+    SSizeType is[4] = {
         std::max(i - 1, kZeroSSize),
         i,
         std::min(i + 1, iSize - 1),
         std::min(i + 2, iSize - 1)
     };
-    SSIZE_T js[4] = {
+    SSizeType js[4] = {
         std::max(j - 1, kZeroSSize),
         j,
         std::min(j + 1, jSize - 1),
         std::min(j + 2, jSize - 1)
     };
-    SSIZE_T ks[4] = {
+    SSizeType ks[4] = {
         std::max(k - 1, kZeroSSize),
         k,
         std::min(k + 1, kSize - 1),
@@ -349,34 +349,34 @@ cubicBufferSamplerScalar::cubicBufferSamplerScalar(const cubicBufferSamplerScala
 
 FloatType cubicBufferSamplerScalar::operator()(const vector3& pt) const
 {
-    SSIZE_T i, j, k;
-    SSIZE_T iSize = static_cast<SSIZE_T>(mDataBuffer->size().x);
-    SSIZE_T jSize = static_cast<SSIZE_T>(mDataBuffer->size().y);
-    SSIZE_T kSize = static_cast<SSIZE_T>(mDataBuffer->size().z);
+    SSizeType i, j, k;
+    SSizeType iSize = static_cast<SSizeType>(mDataBuffer->size().x);
+    SSizeType jSize = static_cast<SSizeType>(mDataBuffer->size().y);
+    SSizeType kSize = static_cast<SSizeType>(mDataBuffer->size().z);
     FloatType fx, fy, fz;
 
-    SSIZE_T kZeroSSize = 0;
+    SSizeType kZeroSSize = 0;
     vector3 normalizedX = (pt - mOrigin) / mGridSpacing;
 
     mathUtil::getBarycentric(normalizedX.x, 0, iSize - 1, &i, &fx);
     mathUtil::getBarycentric(normalizedX.y, 0, jSize - 1, &j, &fy);
     mathUtil::getBarycentric(normalizedX.z, 0, kSize - 1, &k, &fz);
 
-    SSIZE_T is[4] = 
+    SSizeType is[4] = 
     {
         std::max(i - 1, kZeroSSize),
         i,
         std::min(i + 1, iSize - 1),
         std::min(i + 2, iSize - 1)
     };
-    SSIZE_T js[4] = 
+    SSizeType js[4] = 
     {
         std::max(j - 1, kZeroSSize),
         j,
         std::min(j + 1, jSize - 1),
         std::min(j + 2, jSize - 1)
     };
-    SSIZE_T ks[4] = 
+    SSizeType ks[4] = 
     {
         std::max(k - 1, kZeroSSize),
         k,

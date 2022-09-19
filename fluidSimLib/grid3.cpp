@@ -47,7 +47,7 @@ void grid3::setSize(const size3& resolution, const vector3& gridSpacing, const v
 }
 
 
-vector3 grid3::cellCenterPosition(size_t i, size_t j, size_t k) const
+vector3 grid3::cellCenterPosition(SizeType i, SizeType j, SizeType k) const
 {
     const vector3& h = mGridSpacing;
     const vector3& o = mOrigin;
@@ -58,19 +58,19 @@ grid3::DataPositionFunc grid3::cellCenterPosition() const
 {
     vector3 h = mGridSpacing;
     vector3 o = mOrigin;
-    return [h, o](size_t i, size_t j, size_t k) {
+    return [h, o](SizeType i, SizeType j, SizeType k) {
         return o + h * vector3(i + (FloatType)0.5, j + (FloatType)0.5, k + (FloatType)0.5);
     };
 }
 
 void grid3::forEachCellIndex(
-    const std::function<void(size_t, size_t, size_t)>& func) const
+    const std::function<void(SizeType, SizeType, SizeType)>& func) const
 {
-    for (size_t k = 0; k < mResolution.z; ++k)
+    for (SizeType k = 0; k < mResolution.z; ++k)
     {
-        for (size_t j = 0; j < mResolution.y; ++j) 
+        for (SizeType j = 0; j < mResolution.y; ++j) 
         {
-            for (size_t i = 0; i < mResolution.x; ++i) 
+            for (SizeType i = 0; i < mResolution.x; ++i) 
             {
                 func(i, j, k);
             }

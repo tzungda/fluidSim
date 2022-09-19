@@ -2,18 +2,20 @@
 #ifndef size2_H
 #define size2_H
 
+#include "common.h"
+
 class size2
 {
 public:
 
-    size_t x;
+    SizeType x;
 
-    size_t y;
+    SizeType y;
 
 
     size2();
 
-    size2( size_t _x, size_t _y );
+    size2( SizeType _x, SizeType _y );
 
     size2& operator=(const size2& v);
     bool operator!=(const size2& v) const;

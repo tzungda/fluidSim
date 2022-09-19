@@ -39,13 +39,13 @@ public:
 
     void set(const faceCenteredGrid3& other);
 
-    FloatType &u(size_t i, size_t j, size_t k);
-    FloatType &v(size_t i, size_t j, size_t k);
-    FloatType &w(size_t i, size_t j, size_t k);
+    FloatType &u(SizeType i, SizeType j, SizeType k);
+    FloatType &v(SizeType i, SizeType j, SizeType k);
+    FloatType &w(SizeType i, SizeType j, SizeType k);
 
-    const FloatType &u(size_t i, size_t j, size_t k) const;
-    const FloatType &v(size_t i, size_t j, size_t k) const;
-    const FloatType &w(size_t i, size_t j, size_t k) const;
+    const FloatType &u(SizeType i, SizeType j, SizeType k) const;
+    const FloatType &v(SizeType i, SizeType j, SizeType k) const;
+    const FloatType &w(SizeType i, SizeType j, SizeType k) const;
 
     FloatType &u( const size3& pt );
     FloatType &v( const size3& pt );
@@ -55,9 +55,9 @@ public:
     const FloatType &v( const size3& pt ) const;
     const FloatType &w( const size3& pt ) const;
 
-    vector3 uPosition(size_t i, size_t j, size_t k) const;
-    vector3 vPosition(size_t i, size_t j, size_t k) const;
-    vector3 wPosition(size_t i, size_t j, size_t k) const;
+    vector3 uPosition(SizeType i, SizeType j, SizeType k) const;
+    vector3 vPosition(SizeType i, SizeType j, SizeType k) const;
+    vector3 wPosition(SizeType i, SizeType j, SizeType k) const;
 
 
     DataPositionFunc uPosition() const;
@@ -79,16 +79,16 @@ public:
     vector3 wOrigin() const { return mDataOriginW; }
 
     void forEachUIndex(
-        const std::function<void(size_t, size_t, size_t)>& func) const;
+        const std::function<void(SizeType, SizeType, SizeType)>& func) const;
     void forEachVIndex(
-        const std::function<void(size_t, size_t, size_t)>& func) const;
+        const std::function<void(SizeType, SizeType, SizeType)>& func) const;
     void forEachWIndex(
-        const std::function<void(size_t, size_t, size_t)>& func) const;
+        const std::function<void(SizeType, SizeType, SizeType)>& func) const;
 
-    FloatType divergenceAtCellCenterByIndex(size_t i, size_t j, size_t k) const;
+    FloatType divergenceAtCellCenterByIndex(SizeType i, SizeType j, SizeType k) const;
 
-    vector3 valueAtCellCenterByIndex(size_t i, size_t j, size_t k) const;
-    vector3 curlAtCellCenterByIndex(size_t i, size_t j, size_t k) const;
+    vector3 valueAtCellCenterByIndex(SizeType i, SizeType j, SizeType k) const;
+    vector3 curlAtCellCenterByIndex(SizeType i, SizeType j, SizeType k) const;
 
     std::shared_ptr<vectorGrid3> clone() const override;
     vector3 sample(const vector3& x) const override;

@@ -14,7 +14,7 @@ void fdmIccgSolver3::Preconditioner::build(const fdmMatrix3& matrix)
     d.resize(size, 0.0);
     y.resize(size, 0.0);
 
-    matrix.forEachIndex([&](size_t i, size_t j, size_t k) {
+    matrix.forEachIndex([&](SizeType i, SizeType j, SizeType k) {
         FloatType denom
             = matrix(i, j, k).center
             - ((i > 0) ?
@@ -37,11 +37,11 @@ void fdmIccgSolver3::Preconditioner::solve(
     dataBuffer3* x) 
 {
     size3 size = b.size();
-    SSIZE_T sx = static_cast<SSIZE_T>(size.x);
-    SSIZE_T sy = static_cast<SSIZE_T>(size.y);
-    SSIZE_T sz = static_cast<SSIZE_T>(size.z);
+    SSizeType sx = static_cast<SSizeType>(size.x);
+    SSizeType sy = static_cast<SSizeType>(size.y);
+    SSizeType sz = static_cast<SSizeType>(size.z);
 
-    b.forEachIndex([&](size_t i, size_t j, size_t k) 
+    b.forEachIndex([&](SizeType i, SizeType j, SizeType k) 
     {
         y(i, j, k)
             = (b(i, j, k)
@@ -51,11 +51,11 @@ void fdmIccgSolver3::Preconditioner::solve(
             * d(i, j, k);
         });
 
-    for (SSIZE_T k = sz - 1; k >= 0; --k) 
+    for (SSizeType k = sz - 1; k >= 0; --k) 
     {
-        for (SSIZE_T j = sy - 1; j >= 0; --j) 
+        for (SSizeType j = sy - 1; j >= 0; --j) 
         {
-            for (SSIZE_T i = sx - 1; i >= 0; --i) 
+            for (SSizeType i = sx - 1; i >= 0; --i) 
             {
                 (*x)(i, j, k)
                     = (y(i, j, k)

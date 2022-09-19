@@ -44,7 +44,7 @@ private:
 
     void buildMarkers(
         const size3& size,
-        const std::function<vector3(size_t, size_t, size_t)>& pos,
+        const std::function<vector3(SizeType, SizeType, SizeType)>& pos,
         const scalarField3& boundarySdf,
         const scalarField3& fluidSdf);
 

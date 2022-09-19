@@ -5,13 +5,13 @@
 #include "particleSystemData3.h"
 #include "pointHashGridSearcher3.h"
 
-static const size_t kDefaultHashGridResolution = 64;
+static const SizeType kDefaultHashGridResolution = 64;
 
 particleSystemData3::particleSystemData3()
     : particleSystemData3(0) {
 }
 
-particleSystemData3::particleSystemData3(size_t numberOfParticles) {
+particleSystemData3::particleSystemData3(SizeType numberOfParticles) {
     mPositionIdx = addVectorData();
     mVelocityIdx = addVectorData();
     mForceIdx = addVectorData();
@@ -33,7 +33,7 @@ particleSystemData3::particleSystemData3(const particleSystemData3& other) {
 particleSystemData3::~particleSystemData3() {
 }
 
-void particleSystemData3::resize(size_t newNumberOfParticles) {
+void particleSystemData3::resize(SizeType newNumberOfParticles) {
     mNumberOfParticles = newNumberOfParticles;
 
     for (auto& attr : mScalarDataList) {
@@ -45,18 +45,18 @@ void particleSystemData3::resize(size_t newNumberOfParticles) {
     }
 }
 
-size_t particleSystemData3::numberOfParticles() const {
+SizeType particleSystemData3::numberOfParticles() const {
     return mNumberOfParticles;
 }
 
-size_t particleSystemData3::addScalarData(FloatType initialVal) {
-    size_t attrIdx = mScalarDataList.size();
+SizeType particleSystemData3::addScalarData(FloatType initialVal) {
+    SizeType attrIdx = (SizeType)mScalarDataList.size();
     mScalarDataList.emplace_back(numberOfParticles(), initialVal);
     return attrIdx;
 }
 
-size_t particleSystemData3::addVectorData(const vector3& initialVal) {
-    size_t attrIdx = mVectorDataList.size();
+SizeType particleSystemData3::addVectorData(const vector3& initialVal) {
+    SizeType attrIdx = (SizeType)mVectorDataList.size();
     mVectorDataList.emplace_back(numberOfParticles(), initialVal);
     return attrIdx;
 }
@@ -110,22 +110,22 @@ std::vector<vector3>& particleSystemData3::forces()
     return vectorDataAt(mForceIdx);
 }
 
-const std::vector<FloatType>& particleSystemData3::scalarDataAt( size_t idx) const
+const std::vector<FloatType>& particleSystemData3::scalarDataAt( SizeType idx) const
 {
     return mScalarDataList[idx];
 }
 
-std::vector<FloatType>& particleSystemData3::scalarDataAt(size_t idx)
+std::vector<FloatType>& particleSystemData3::scalarDataAt(SizeType idx)
 {
     return mScalarDataList[idx];
 }
 
-const std::vector<vector3>& particleSystemData3::vectorDataAt( size_t idx) const
+const std::vector<vector3>& particleSystemData3::vectorDataAt( SizeType idx) const
 {
     return mVectorDataList[idx];
 }
 
-std::vector<vector3>& particleSystemData3::vectorDataAt(size_t idx)
+std::vector<vector3>& particleSystemData3::vectorDataAt(SizeType idx)
 {
     return mVectorDataList[idx];
 }
@@ -149,8 +149,8 @@ void particleSystemData3::addParticles(
 {
 
 
-    size_t oldNumberOfParticles = numberOfParticles();
-    size_t newNumberOfParticles = oldNumberOfParticles + newPositions.size();
+    SizeType oldNumberOfParticles = numberOfParticles();
+    SizeType newNumberOfParticles = oldNumberOfParticles + (SizeType)newPositions.size();
 
     resize(newNumberOfParticles);
 
@@ -158,7 +158,7 @@ void particleSystemData3::addParticles(
     std::vector<vector3>& vel = velocities();
     std::vector<vector3>& frc = forces();
 
-    for ( size_t i = 0; i < newPositions.size(); ++i )
+    for ( SizeType i = 0; i < newPositions.size(); ++i )
     {
         pos[i + oldNumberOfParticles] = newPositions[i];
     }
@@ -166,7 +166,7 @@ void particleSystemData3::addParticles(
 
     if (newVelocities.size() > 0)
     {
-        for ( size_t i = 0; i < newPositions.size(); ++i )
+        for ( SizeType i = 0; i < newPositions.size(); ++i )
         {
             vel[i + oldNumberOfParticles] = newVelocities[i];
         }
@@ -174,7 +174,7 @@ void particleSystemData3::addParticles(
 
     if (newForces.size() > 0)
     {
-        for ( size_t i = 0; i < newPositions.size(); ++i )
+        for ( SizeType i = 0; i < newPositions.size(); ++i )
         {
             frc[i + oldNumberOfParticles] = newForces[i];
         }
@@ -190,7 +190,7 @@ void particleSystemData3::setNeighborSearcher(
     mNeighborSearcher = newNeighborSearcher;
 }
 
-const std::vector<std::vector<size_t>>&
+const std::vector<std::vector<SizeType>>&
 particleSystemData3::neighborLists() const {
     return mNeighborLists;
 }
@@ -214,14 +214,14 @@ void particleSystemData3::buildNeighborLists(FloatType maxSearchRadius)
     mNeighborLists.resize(numberOfParticles());
 
     auto points = positions();
-    for (size_t i = 0; i < numberOfParticles(); ++i) {
+    for (SizeType i = 0; i < numberOfParticles(); ++i) {
         vector3 origin = points[i];
         mNeighborLists[i].clear();
 
         mNeighborSearcher->forEachNearbyPoint(
             origin,
             maxSearchRadius,
-            [&](size_t j, const vector3&) {
+            [&](SizeType j, const vector3&) {
             if (i != j) {
                 mNeighborLists[i].push_back(j);
             }

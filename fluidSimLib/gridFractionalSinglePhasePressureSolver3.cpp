@@ -86,7 +86,7 @@ void gridFractionalSinglePhasePressureSolver3::buildWeights(
 
     vector3 h = input.gridSpacing();
 
-    mWeightsU.forEachIndex([&](size_t i, size_t j, size_t k)
+    mWeightsU.forEachIndex([&](SizeType i, SizeType j, SizeType k)
     {
         vector3 pt = uPos(i, j, k);
         FloatType phi0 =
@@ -111,7 +111,7 @@ void gridFractionalSinglePhasePressureSolver3::buildWeights(
         mBoundaryU(i, j, k) = boundaryVelocity.sample(pt).x;
     });
 
-    mWeightsV.forEachIndex([&](size_t i, size_t j, size_t k) 
+    mWeightsV.forEachIndex([&](SizeType i, SizeType j, SizeType k) 
     {
         vector3 pt = vPos(i, j, k);
         FloatType phi0 =
@@ -136,7 +136,7 @@ void gridFractionalSinglePhasePressureSolver3::buildWeights(
         mBoundaryV(i, j, k) = boundaryVelocity.sample(pt).y;
     });
 
-    mWeightsW.forEachIndex([&](size_t i, size_t j, size_t k) 
+    mWeightsW.forEachIndex([&](SizeType i, SizeType j, SizeType k) 
     {
         vector3 pt = wPos(i, j, k);
         FloatType phi0 =
@@ -173,7 +173,7 @@ void gridFractionalSinglePhasePressureSolver3::buildSystem(
     vector3 invHSqr = invH * invH;
 
     // Build linear system
-    mSystem.A.forEachIndex([&](size_t i, size_t j, size_t k) {
+    mSystem.A.forEachIndex([&](SizeType i, SizeType j, SizeType k) {
         auto& row = mSystem.A(i, j, k);
 
         // initialize
@@ -342,7 +342,7 @@ void gridFractionalSinglePhasePressureSolver3::applyPressureGradient(
 
     vector3 invH = 1.0 / input.gridSpacing();
 
-    mSystem.x.forEachIndex([&](size_t i, size_t j, size_t k) {
+    mSystem.x.forEachIndex([&](SizeType i, SizeType j, SizeType k) {
         FloatType centerPhi = mFluidSdf(i, j, k);
 
         if (i + 1 < size.x && mWeightsU(i + 1, j, k) > 0.0 &&

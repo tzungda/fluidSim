@@ -19,7 +19,7 @@ public:
         const boundingBox3& bounds,
         FloatType spacing,
         const vector3& initialVel = vector3(),
-        size_t maxNumberOfParticles = std::numeric_limits<size_t>::max(),
+        SizeType maxNumberOfParticles = std::numeric_limits<SizeType>::max(),
         FloatType jitter = 0.0,
         bool isOneShot = true,
         bool allowOverlapping = false,
@@ -40,9 +40,9 @@ public:
 
     void setAllowOverlapping(bool newValue);
 
-    size_t maxNumberOfParticles() const;
+    SizeType maxNumberOfParticles() const;
 
-    void setMaxNumberOfParticles(size_t newMaxNumberOfParticles);
+    void setMaxNumberOfParticles(SizeType newMaxNumberOfParticles);
 
     FloatType spacing() const;
 
@@ -65,8 +65,8 @@ private:
     vector3 mInitialVel;
     pointGenerator3Ptr mPointsGen;
 
-    size_t mMaxNumberOfParticles = std::numeric_limits<size_t>::max();
-    size_t mNumberOfEmittedParticles = 0;
+    SizeType mMaxNumberOfParticles = std::numeric_limits<SizeType>::max();
+    SizeType mNumberOfEmittedParticles = 0;
 
     FloatType mJitter = 0.0;
     bool mIsOneShot = true;

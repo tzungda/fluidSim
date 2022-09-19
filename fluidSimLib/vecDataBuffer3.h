@@ -17,25 +17,25 @@ public:
 
     vecDataBuffer3( const size3& size, const vector3 initValue = vector3() );
 
-    vecDataBuffer3( size_t width, size_t height, size_t depth, const vector3 initValue = vector3() );
+    vecDataBuffer3( SizeType width, SizeType height, SizeType depth, const vector3 initValue = vector3() );
 
 public:
     void resize( const size3& size, const vector3 initValue = vector3() );
 
-    void resize( size_t width, size_t height, size_t depth, const vector3 initValue = vector3() );
+    void resize( SizeType width, SizeType height, SizeType depth, const vector3 initValue = vector3() );
 
-    const vector3 valueByIndex( size_t i, size_t j, size_t k ) const;
+    const vector3 valueByIndex( SizeType i, SizeType j, SizeType k ) const;
 
-    vector3& valueByIndex( size_t i, size_t j, size_t k );
+    vector3& valueByIndex( SizeType i, SizeType j, SizeType k );
 
     template <typename Callback>
     void forEachIndex(Callback func) const
     {
-        for (size_t k = 0; k < mSize.z; ++k) 
+        for (SizeType k = 0; k < mSize.z; ++k) 
         {
-            for (size_t j = 0; j < mSize.y; ++j) 
+            for (SizeType j = 0; j < mSize.y; ++j) 
             {
-                for (size_t i = 0; i < mSize.x; ++i) 
+                for (SizeType i = 0; i < mSize.x; ++i) 
                 {
                     func(i, j, k);
                 }
@@ -46,11 +46,11 @@ public:
     template <typename Callback>
     void forEach(Callback func) const
     {
-        for (size_t k = 0; k < mSize.z; ++k) 
+        for (SizeType k = 0; k < mSize.z; ++k) 
         {
-            for (size_t j = 0; j < mSize.y; ++j) 
+            for (SizeType j = 0; j < mSize.y; ++j) 
             {
-                for (size_t i = 0; i < mSize.x; ++i) 
+                for (SizeType i = 0; i < mSize.x; ++i) 
                 {
                     func( (*this)(i, j, k) );
                 }
@@ -60,11 +60,11 @@ public:
 
     size3 size( ) const;
 
-    size_t width( ) const;
+    SizeType width( ) const;
 
-    size_t height( ) const;
+    SizeType height( ) const;
 
-    size_t depth( ) const;
+    SizeType depth( ) const;
 
     vector3 *data( );
 
@@ -72,8 +72,8 @@ public:
 
     void set( const vecDataBuffer3& other );
 
-    vector3& operator()(size_t i, size_t j, size_t k);
-    const vector3& operator()(size_t i, size_t j, size_t k) const;
+    vector3& operator()(SizeType i, SizeType j, SizeType k);
+    const vector3& operator()(SizeType i, SizeType j, SizeType k) const;
 };
 
 #endif

@@ -41,7 +41,7 @@ void gridFractionalBoundaryConditionSolver3::constrainVelocity(
     vector3 h = velocity->gridSpacing();
 
     // Assign collider's velocity first and initialize markers
-    velocity->forEachUIndex([&](size_t i, size_t j, size_t k) {
+    velocity->forEachUIndex([&](SizeType i, SizeType j, SizeType k) {
         vector3 pt = uPos(i, j, k);
         FloatType phi0 = mColliderSdf.sample(pt - vector3((FloatType)0.5 * h.x, (FloatType)0.0, (FloatType)0.0));
         FloatType phi1 = mColliderSdf.sample(pt + vector3((FloatType)0.5 * h.x, (FloatType)0.0, (FloatType)0.0));
@@ -57,7 +57,7 @@ void gridFractionalBoundaryConditionSolver3::constrainVelocity(
         }
         });
 
-    velocity->forEachVIndex([&](size_t i, size_t j, size_t k) {
+    velocity->forEachVIndex([&](SizeType i, SizeType j, SizeType k) {
         vector3 pt = vPos(i, j, k);
         FloatType phi0 = mColliderSdf.sample(pt - vector3((FloatType)0.0, (FloatType)0.5 * h.y, (FloatType)0.0));
         FloatType phi1 = mColliderSdf.sample(pt + vector3((FloatType)0.0, (FloatType)0.5 * h.y, (FloatType)0.0));
@@ -73,7 +73,7 @@ void gridFractionalBoundaryConditionSolver3::constrainVelocity(
         }
         });
 
-    velocity->forEachWIndex([&](size_t i, size_t j, size_t k) {
+    velocity->forEachWIndex([&](SizeType i, SizeType j, SizeType k) {
         vector3 pt = wPos(i, j, k);
         FloatType phi0 = mColliderSdf.sample(pt - vector3((FloatType)0.0, (FloatType)0.0, (FloatType)0.5 * h.z));
         FloatType phi1 = mColliderSdf.sample(pt + vector3((FloatType)0.0, (FloatType)0.0, (FloatType)0.5 * h.z));
@@ -99,7 +99,7 @@ void gridFractionalBoundaryConditionSolver3::constrainVelocity(
 
     // no-flux: project the extrapolated velocity to the collider's surface
     // normal
-    velocity->forEachUIndex([&](size_t i, size_t j, size_t k) {
+    velocity->forEachUIndex([&](SizeType i, SizeType j, SizeType k) {
         vector3 pt = uPos(i, j, k);
         if ( mathUtil::isInsideSdf(mColliderSdf.sample(pt))) {
             vector3 colliderVel = collider()->velocityAt(pt);
@@ -121,7 +121,7 @@ void gridFractionalBoundaryConditionSolver3::constrainVelocity(
         }
         });
 
-    velocity->forEachVIndex([&](size_t i, size_t j, size_t k) {
+    velocity->forEachVIndex([&](SizeType i, SizeType j, SizeType k) {
         vector3 pt = vPos(i, j, k);
         if (mathUtil::isInsideSdf(mColliderSdf.sample(pt))) {
             vector3 colliderVel = collider()->velocityAt(pt);
@@ -143,7 +143,7 @@ void gridFractionalBoundaryConditionSolver3::constrainVelocity(
         }
         });
 
-    velocity->forEachWIndex([&](size_t i, size_t j, size_t k) {
+    velocity->forEachWIndex([&](SizeType i, SizeType j, SizeType k) {
         vector3 pt = wPos(i, j, k);
         if (mathUtil::isInsideSdf(mColliderSdf.sample(pt))) {
             vector3 colliderVel = collider()->velocityAt(pt);
@@ -166,21 +166,21 @@ void gridFractionalBoundaryConditionSolver3::constrainVelocity(
         });
 
     // transfer results
-    velocity->uData().forEachIndex([&](size_t i, size_t j, size_t k) {
+    velocity->uData().forEachIndex([&](SizeType i, SizeType j, SizeType k) {
         velocity->u( i, j, k ) = uTemp(i, j, k);
         });
-    velocity->vData().forEachIndex([&](size_t i, size_t j, size_t k) {
+    velocity->vData().forEachIndex([&](SizeType i, SizeType j, SizeType k) {
         velocity->v( i, j, k ) = vTemp(i, j, k);
         });
-    velocity->wData().forEachIndex([&](size_t i, size_t j, size_t k) {
+    velocity->wData().forEachIndex([&](SizeType i, SizeType j, SizeType k) {
         velocity->w( i, j, k ) = wTemp(i, j, k);
         });
 
     // no-flux: Project velocity on the domain boundary if closed
     if (closedDomainBoundaryFlag() & kDirectionLeft) {
-        for (size_t k = 0; k < velocity->uData().size().z; ++k) 
+        for (SizeType k = 0; k < velocity->uData().size().z; ++k) 
         {
-            for (size_t j = 0; j < velocity->uData().size().y; ++j) 
+            for (SizeType j = 0; j < velocity->uData().size().y; ++j) 
             {
                 velocity->u( 0, j, k ) = 0.0;
             }
@@ -188,9 +188,9 @@ void gridFractionalBoundaryConditionSolver3::constrainVelocity(
     }
     if (closedDomainBoundaryFlag() & kDirectionRight) 
     {
-        for (size_t k = 0; k < velocity->uData().size().z; ++k) 
+        for (SizeType k = 0; k < velocity->uData().size().z; ++k) 
         {
-            for (size_t j = 0; j < velocity->uData().size().y; ++j) 
+            for (SizeType j = 0; j < velocity->uData().size().y; ++j) 
             {
                 velocity->u( velocity->uData().size().x - 1, j, k ) = 0.0;
             }
@@ -198,9 +198,9 @@ void gridFractionalBoundaryConditionSolver3::constrainVelocity(
     }
     if (closedDomainBoundaryFlag() & kDirectionDown) 
     {
-        for (size_t k = 0; k < velocity->vData().size().z; ++k) 
+        for (SizeType k = 0; k < velocity->vData().size().z; ++k) 
         {
-            for (size_t i = 0; i < velocity->vData().size().x; ++i) 
+            for (SizeType i = 0; i < velocity->vData().size().x; ++i) 
             {
                 velocity->v( i, 0, k ) = 0.0;
             }
@@ -208,9 +208,9 @@ void gridFractionalBoundaryConditionSolver3::constrainVelocity(
     }
     if (closedDomainBoundaryFlag() & kDirectionUp) 
     {
-        for (size_t k = 0; k < velocity->vData().size().z; ++k) 
+        for (SizeType k = 0; k < velocity->vData().size().z; ++k) 
         {
-            for (size_t i = 0; i < velocity->vData().size().x; ++i) 
+            for (SizeType i = 0; i < velocity->vData().size().x; ++i) 
             {
                 velocity->v( i, velocity->vData().size().y - 1, k ) = 0.0;
             }
@@ -218,9 +218,9 @@ void gridFractionalBoundaryConditionSolver3::constrainVelocity(
     }
     if (closedDomainBoundaryFlag() & kDirectionBack)
     {
-        for (size_t j = 0; j < velocity->wData().size().y; ++j) 
+        for (SizeType j = 0; j < velocity->wData().size().y; ++j) 
         {
-            for (size_t i = 0; i < velocity->wData().size().x; ++i) 
+            for (SizeType i = 0; i < velocity->wData().size().x; ++i) 
             {
                 velocity->w( i, j, 0 ) = 0.0;
             }
@@ -228,9 +228,9 @@ void gridFractionalBoundaryConditionSolver3::constrainVelocity(
     }
     if (closedDomainBoundaryFlag() & kDirectionFront) 
     {
-        for (size_t j = 0; j < velocity->wData().size().y; ++j) 
+        for (SizeType j = 0; j < velocity->wData().size().y; ++j) 
         {
-            for (size_t i = 0; i < velocity->wData().size().x; ++i) 
+            for (SizeType i = 0; i < velocity->wData().size().x; ++i) 
             {
                 velocity->w(i, j, velocity->wData().size().z - 1) = 0.0;
             }
