@@ -32,7 +32,7 @@ private:
     int mFrameLength;
     flipSolver3Ptr mSolver;
     FloatType mFPS;
-    size_t mResolution;
+    SizeType mResolution;
 public:
     fluidSim( ):
         mCurrentFrame( 0 ), mFrameLength( 100 ), mFPS( 60.0 ), mResolution( 50 )
@@ -100,7 +100,7 @@ public:
         printf( "\nfluid sim updating frame: %d\n", frameNumber );
 
         frame f(0, (FloatType)1.0 / mFPS);
-        f.index = (size_t)frameNumber;
+        f.index = (SizeType)frameNumber;
         mSolver->update( f );
 
         printf( "number of particles: %d\n", (int)mSolver->particleSystemData()->positions().size() );
