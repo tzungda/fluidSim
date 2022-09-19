@@ -11,20 +11,20 @@ extendVectorGrid3::~extendVectorGrid3()
 }
 
 
-double extendVectorGrid3::divergenceByIndex(size_t i, size_t j, size_t k) const
+FloatType extendVectorGrid3::divergenceByIndex(size_t i, size_t j, size_t k) const
 {
     const size3 s = mData.size();
     const vector3& gs = gridSpacing();
 
 
-    double left = mData((i > 0) ? i - 1 : i, j, k).x;
-    double right = mData((i + 1 < s.x) ? i + 1 : i, j, k).x;
-    double down = mData(i, (j > 0) ? j - 1 : j, k).y;
-    double up = mData(i, (j + 1 < s.y) ? j + 1 : j, k).y;
-    double back = mData(i, j, (k > 0) ? k - 1 : k).z;
-    double front = mData(i, j, (k + 1 < s.z) ? k + 1 : k).z;
+    FloatType left = mData((i > 0) ? i - 1 : i, j, k).x;
+    FloatType right = mData((i + 1 < s.x) ? i + 1 : i, j, k).x;
+    FloatType down = mData(i, (j > 0) ? j - 1 : j, k).y;
+    FloatType up = mData(i, (j + 1 < s.y) ? j + 1 : j, k).y;
+    FloatType back = mData(i, j, (k > 0) ? k - 1 : k).z;
+    FloatType front = mData(i, j, (k + 1 < s.z) ? k + 1 : k).z;
 
-    return 0.5 * (right - left) / gs.x + 0.5 * (up - down) / gs.y + 0.5 * (front - back) / gs.z;
+    return (FloatType)0.5 * (right - left) / gs.x + (FloatType)0.5 * (up - down) / gs.y + (FloatType)0.5 * (front - back) / gs.z;
 }
 
 
@@ -40,24 +40,24 @@ vector3 extendVectorGrid3::curlByIndex(size_t i, size_t j, size_t k) const
     vector3 back = mData(i, j, (k > 0) ? k - 1 : k);
     vector3 front = mData(i, j, (k + 1 < s.z) ? k + 1 : k);
 
-    double fx_y_lower = down.x;
-    double fx_y_upper = up.x;
-    double fx_z_lower = back.x;
-    double fx_z_upper = front.x;
+    FloatType fx_y_lower = down.x;
+    FloatType fx_y_upper = up.x;
+    FloatType fx_z_lower = back.x;
+    FloatType fx_z_upper = front.x;
 
-    double fy_x_lower = left.y;
-    double fy_x_upper = right.y;
-    double fy_z_lower = back.y;
-    double fy_z_upper = front.y;
+    FloatType fy_x_lower = left.y;
+    FloatType fy_x_upper = right.y;
+    FloatType fy_z_lower = back.y;
+    FloatType fy_z_upper = front.y;
 
-    double fz_x_lower = left.z;
-    double fz_x_upper = right.z;
-    double fz_y_lower = down.z;
-    double fz_y_upper = up.z;
+    FloatType fz_x_lower = left.z;
+    FloatType fz_x_upper = right.z;
+    FloatType fz_y_lower = down.z;
+    FloatType fz_y_upper = up.z;
 
-    return vector3(0.5 * (fz_y_upper - fx_y_lower) / gs.y - 0.5 * (fy_z_upper - fy_z_lower) / gs.z,
-        0.5 * (fx_z_upper - fx_z_lower) / gs.z - 0.5 * (fz_x_upper - fz_x_lower) / gs.x,
-        0.5 * (fy_x_upper - fy_x_lower) / gs.x - 0.5 * (fx_y_upper - fx_y_lower) / gs.y);
+    return vector3( (FloatType)0.5 * (fz_y_upper - fx_y_lower) / gs.y - (FloatType)0.5 * (fy_z_upper - fy_z_lower) / gs.z,
+        (FloatType)0.5 * (fx_z_upper - fx_z_lower) / gs.z - (FloatType)0.5 * (fz_x_upper - fz_x_lower) / gs.x,
+        (FloatType)0.5 * (fy_x_upper - fy_x_lower) / gs.x - (FloatType)0.5 * (fx_y_upper - fx_y_lower) / gs.y);
 }
 
 void extendVectorGrid3::forEachDataPointIndex(
@@ -71,7 +71,7 @@ vectorGrid3::DataPositionFunc extendVectorGrid3::dataPosition() const
     vector3 dataOrigin_ = dataOrigin();
     return [this, dataOrigin_](size_t i, size_t j, size_t k) -> vector3 
     {
-        return dataOrigin_ + gridSpacing() * vector3((double)i, (double)j, (double)k);
+        return dataOrigin_ + gridSpacing() * vector3((FloatType)i, (FloatType)j, (FloatType)k);
     };
 }
 
@@ -117,7 +117,7 @@ void extendVectorGrid3::setExtendVectorGrid(const extendVectorGrid3& other)
     resetSampler();
 }
 
-void extendVectorGrid3::getData(std::vector<double>* data) const
+void extendVectorGrid3::getData(std::vector<FloatType>* data) const
 {
     size_t size = 3 * dataSize().x * dataSize().y * dataSize().z;
     data->resize(size);
@@ -129,7 +129,7 @@ void extendVectorGrid3::getData(std::vector<double>* data) const
     });
 }
 
-void extendVectorGrid3::setData(const std::vector<double>& data)
+void extendVectorGrid3::setData(const std::vector<FloatType>& data)
 {
 }
 

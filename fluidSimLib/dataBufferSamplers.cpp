@@ -12,9 +12,9 @@ LinearBufferSampler::LinearBufferSampler()
 LinearBufferSampler::LinearBufferSampler( dataBuffer3* dataBuffer, const vector3 &gridSpacing, const vector3& gridOrigin )
 {
     mGridSpacing = gridSpacing;
-    mInvGridSpacing.x = 1.0 / mGridSpacing.x;
-    mInvGridSpacing.y = 1.0 / mGridSpacing.y;
-    mInvGridSpacing.z = 1.0 / mGridSpacing.z;
+    mInvGridSpacing.x = (FloatType)1.0 / mGridSpacing.x;
+    mInvGridSpacing.y = (FloatType)1.0 / mGridSpacing.y;
+    mInvGridSpacing.z = (FloatType)1.0 / mGridSpacing.z;
     mOrigin = gridOrigin;
     mDataBuffer = dataBuffer;
 }
@@ -28,10 +28,10 @@ LinearBufferSampler::LinearBufferSampler( const LinearBufferSampler& other )
 }
 
 // return sampled value at the given point
-double LinearBufferSampler::operator()( const vector3& pt ) const
+FloatType LinearBufferSampler::operator()( const vector3& pt ) const
 {
     SSIZE_T i, j, k;
-    double cx, cy, cz;
+    FloatType cx, cy, cz;
 
     vector3 tmp( pt.x - mOrigin.x, pt.y - mOrigin.y, pt.z - mOrigin.z );
     vector3 normalizedX( tmp.x / mGridSpacing.x, tmp.y / mGridSpacing.y, tmp.z / mGridSpacing.z );
@@ -63,10 +63,10 @@ double LinearBufferSampler::operator()( const vector3& pt ) const
 }
 
 // return the indices of points and their sampling weight for given point.
-void LinearBufferSampler::getCoordinatesAndWeights( const vector3& pt, std::array<size3, 8>* indices, std::array<double, 8>* weights) const
+void LinearBufferSampler::getCoordinatesAndWeights( const vector3& pt, std::array<size3, 8>* indices, std::array<FloatType, 8>* weights) const
 {
     SSIZE_T i, j, k;
-    double fx, fy, fz;
+    FloatType fx, fy, fz;
 
     const vector3 normalizedX( (pt.x - mOrigin.x)*mInvGridSpacing.x, (pt.y - mOrigin.y)*mInvGridSpacing.y, (pt.z - mOrigin.z)*mInvGridSpacing.z );
 
@@ -92,17 +92,17 @@ void LinearBufferSampler::getCoordinatesAndWeights( const vector3& pt, std::arra
     (*indices)[6] = size3(i, j1, k1);
     (*indices)[7] = size3(i1, j1, k1);
 
-    (*weights)[0] = (1.0 - fx) * (1.0 - fy) * (1.0 - fz);
-    (*weights)[1] = fx * (1.0 - fy) * (1.0 - fz);
-    (*weights)[2] = (1.0 - fx) * fy * (1.0 - fz);
-    (*weights)[3] = fx * fy * (1.0 - fz);
-    (*weights)[4] = (1 - fx) * (1.0 - fy) * fz;
-    (*weights)[5] = fx * (1.0 - fy) * fz;
-    (*weights)[6] = (1.0 - fx) * fy * fz;
+    (*weights)[0] = ((FloatType)1.0 - fx) * ((FloatType)1.0 - fy) * ((FloatType)1.0 - fz);
+    (*weights)[1] = fx * ((FloatType)1.0 - fy) * ((FloatType)1.0 - fz);
+    (*weights)[2] = ((FloatType)1.0 - fx) * fy * ((FloatType)1.0 - fz);
+    (*weights)[3] = fx * fy * ((FloatType)1.0 - fz);
+    (*weights)[4] = (1 - fx) * ((FloatType)1.0 - fy) * fz;
+    (*weights)[5] = fx * ((FloatType)1.0 - fy) * fz;
+    (*weights)[6] = ((FloatType)1.0 - fx) * fy * fz;
     (*weights)[7] = fx * fy * fz;
 }
 
-std::function<double(const vector3&)> LinearBufferSampler::functor() const
+std::function<FloatType(const vector3&)> LinearBufferSampler::functor() const
 {
     LinearBufferSampler sampler(*this);
     return std::bind(
@@ -118,9 +118,9 @@ LinearVecBufferSampler::LinearVecBufferSampler()
 LinearVecBufferSampler::LinearVecBufferSampler( vecDataBuffer3* dataBuffer, const vector3 &gridSpacing, const vector3& gridOrigin )
 {
     mGridSpacing = gridSpacing;
-    mInvGridSpacing.x = 1.0 / mGridSpacing.x;
-    mInvGridSpacing.y = 1.0 / mGridSpacing.y;
-    mInvGridSpacing.z = 1.0 / mGridSpacing.z;
+    mInvGridSpacing.x = (FloatType)1.0 / mGridSpacing.x;
+    mInvGridSpacing.y = (FloatType)1.0 / mGridSpacing.y;
+    mInvGridSpacing.z = (FloatType)1.0 / mGridSpacing.z;
     mOrigin = gridOrigin;
     mDataBuffer = dataBuffer;
 }
@@ -137,7 +137,7 @@ LinearVecBufferSampler::LinearVecBufferSampler( const LinearVecBufferSampler& ot
 vector3 LinearVecBufferSampler::operator()( const vector3& pt ) const
 {
     SSIZE_T i, j, k;
-    double cx, cy, cz;
+    FloatType cx, cy, cz;
 
     vector3 tmp( pt.x - mOrigin.x, pt.y - mOrigin.y, pt.z - mOrigin.z );
     vector3 normalizedX( tmp.x / mGridSpacing.x, tmp.y / mGridSpacing.y, tmp.z / mGridSpacing.z );
@@ -163,7 +163,7 @@ vector3 LinearVecBufferSampler::operator()( const vector3& pt ) const
     vector3 v_i_j1_k1 = (*mDataBuffer)( i, j1, k1 );
     vector3 v_i1_j1_k1 = (*mDataBuffer)( i1, j1, k1 );
 
-    double resX = mathUtil::trilerp( v_i_j_k.x,
+    FloatType resX = mathUtil::trilerp( v_i_j_k.x,
         v_i1_j_k.x,
         v_i_j1_k.x,
         v_i1_j1_k.x,
@@ -174,7 +174,7 @@ vector3 LinearVecBufferSampler::operator()( const vector3& pt ) const
         cx,
         cy,
         cz);
-    double resY = mathUtil::trilerp( v_i_j_k.y,
+    FloatType resY = mathUtil::trilerp( v_i_j_k.y,
         v_i1_j_k.y,
         v_i_j1_k.y,
         v_i1_j1_k.y,
@@ -185,7 +185,7 @@ vector3 LinearVecBufferSampler::operator()( const vector3& pt ) const
         cx,
         cy,
         cz);
-    double resZ = mathUtil::trilerp( v_i_j_k.z,
+    FloatType resZ = mathUtil::trilerp( v_i_j_k.z,
         v_i1_j_k.z,
         v_i_j1_k.z,
         v_i1_j1_k.z,
@@ -201,10 +201,10 @@ vector3 LinearVecBufferSampler::operator()( const vector3& pt ) const
 }
 
 // return the indices of points and their sampling weight for given point.
-void LinearVecBufferSampler::getCoordinatesAndWeights( const vector3& pt, std::array<size3, 8>* indices, std::array<double, 8>* weights) const
+void LinearVecBufferSampler::getCoordinatesAndWeights( const vector3& pt, std::array<size3, 8>* indices, std::array<FloatType, 8>* weights) const
 {
     SSIZE_T i, j, k;
-    double fx, fy, fz;
+    FloatType fx, fy, fz;
 
     const vector3 normalizedX( (pt.x - mOrigin.x)*mInvGridSpacing.x, (pt.y - mOrigin.y)*mInvGridSpacing.y, (pt.z - mOrigin.z)*mInvGridSpacing.z );
 
@@ -271,7 +271,7 @@ vector3 cubicBufferSamplerVec::operator()(const vector3& x) const {
     SSIZE_T iSize = static_cast<SSIZE_T>(mDataBuffer->size().x);
     SSIZE_T jSize = static_cast<SSIZE_T>(mDataBuffer->size().y);
     SSIZE_T kSize = static_cast<SSIZE_T>(mDataBuffer->size().z);
-    double fx, fy, fz;
+    FloatType fx, fy, fz;
 
     SSIZE_T kZeroSSize = 0;
     vector3 normalizedX = (x - mOrigin) / mGridSpacing;
@@ -347,13 +347,13 @@ cubicBufferSamplerScalar::cubicBufferSamplerScalar(const cubicBufferSamplerScala
 }
 
 
-double cubicBufferSamplerScalar::operator()(const vector3& pt) const
+FloatType cubicBufferSamplerScalar::operator()(const vector3& pt) const
 {
     SSIZE_T i, j, k;
     SSIZE_T iSize = static_cast<SSIZE_T>(mDataBuffer->size().x);
     SSIZE_T jSize = static_cast<SSIZE_T>(mDataBuffer->size().y);
     SSIZE_T kSize = static_cast<SSIZE_T>(mDataBuffer->size().z);
-    double fx, fy, fz;
+    FloatType fx, fy, fz;
 
     SSIZE_T kZeroSSize = 0;
     vector3 normalizedX = (pt - mOrigin) / mGridSpacing;
@@ -384,11 +384,11 @@ double cubicBufferSamplerScalar::operator()(const vector3& pt) const
         std::min(k + 2, kSize - 1)
     };
 
-    double kValues[4];
+    FloatType kValues[4];
 
     for (int kk = 0; kk < 4; ++kk) 
     {
-        double jValues[4];
+        FloatType jValues[4];
 
         for (int jj = 0; jj < 4; ++jj) 
         {
@@ -409,7 +409,7 @@ double cubicBufferSamplerScalar::operator()(const vector3& pt) const
 }
 
 
-std::function<double(const vector3&)> cubicBufferSamplerScalar::functor() const
+std::function<FloatType(const vector3&)> cubicBufferSamplerScalar::functor() const
 {
     cubicBufferSamplerScalar sampler(*this);
     return std::bind(

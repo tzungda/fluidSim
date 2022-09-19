@@ -9,15 +9,15 @@ class matrix33
 {
 public:
     matrix33();
-    matrix33( double m00, double m01, double m02,
-        double m10, double m11, double m12,
-        double m20, double m21, double m22 );
+    matrix33( FloatType m00, FloatType m01, FloatType m02,
+        FloatType m10, FloatType m11, FloatType m12,
+        FloatType m20, FloatType m21, FloatType m22 );
 
-    void set( double m00, double m01, double m02,
-        double m10, double m11, double m12,
-        double m20, double m21, double m22 );
+    void set( FloatType m00, FloatType m01, FloatType m02,
+        FloatType m10, FloatType m11, FloatType m12,
+        FloatType m20, FloatType m21, FloatType m22 );
 
-    double trace() const;
+    FloatType trace() const;
 
     matrix33 add(const matrix33& mtx) const;
 
@@ -26,11 +26,11 @@ public:
 
     matrix33 rmul(const matrix33& mtx) const;
 
-    double& operator()(size_t i, size_t j);
-    const double& operator()(size_t i, size_t j) const;
+    FloatType& operator()(size_t i, size_t j);
+    const FloatType& operator()(size_t i, size_t j) const;
 
 private:
-    std::array<double, 9> m;
+    std::array<FloatType, 9> m;
 };
 
 vector3 operator*(const matrix33& a, const vector3& b);

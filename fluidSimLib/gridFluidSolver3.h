@@ -36,13 +36,13 @@ public:
     void setEmitter(const gridEmitter3Ptr& newEmitter);
 
     int closedDomainBoundaryFlag() const;
-    double maxCfl() const;
+    FloatType maxCfl() const;
 
     collider3Ptr collider() const;
 
     const cellCenteredScalarGrid3& colliderSdf() const;
 
-    void computeGravity(double timeIntervalInSeconds);
+    void computeGravity(FloatType timeIntervalInSeconds);
 
     void resizeGrid(
         const size3& newSize,
@@ -53,16 +53,16 @@ public:
 
 protected:
     void onInitialize() override;
-    void onAdvanceTimeStep(double timeIntervalInSeconds) override;
+    void onAdvanceTimeStep(FloatType timeIntervalInSeconds) override;
 
-    virtual void onBeginAdvanceTimeStep(double timeIntervalInSeconds);
-    virtual void onEndAdvanceTimeStep(double timeIntervalInSeconds);
+    virtual void onBeginAdvanceTimeStep(FloatType timeIntervalInSeconds);
+    virtual void onEndAdvanceTimeStep(FloatType timeIntervalInSeconds);
     virtual scalarField3Ptr fluidSdf() const;
 
-    virtual void computeExternalForces(double timeIntervalInSeconds);
-    virtual void computeViscosity(double timeIntervalInSeconds);
-    virtual void computePressure(double timeIntervalInSeconds);
-    virtual void computeAdvection(double timeIntervalInSeconds);
+    virtual void computeExternalForces(FloatType timeIntervalInSeconds);
+    virtual void computeViscosity(FloatType timeIntervalInSeconds);
+    virtual void computePressure(FloatType timeIntervalInSeconds);
+    virtual void computeAdvection(FloatType timeIntervalInSeconds);
 
 
     void extrapolateIntoCollider(scalarGrid3* grid);
@@ -71,16 +71,16 @@ protected:
     void applyBoundaryCondition();
 
 private:
-    void beginAdvanceTimeStep(double timeIntervalInSeconds);
-    void endAdvanceTimeStep(double timeIntervalInSeconds);
+    void beginAdvanceTimeStep(FloatType timeIntervalInSeconds);
+    void endAdvanceTimeStep(FloatType timeIntervalInSeconds);
 
-    void updateCollider(double timeIntervalInSeconds);
-    void updateEmitter(double timeIntervalInSeconds);
+    void updateCollider(FloatType timeIntervalInSeconds);
+    void updateEmitter(FloatType timeIntervalInSeconds);
 
 private:
-    vector3 mGravity = vector3(0.0, -9.8, 0.0);
-    double mViscosityCoefficient = 0.0;
-    double mMaxCfl = 5.0;
+    vector3 mGravity = vector3( (FloatType)0.0, (FloatType)-9.8, (FloatType)0.0);
+    FloatType mViscosityCoefficient = (FloatType)0.0;
+    FloatType mMaxCfl = (FloatType)5.0;
     int mClosedDomainBoundaryFlag = kDirectionAll;
     //bool isDirectionBoundary = true;
 

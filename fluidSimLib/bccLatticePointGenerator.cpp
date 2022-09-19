@@ -4,13 +4,13 @@
 
 void bccLatticePointGenerator::forEachPoint(
     const boundingBox3& boundingBox,
-    double spacing,
+    FloatType spacing,
     const std::function<bool(const vector3&)>& callback) const
 {
-    double halfSpacing = spacing / 2.0;
-    double boxWidth = boundingBox.width();
-    double boxHeight = boundingBox.height();
-    double boxDepth = boundingBox.depth();
+    FloatType halfSpacing = spacing / (FloatType)2.0 ;
+    FloatType boxWidth = boundingBox.width();
+    FloatType boxHeight = boundingBox.height();
+    FloatType boxDepth = boundingBox.depth();
 
     vector3 position;
     bool hasOffset = false;
@@ -18,7 +18,7 @@ void bccLatticePointGenerator::forEachPoint(
     for (int k = 0; k * halfSpacing <= boxDepth && !shouldQuit; ++k) {
         position.z = k * halfSpacing + boundingBox.lowerCorner.z;
 
-        double offset = (hasOffset) ? halfSpacing : 0.0;
+        FloatType offset = (FloatType)( (hasOffset) ? halfSpacing : 0.0 );
 
         for (int j = 0; j * spacing + offset <= boxHeight && !shouldQuit; ++j) {
             position.y = j * spacing + offset + boundingBox.lowerCorner.y;

@@ -4,7 +4,7 @@
 #include "fdmLinearSystem3.h"
 #include "mathUtil.h"
 
-void fdmBlas3::set(double s, dataBuffer3* result)
+void fdmBlas3::set(FloatType s, dataBuffer3* result)
 {
     result->set(s);
 }
@@ -14,7 +14,7 @@ void fdmBlas3::set(const dataBuffer3& v, dataBuffer3* result)
     result->set(v);
 }
 
-void fdmBlas3::set(double s, fdmMatrix3* result) 
+void fdmBlas3::set(FloatType s, fdmMatrix3* result) 
 {
     fdmMatrixRow3 row;
     row.center = row.right = row.up = row.front = s;
@@ -26,11 +26,11 @@ void fdmBlas3::set(const fdmMatrix3& m, fdmMatrix3* result)
     result->set(m);
 }
 
-double fdmBlas3::dot(const dataBuffer3& a, const dataBuffer3& b) 
+FloatType fdmBlas3::dot(const dataBuffer3& a, const dataBuffer3& b) 
 {
     size3 size = a.size();
 
-    double result = 0.0;
+    FloatType result = 0.0;
 
     for (size_t k = 0; k < size.z; ++k) 
     {
@@ -47,7 +47,7 @@ double fdmBlas3::dot(const dataBuffer3& a, const dataBuffer3& b)
 }
 
 void fdmBlas3::axpy(
-    double a,
+    FloatType a,
     const dataBuffer3& x,
     const dataBuffer3& y,
     dataBuffer3* result) 
@@ -69,12 +69,12 @@ void fdmBlas3::mvm(
     m.forEachIndex([&](size_t i, size_t j, size_t k) {
         (*result)(i, j, k)
             = m(i, j, k).center * v(i, j, k)
-            + ((i > 0) ? m(i - 1, j, k).right * v(i - 1, j, k) : 0.0)
-            + ((i + 1 < size.x) ? m(i, j, k).right * v(i + 1, j, k) : 0.0)
-            + ((j > 0) ? m(i, j - 1, k).up * v(i, j - 1, k) : 0.0)
-            + ((j + 1 < size.y) ? m(i, j, k).up * v(i, j + 1, k) : 0.0)
-            + ((k > 0) ? m(i, j, k - 1).front * v(i, j, k - 1) : 0.0)
-            + ((k + 1 < size.z) ? m(i, j, k).front * v(i, j, k + 1) : 0.0);
+            + ((i > 0) ? m(i - 1, j, k).right * v(i - 1, j, k) : (FloatType)0.0)
+            + ((i + 1 < size.x) ? m(i, j, k).right * v(i + 1, j, k) : (FloatType)0.0)
+            + ((j > 0) ? m(i, j - 1, k).up * v(i, j - 1, k) : (FloatType)0.0)
+            + ((j + 1 < size.y) ? m(i, j, k).up * v(i, j + 1, k) : (FloatType)0.0)
+            + ((k > 0) ? m(i, j, k - 1).front * v(i, j, k - 1) : (FloatType)0.0)
+            + ((k + 1 < size.z) ? m(i, j, k).front * v(i, j, k + 1) : (FloatType)0.0);
         });
 }
 
@@ -90,25 +90,25 @@ void fdmBlas3::residual(
         (*result)(i, j, k)
             = b(i, j, k)
             - a(i, j, k).center * x(i, j, k)
-            - ((i > 0) ? a(i - 1, j, k).right * x(i - 1, j, k) : 0.0)
-            - ((i + 1 < size.x) ? a(i, j, k).right * x(i + 1, j, k) : 0.0)
-            - ((j > 0) ? a(i, j - 1, k).up * x(i, j - 1, k) : 0.0)
-            - ((j + 1 < size.y) ? a(i, j, k).up * x(i, j + 1, k) : 0.0)
-            - ((k > 0) ? a(i, j, k - 1).front * x(i, j, k - 1) : 0.0)
-            - ((k + 1 < size.z) ? a(i, j, k).front * x(i, j, k + 1) : 0.0);
+            - ((i > 0) ? a(i - 1, j, k).right * x(i - 1, j, k) : (FloatType)0.0)
+            - ((i + 1 < size.x) ? a(i, j, k).right * x(i + 1, j, k) : (FloatType)0.0)
+            - ((j > 0) ? a(i, j - 1, k).up * x(i, j - 1, k) : (FloatType)0.0)
+            - ((j + 1 < size.y) ? a(i, j, k).up * x(i, j + 1, k) : (FloatType)0.0)
+            - ((k > 0) ? a(i, j, k - 1).front * x(i, j, k - 1) : (FloatType)0.0)
+            - ((k + 1 < size.z) ? a(i, j, k).front * x(i, j, k + 1) : (FloatType)0.0);
         });
 }
 
-double fdmBlas3::l2Norm(const dataBuffer3& v) 
+FloatType fdmBlas3::l2Norm(const dataBuffer3& v) 
 {
     return std::sqrt(dot(v, v));
 }
 
-double fdmBlas3::lInfNorm(const dataBuffer3& v) 
+FloatType fdmBlas3::lInfNorm(const dataBuffer3& v) 
 {
     size3 size = v.size();
 
-    double result = 0.0;
+    FloatType result = 0.0;
 
     for (size_t k = 0; k < size.z; ++k)
     {

@@ -2,6 +2,8 @@
 #ifndef size3_H
 #define size3_H
 
+#include "common.h"
+
 class size3
 {
 public:

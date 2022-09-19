@@ -15,8 +15,8 @@ gridBackwardEulerDiffusionSolver3::gridBackwardEulerDiffusionSolver3(
 
 void gridBackwardEulerDiffusionSolver3::solve(
     const scalarGrid3& source,
-    double diffusionCoefficient,
-    double timeIntervalInSeconds,
+    FloatType diffusionCoefficient,
+    FloatType timeIntervalInSeconds,
     scalarGrid3* dest,
     const scalarField3& boundarySdf,
     const scalarField3& fluidSdf) 
@@ -44,8 +44,8 @@ void gridBackwardEulerDiffusionSolver3::solve(
 
 void gridBackwardEulerDiffusionSolver3::solve(
     const extendVectorGrid3& source,
-    double diffusionCoefficient,
-    double timeIntervalInSeconds,
+    FloatType diffusionCoefficient,
+    FloatType timeIntervalInSeconds,
     extendVectorGrid3* dest,
     const scalarField3& boundarySdf,
     const scalarField3& fluidSdf)
@@ -105,8 +105,8 @@ void gridBackwardEulerDiffusionSolver3::solve(
 
 void gridBackwardEulerDiffusionSolver3::solve(
     const faceCenteredGrid3& source,
-    double diffusionCoefficient,
-    double timeIntervalInSeconds,
+    FloatType diffusionCoefficient,
+    FloatType timeIntervalInSeconds,
     faceCenteredGrid3* dest,
     const scalarField3& boundarySdf,
     const scalarField3& fluidSdf)

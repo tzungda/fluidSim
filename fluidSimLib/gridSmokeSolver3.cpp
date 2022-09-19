@@ -25,62 +25,62 @@ gridSmokeSolver3::~gridSmokeSolver3()
 {
 }
 
-double gridSmokeSolver3::smokeDiffusionCoefficient() const
+FloatType gridSmokeSolver3::smokeDiffusionCoefficient() const
 {
     return mSmokeDiffusionCoefficient;
 }
 
-void gridSmokeSolver3::setSmokeDiffusionCoefficient(double newValue)
+void gridSmokeSolver3::setSmokeDiffusionCoefficient(FloatType newValue)
 {
-    mSmokeDiffusionCoefficient = std::max(newValue, 0.0);
+    mSmokeDiffusionCoefficient = std::max<FloatType>(newValue, (FloatType)0.0);
 }
 
-double gridSmokeSolver3::temperatureDiffusionCoefficient() const
+FloatType gridSmokeSolver3::temperatureDiffusionCoefficient() const
 {
     return mTemperatureDiffusionCoefficient;
 }
 
-void gridSmokeSolver3::setTemperatureDiffusionCoefficient(double newValue)
+void gridSmokeSolver3::setTemperatureDiffusionCoefficient(FloatType newValue)
 {
-    mTemperatureDiffusionCoefficient = std::max(newValue, 0.0);
+    mTemperatureDiffusionCoefficient = std::max<FloatType>(newValue, (FloatType)0.0);
 }
 
-double gridSmokeSolver3::buoyancySmokeDensityFactor() const
+FloatType gridSmokeSolver3::buoyancySmokeDensityFactor() const
 {
     return mBuoyancySmokeDensityFactor;
 }
 
-void gridSmokeSolver3::setBuoyancySmokeDensityFactor(double newValue)
+void gridSmokeSolver3::setBuoyancySmokeDensityFactor(FloatType newValue)
 {
     mBuoyancySmokeDensityFactor = newValue;
 }
 
-double gridSmokeSolver3::buoyancyTemperatureFactor() const
+FloatType gridSmokeSolver3::buoyancyTemperatureFactor() const
 {
     return mBuoyancyTemperatureFactor;
 }
 
-void gridSmokeSolver3::setBuoyancyTemperatureFactor(double newValue)
+void gridSmokeSolver3::setBuoyancyTemperatureFactor(FloatType newValue)
 {
     mBuoyancyTemperatureFactor = newValue;
 }
 
-double gridSmokeSolver3::smokeDecayFactor() const
+FloatType gridSmokeSolver3::smokeDecayFactor() const
 {
     return mSmokeDecayFactor;
 }
 
-void gridSmokeSolver3::setSmokeDecayFactor(double newValue)
+void gridSmokeSolver3::setSmokeDecayFactor(FloatType newValue)
 {
     mSmokeDecayFactor = mathUtil::clamp(newValue, 0.0, 1.0);
 }
 
-double gridSmokeSolver3::smokeTemperatureDecayFactor() const
+FloatType gridSmokeSolver3::smokeTemperatureDecayFactor() const
 {
     return mTemperatureDecayFactor;
 }
 
-void gridSmokeSolver3::setTemperatureDecayFactor(double newValue)
+void gridSmokeSolver3::setTemperatureDecayFactor(FloatType newValue)
 {
     mTemperatureDecayFactor = mathUtil::clamp(newValue, 0.0, 1.0);
 }
@@ -95,17 +95,17 @@ scalarGrid3Ptr gridSmokeSolver3::temperature() const
     return gridSystemData()->advectableScalarDataAt(mTemperatureDataId);
 }
 
-void gridSmokeSolver3::onEndAdvanceTimeStep(double timeIntervalInSeconds)
+void gridSmokeSolver3::onEndAdvanceTimeStep(FloatType timeIntervalInSeconds)
 {
     computeDiffusion(timeIntervalInSeconds);
 }
 
-void gridSmokeSolver3::computeExternalForces(double timeIntervalInSeconds)
+void gridSmokeSolver3::computeExternalForces(FloatType timeIntervalInSeconds)
 {
     computeBuoyancyForce(timeIntervalInSeconds);
 }
 
-void gridSmokeSolver3::computeDiffusion(double timeIntervalInSeconds)
+void gridSmokeSolver3::computeDiffusion(FloatType timeIntervalInSeconds)
 {
     if (diffusionSolver() != nullptr)
     {
@@ -141,16 +141,16 @@ void gridSmokeSolver3::computeDiffusion(double timeIntervalInSeconds)
     scalarGrid3Ptr den = smokeDensity();
     den->forEachDataPointIndex(
         [&](size_t i, size_t j, size_t k) {
-        (*den)(i, j, k) *= 1.0 - mSmokeDecayFactor;
+        (*den)(i, j, k) *= (FloatType)1.0 - mSmokeDecayFactor;
     });
     scalarGrid3Ptr temp = temperature();
     temp->forEachDataPointIndex(
         [&](size_t i, size_t j, size_t k) {
-        (*temp)(i, j, k) *= 1.0 - mTemperatureDecayFactor;
+        (*temp)(i, j, k) *= (FloatType)1.0 - mTemperatureDecayFactor;
     });
 }
 
-void gridSmokeSolver3::computeBuoyancyForce(double timeIntervalInSeconds)
+void gridSmokeSolver3::computeBuoyancyForce(FloatType timeIntervalInSeconds)
 {
     auto grids = gridSystemData();
     auto vel = grids->velocity();
@@ -167,11 +167,11 @@ void gridSmokeSolver3::computeBuoyancyForce(double timeIntervalInSeconds)
         scalarGrid3Ptr den = smokeDensity();
         scalarGrid3Ptr temp = temperature();
 
-        double tAmb = 0.0;
+        FloatType tAmb = 0.0;
         temp->forEachCellIndex([&](size_t i, size_t j, size_t k) {
             tAmb += (*temp)(i, j, k);
         });
-        tAmb /= static_cast<double>(
+        tAmb /= static_cast<FloatType>(
             temp->resolution().x * temp->resolution().y * temp->resolution().z);
 
         vectorGrid3::DataPositionFunc uPos = vel->uPosition();
@@ -182,7 +182,7 @@ void gridSmokeSolver3::computeBuoyancyForce(double timeIntervalInSeconds)
         {
             vel->forEachUIndex([&](size_t i, size_t j, size_t k) {
                 vector3 pt = uPos(i, j, k);
-                double fBuoy
+                FloatType fBuoy
                     = mBuoyancySmokeDensityFactor * den->sample(pt)
                     + mBuoyancyTemperatureFactor * (temp->sample(pt) - tAmb);
                 vel->u( i, j, k ) += timeIntervalInSeconds * fBuoy * up.x;
@@ -193,7 +193,7 @@ void gridSmokeSolver3::computeBuoyancyForce(double timeIntervalInSeconds)
         {
             vel->forEachVIndex([&](size_t i, size_t j, size_t k) {
                 vector3 pt = vPos(i, j, k);
-                double fBuoy
+                FloatType fBuoy
                     = mBuoyancySmokeDensityFactor * den->sample(pt)
                     + mBuoyancyTemperatureFactor * (temp->sample(pt) - tAmb);
                 vel->v( i, j, k ) += timeIntervalInSeconds * fBuoy * up.y;
@@ -204,7 +204,7 @@ void gridSmokeSolver3::computeBuoyancyForce(double timeIntervalInSeconds)
         {
             vel->forEachWIndex([&](size_t i, size_t j, size_t k) {
                 vector3 pt = wPos(i, j, k);
-                double fBuoy
+                FloatType fBuoy
                     = mBuoyancySmokeDensityFactor * den->sample(pt)
                     + mBuoyancyTemperatureFactor * (temp->sample(pt) - tAmb);
                 vel->w( i, j, k ) += timeIntervalInSeconds * fBuoy * up.z;

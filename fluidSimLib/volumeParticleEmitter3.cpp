@@ -11,10 +11,10 @@ static const size_t kDefaultHashGridResolution = 64;
 volumeParticleEmitter3::volumeParticleEmitter3(
     const implicitSurface3Ptr& implicitSurface,
     const boundingBox3& bounds,
-    double spacing,
+    FloatType spacing,
     const vector3& initialVel,
     size_t maxNumberOfParticles,
-    double jitter,
+    FloatType jitter,
     bool isOneShot,
     bool allowOverlapping,
     uint32_t seed) :
@@ -32,8 +32,8 @@ volumeParticleEmitter3::volumeParticleEmitter3(
 }
 
 void volumeParticleEmitter3::onUpdate(
-    double currentTimeInSeconds,
-    double timeIntervalInSeconds)
+    FloatType currentTimeInSeconds,
+    FloatType timeIntervalInSeconds)
 {
 
     auto particles = target();
@@ -60,8 +60,8 @@ void volumeParticleEmitter3::emit(
     std::vector<vector3>* newVelocities)
 {
     // Reserving more space for jittering
-    const double j = jitter();
-    const double maxJitterDist = 0.5 * j * mSpacing;
+    const FloatType j = jitter();
+    const FloatType maxJitterDist = (FloatType)0.5 * j * mSpacing;
 
     if (mAllowOverlapping || mIsOneShot) {
         mPointsGen->forEachPoint(
@@ -130,12 +130,12 @@ void volumeParticleEmitter3::setPointGenerator( const pointGenerator3Ptr& newPoi
     mPointsGen = newPointsGen;
 }
 
-double volumeParticleEmitter3::jitter() const
+FloatType volumeParticleEmitter3::jitter() const
 {
     return mJitter;
 }
 
-void volumeParticleEmitter3::setJitter(double newJitter)
+void volumeParticleEmitter3::setJitter(FloatType newJitter)
 {
     mJitter = mathUtil::clamp(newJitter, 0.0, 1.0);
 }
@@ -170,12 +170,12 @@ void volumeParticleEmitter3::setMaxNumberOfParticles( size_t newMaxNumberOfParti
     mMaxNumberOfParticles = newMaxNumberOfParticles;
 }
 
-double volumeParticleEmitter3::spacing() const
+FloatType volumeParticleEmitter3::spacing() const
 {
     return mSpacing;
 }
 
-void volumeParticleEmitter3::setSpacing(double newSpacing)
+void volumeParticleEmitter3::setSpacing(FloatType newSpacing)
 {
     mSpacing = newSpacing;
 }
@@ -190,8 +190,8 @@ void volumeParticleEmitter3::setInitialVelocity(const vector3& newInitialVel)
     mInitialVel = newInitialVel;
 }
 
-double volumeParticleEmitter3::random()
+FloatType volumeParticleEmitter3::random()
 {
     std::uniform_real_distribution<> d(0.0, 1.0);
-    return d(mRng);
+    return (FloatType)d(mRng);
 }

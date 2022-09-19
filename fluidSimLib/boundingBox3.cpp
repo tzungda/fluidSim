@@ -16,12 +16,12 @@ boundingBox3::boundingBox3(const vector3& lower, const vector3& upper)
 
 void boundingBox3::reset()
 {
-    lowerCorner.x = std::numeric_limits<double>::max();
-    lowerCorner.y = std::numeric_limits<double>::max();
-    lowerCorner.z = std::numeric_limits<double>::max();
-    upperCorner.x = -std::numeric_limits<double>::max();
-    upperCorner.y = -std::numeric_limits<double>::max();
-    upperCorner.z = -std::numeric_limits<double>::max();
+    lowerCorner.x = std::numeric_limits<FloatType>::max();
+    lowerCorner.y = std::numeric_limits<FloatType>::max();
+    lowerCorner.z = std::numeric_limits<FloatType>::max();
+    upperCorner.x = -std::numeric_limits<FloatType>::max();
+    upperCorner.y = -std::numeric_limits<FloatType>::max();
+    upperCorner.z = -std::numeric_limits<FloatType>::max();
 }
 
 
@@ -57,17 +57,17 @@ vector3 boundingBox3::corner(size_t idx) const
     return result;
 }
 
-double boundingBox3::width( ) const
+FloatType boundingBox3::width( ) const
 {
     return upperCorner.x - lowerCorner.x;
 }
 
-double boundingBox3::height( ) const
+FloatType boundingBox3::height( ) const
 {
     return upperCorner.y - lowerCorner.y;
 }
 
-double boundingBox3::depth( ) const
+FloatType boundingBox3::depth( ) const
 {
     return upperCorner.z - lowerCorner.z;
 }
@@ -99,14 +99,14 @@ bool boundingBox3::contains(const vector3& point) const
 
 bool boundingBox3::intersects(const ray3& ray) const
 {
-    double tMin = 0;
-    double tMax = std::numeric_limits<double>::max();
+    FloatType tMin = 0;
+    FloatType tMax = std::numeric_limits<FloatType>::max();
     const vector3& rayInvDir = ray.direction.rdiv(1);
 
     for (int i = 0; i < 3; ++i)
     {
-        double tNear = (lowerCorner[i] - ray.origin[i]) * rayInvDir[i];
-        double tFar = (upperCorner[i] - ray.origin[i]) * rayInvDir[i];
+        FloatType tNear = (lowerCorner[i] - ray.origin[i]) * rayInvDir[i];
+        FloatType tFar = (upperCorner[i] - ray.origin[i]) * rayInvDir[i];
 
         if (tNear > tFar) std::swap(tNear, tFar);
         tMin = tNear > tMin ? tNear : tMin;
@@ -122,14 +122,14 @@ boundingBoxRayIntersection3 boundingBox3::closestIntersection(const ray3& ray) c
 {
     boundingBoxRayIntersection3 intersection;
 
-    double tMin = 0.0;
-    double tMax = std::numeric_limits<double>::max();
+    FloatType tMin = 0.0;
+    FloatType tMax = std::numeric_limits<FloatType>::max();
     const vector3& rayInvDir = ray.direction.rdiv(1);
 
     for (int i = 0; i < 3; ++i)
     {
-        double tNear = (lowerCorner[i] - ray.origin[i]) * rayInvDir[i];
-        double tFar = (upperCorner[i] - ray.origin[i]) * rayInvDir[i];
+        FloatType tNear = (lowerCorner[i] - ray.origin[i]) * rayInvDir[i];
+        FloatType tFar = (upperCorner[i] - ray.origin[i]) * rayInvDir[i];
 
         if (tNear > tFar) std::swap(tNear, tFar);
         tMin = tNear > tMin ? tNear : tMin;
@@ -147,7 +147,7 @@ boundingBoxRayIntersection3 boundingBox3::closestIntersection(const ray3& ray) c
     if (contains(ray.origin))
     {
         intersection.tNear = tMax;
-        intersection.tFar = std::numeric_limits<double>::max();
+        intersection.tFar = std::numeric_limits<FloatType>::max();
     }
     else
     {

@@ -19,13 +19,13 @@ public:
 
     void generate(
         const boundingBox3& boundingBox,
-        double spacing,
+        FloatType spacing,
         std::vector<vector3>* points) const;
 
 
     virtual void forEachPoint(
         const boundingBox3& boundingBox,
-        double spacing,
+        FloatType spacing,
         const std::function<bool(const vector3&)>& callback) const = 0;
 };
 

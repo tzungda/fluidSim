@@ -1,7 +1,9 @@
 //---collider3.cpp
 
 #include <cmath>
+#include <algorithm>
 #include "collider3.h"
+
 
 collider3::collider3() 
 {
@@ -12,8 +14,8 @@ collider3::~collider3()
 }
 
 void collider3::resolveCollision(
-    double radius,
-    double restitutionCoefficient,
+    FloatType radius,
+    FloatType restitutionCoefficient,
     vector3* newPosition,
     vector3* newVelocity)
 {
@@ -32,7 +34,7 @@ void collider3::resolveCollision(
 
         // get new candidate relative velocity from the target point.
         vector3 relativeVel = *newVelocity - colliderVelAtTargetPoint;
-        double normalDotRelativeVel = targetNormal.dot(relativeVel);
+        FloatType normalDotRelativeVel = targetNormal.dot(relativeVel);
         vector3 relativeVelN = normalDotRelativeVel * targetNormal;
         vector3 relativeVelT = relativeVel - relativeVelN;
 
@@ -43,7 +45,7 @@ void collider3::resolveCollision(
             // apply restitution coefficient to the surface normal component of
             // the velocity
             vector3 deltaRelativeVelN
-                = (-restitutionCoefficient - 1.0) * relativeVelN;
+                = (-restitutionCoefficient - (FloatType)1.0) * relativeVelN;
             relativeVelN *= -restitutionCoefficient;
 
             // apply friction to the tangential component of the velocity
@@ -52,8 +54,8 @@ void collider3::resolveCollision(
             // http://graphics.stanford.edu/papers/cloth-sig02/cloth.pdf
             if (relativeVelT.lengthSquared() > 0.0) 
             {
-                double frictionScale
-                    = std::max(
+                FloatType frictionScale
+                    = (FloatType)std::max(
                         1.0
                         - mFrictionCoeffient
                         * deltaRelativeVelN.length()
@@ -70,14 +72,14 @@ void collider3::resolveCollision(
     }
 }
 
-double collider3::frictionCoefficient() const 
+FloatType collider3::frictionCoefficient() const 
 {
     return mFrictionCoeffient;
 }
 
-void collider3::setFrictionCoefficient(double newFrictionCoeffient) 
+void collider3::setFrictionCoefficient(FloatType newFrictionCoeffient) 
 {
-    mFrictionCoeffient = std::max(newFrictionCoeffient, 0.0);
+    mFrictionCoeffient = std::max<FloatType>(newFrictionCoeffient, 0.0);
 }
 
 const surface3Ptr& collider3::surface() const 
@@ -104,15 +106,15 @@ void collider3::getClosestPoint(
 bool collider3::isPenetrating(
     const colliderQueryResult& colliderPoint,
     const vector3& position,
-    double radius) 
+    FloatType radius) 
 {
     return (position - colliderPoint.point).dot(colliderPoint.normal) < 0.0 ||
         colliderPoint.distance < radius;
 }
 
 void collider3::update(
-    double currentTimeInSeconds,
-    double timeIntervalInSeconds) 
+    FloatType currentTimeInSeconds,
+    FloatType timeIntervalInSeconds) 
 {
     if (mOnUpdateCallback) {
         mOnUpdateCallback(this, currentTimeInSeconds, timeIntervalInSeconds);

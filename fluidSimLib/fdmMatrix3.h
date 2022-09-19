@@ -8,13 +8,13 @@
 
 struct fdmMatrixRow3 {
     //! Diagonal component of the matrix (row, row).
-    double center = 0.0;
+    FloatType center = 0.0;
     //! Off-diagonal element where colum refers to (i+1, j, k) grid point.
-    double right = 0.0;
+    FloatType right = 0.0;
     //! Off-diagonal element where column refers to (i, j+1, k) grid point.
-    double up = 0.0;
+    FloatType up = 0.0;
     //! OFf-diagonal element where column refers to (i, j, k+1) grid point.
-    double front = 0.0;
+    FloatType front = 0.0;
 };
 
 class fdmMatrix3

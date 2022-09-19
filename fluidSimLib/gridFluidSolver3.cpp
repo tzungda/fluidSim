@@ -97,7 +97,7 @@ int gridFluidSolver3::closedDomainBoundaryFlag() const
     return this->mClosedDomainBoundaryFlag;
 }
 
-double gridFluidSolver3::maxCfl() const
+FloatType gridFluidSolver3::maxCfl() const
 {
     return this->mMaxCfl;
 }
@@ -112,7 +112,7 @@ const cellCenteredScalarGrid3& gridFluidSolver3::colliderSdf() const
     return mColliderSdf;
 }
 
-void gridFluidSolver3::computeGravity(double timeIntervalInSeconds)
+void gridFluidSolver3::computeGravity(FloatType timeIntervalInSeconds)
 {
     if (mGravity.lengthSquared() > mathUtil::eps())
     {
@@ -163,7 +163,7 @@ void gridFluidSolver3::onInitialize()
     updateEmitter(0.0);
 }
 
-void gridFluidSolver3::onAdvanceTimeStep(double timeIntervalInSeconds)
+void gridFluidSolver3::onAdvanceTimeStep(FloatType timeIntervalInSeconds)
 {
     {
         timer t( "  beginAdvanceTimeStep" );
@@ -196,11 +196,11 @@ void gridFluidSolver3::onAdvanceTimeStep(double timeIntervalInSeconds)
     }
 }
 
-void gridFluidSolver3::onBeginAdvanceTimeStep(double timeIntervalInSeconds)
+void gridFluidSolver3::onBeginAdvanceTimeStep(FloatType timeIntervalInSeconds)
 {
 }
 
-void gridFluidSolver3::onEndAdvanceTimeStep(double timeIntervalInSeconds)
+void gridFluidSolver3::onEndAdvanceTimeStep(FloatType timeIntervalInSeconds)
 {
 }
 
@@ -209,12 +209,12 @@ scalarField3Ptr gridFluidSolver3::fluidSdf() const
     return std::make_shared<constantScalarField3>(-mathUtil::maxFloat());
 }
 
-void gridFluidSolver3::computeExternalForces(double timeIntervalInSeconds)
+void gridFluidSolver3::computeExternalForces(FloatType timeIntervalInSeconds)
 {
     computeGravity(timeIntervalInSeconds);
 }
 
-void gridFluidSolver3::computeViscosity(double timeIntervalInSeconds)
+void gridFluidSolver3::computeViscosity(FloatType timeIntervalInSeconds)
 {
     if (mDiffusionSolver != nullptr && mViscosityCoefficient > mathUtil::maxFloat()) {
         auto vel = velocity();
@@ -231,7 +231,7 @@ void gridFluidSolver3::computeViscosity(double timeIntervalInSeconds)
     }
 }
 
-void gridFluidSolver3::computePressure(double timeIntervalInSeconds)
+void gridFluidSolver3::computePressure(FloatType timeIntervalInSeconds)
 {
     if (mPressureSolver != nullptr) {
         auto vel = velocity();
@@ -248,7 +248,7 @@ void gridFluidSolver3::computePressure(double timeIntervalInSeconds)
     }
 }
 
-void gridFluidSolver3::computeAdvection(double timeIntervalInSeconds)
+void gridFluidSolver3::computeAdvection(FloatType timeIntervalInSeconds)
 {
     faceCenteredGrid3Ptr vel = velocity();
     if (mAdvectionSolver != nullptr) {
@@ -413,7 +413,7 @@ void gridFluidSolver3::applyBoundaryCondition()
     }
 }
 
-void gridFluidSolver3::beginAdvanceTimeStep(double timeIntervalInSeconds)
+void gridFluidSolver3::beginAdvanceTimeStep(FloatType timeIntervalInSeconds)
 {
     size3 res = mGrids->resolution();
     vector3 h = mGrids->gridSpacing();
@@ -486,12 +486,12 @@ void gridFluidSolver3::beginAdvanceTimeStep(double timeIntervalInSeconds)
     }
 }
 
-void gridFluidSolver3::endAdvanceTimeStep(double timeIntervalInSeconds)
+void gridFluidSolver3::endAdvanceTimeStep(FloatType timeIntervalInSeconds)
 {
     onEndAdvanceTimeStep(timeIntervalInSeconds);
 }
 
-void gridFluidSolver3::updateCollider(double timeIntervalInSeconds)
+void gridFluidSolver3::updateCollider(FloatType timeIntervalInSeconds)
 {
     if (mCollider != nullptr)
     {
@@ -499,7 +499,7 @@ void gridFluidSolver3::updateCollider(double timeIntervalInSeconds)
     }
 }
 
-void gridFluidSolver3::updateEmitter(double timeIntervalInSeconds)
+void gridFluidSolver3::updateEmitter(FloatType timeIntervalInSeconds)
 {
     if (mEmitter != nullptr)
     {

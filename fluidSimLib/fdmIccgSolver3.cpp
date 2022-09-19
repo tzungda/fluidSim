@@ -15,19 +15,19 @@ void fdmIccgSolver3::Preconditioner::build(const fdmMatrix3& matrix)
     y.resize(size, 0.0);
 
     matrix.forEachIndex([&](size_t i, size_t j, size_t k) {
-        double denom
+        FloatType denom
             = matrix(i, j, k).center
             - ((i > 0) ?
-                mathUtil::square( matrix(i - 1, j, k).right ) * d(i - 1, j, k) : 0.0)
+                mathUtil::square( matrix(i - 1, j, k).right ) * d(i - 1, j, k) : (FloatType)0.0)
             - ((j > 0) ?
-                mathUtil::square( matrix(i, j - 1, k).up )    * d(i, j - 1, k) : 0.0)
+                mathUtil::square( matrix(i, j - 1, k).up )    * d(i, j - 1, k) : (FloatType)0.0)
             - ((k > 0) ?
-                mathUtil::square( matrix(i, j, k - 1).front ) * d(i, j, k - 1) : 0.0);
+                mathUtil::square( matrix(i, j, k - 1).front ) * d(i, j, k - 1) : (FloatType)0.0);
 
         if (std::fabs(denom) > 0.0) {
-            d(i, j, k) = 1.0 / denom;
+            d(i, j, k) = (FloatType)1.0 / denom;
         } else {
-            d(i, j, k) = 0.0;
+            d(i, j, k) = (FloatType)0.0;
         }
         });
 }
@@ -45,9 +45,9 @@ void fdmIccgSolver3::Preconditioner::solve(
     {
         y(i, j, k)
             = (b(i, j, k)
-                - ((i > 0) ? (*A)(i - 1, j, k).right * y(i - 1, j, k) : 0.0)
-                - ((j > 0) ? (*A)(i, j - 1, k).up    * y(i, j - 1, k) : 0.0)
-                - ((k > 0) ? (*A)(i, j, k - 1).front * y(i, j, k - 1) : 0.0))
+                - ((i > 0) ? (*A)(i - 1, j, k).right * y(i - 1, j, k) : (FloatType)0.0)
+                - ((j > 0) ? (*A)(i, j - 1, k).up    * y(i, j - 1, k) : (FloatType)0.0)
+                - ((k > 0) ? (*A)(i, j, k - 1).front * y(i, j, k - 1) : (FloatType)0.0))
             * d(i, j, k);
         });
 
@@ -60,11 +60,11 @@ void fdmIccgSolver3::Preconditioner::solve(
                 (*x)(i, j, k)
                     = (y(i, j, k)
                         - ((i + 1 < sx) ?
-                            (*A)(i, j, k).right * (*x)(i + 1, j, k) : 0.0)
+                            (*A)(i, j, k).right * (*x)(i + 1, j, k) : (FloatType)0.0)
                         - ((j + 1 < sy) ?
-                            (*A)(i, j, k).up    * (*x)(i, j + 1, k) : 0.0)
+                            (*A)(i, j, k).up    * (*x)(i, j + 1, k) : (FloatType)0.0)
                         - ((k + 1 < sz) ?
-                            (*A)(i, j, k).front * (*x)(i, j, k + 1) : 0.0))
+                            (*A)(i, j, k).front * (*x)(i, j, k + 1) : (FloatType)0.0))
                     * d(i, j, k);
             }
         }
@@ -73,11 +73,11 @@ void fdmIccgSolver3::Preconditioner::solve(
 
 fdmIccgSolver3::fdmIccgSolver3(
     unsigned int maxNumberOfIterations,
-    double tolerance) :
+    FloatType tolerance) :
     mMaxNumberOfIterations(maxNumberOfIterations),
     mLastNumberOfIterations(0),
     mTolerance(tolerance),
-    mLastResidualNorm(std::numeric_limits<double>::max())
+    mLastResidualNorm(std::numeric_limits<FloatType>::max())
 {
 }
 
@@ -131,12 +131,12 @@ unsigned int fdmIccgSolver3::lastNumberOfIterations() const
     return mLastNumberOfIterations;
 }
 
-double fdmIccgSolver3::tolerance() const 
+FloatType fdmIccgSolver3::tolerance() const 
 {
     return mTolerance;
 }
 
-double fdmIccgSolver3::lastResidual() const 
+FloatType fdmIccgSolver3::lastResidual() const 
 {
     return mLastResidualNorm;
 }
@@ -145,7 +145,7 @@ double fdmIccgSolver3::lastResidual() const
 void fdmIccgSolver3::pcg( const  fdmMatrix3& A,
     const dataBuffer3& b,
     unsigned int maxNumberOfIterations,
-    double tolerance,
+    FloatType tolerance,
     Preconditioner* M,
     dataBuffer3* x,
     dataBuffer3* r,
@@ -153,7 +153,7 @@ void fdmIccgSolver3::pcg( const  fdmMatrix3& A,
     dataBuffer3* q,
     dataBuffer3* s,
     unsigned int* lastNumberOfIterations,
-    double* lastResidualNorm )
+    FloatType* lastResidualNorm )
 {
     fdmBlas3::set(0, r);
     fdmBlas3::set(0, d);
@@ -169,7 +169,7 @@ void fdmIccgSolver3::pcg( const  fdmMatrix3& A,
     M->solve(*r, d);
 
     // sigmaNew = r.d
-    double sigmaNew = fdmBlas3::dot(*r, *d);
+    FloatType sigmaNew = fdmBlas3::dot(*r, *d);
 
     unsigned int iter = 0;
     bool trigger = false;
@@ -178,7 +178,7 @@ void fdmIccgSolver3::pcg( const  fdmMatrix3& A,
         fdmBlas3::mvm(A, *d, q);
 
         // alpha = sigmaNew/d.q
-        double alpha = sigmaNew / fdmBlas3::dot(*d, *q);
+        FloatType alpha = sigmaNew / fdmBlas3::dot(*d, *q);
 
         // x = x + alpha*d
         fdmBlas3::axpy(alpha, *d, *x, x);
@@ -200,7 +200,7 @@ void fdmIccgSolver3::pcg( const  fdmMatrix3& A,
         M->solve(*r, s);
 
         // sigmaOld = sigmaNew
-        double sigmaOld = sigmaNew;
+        FloatType sigmaOld = sigmaNew;
 
         // sigmaNew = r.s
         sigmaNew = fdmBlas3::dot(*r, *s);
@@ -211,7 +211,7 @@ void fdmIccgSolver3::pcg( const  fdmMatrix3& A,
         }
 
         // beta = sigmaNew/sigmaOld
-        double beta = sigmaNew / sigmaOld;
+        FloatType beta = sigmaNew / sigmaOld;
 
         // d = s + beta*d
         fdmBlas3::axpy(beta, *d, *s, d);

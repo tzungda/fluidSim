@@ -6,7 +6,7 @@ cellCenteredScalarGrid3::cellCenteredScalarGrid3()
 {
 }
 
-cellCenteredScalarGrid3::cellCenteredScalarGrid3(const size3& resolution, const vector3& gridSpacing, const vector3& origin, double initValue)
+cellCenteredScalarGrid3::cellCenteredScalarGrid3(const size3& resolution, const vector3& gridSpacing, const vector3& origin, FloatType initValue)
 {
     resize(resolution, gridSpacing, origin, initValue);
 }

@@ -7,7 +7,7 @@ cubicSemiLagrangian3::cubicSemiLagrangian3()
 {
 }
 
-std::function<double(const vector3&)>
+std::function<FloatType(const vector3&)>
 cubicSemiLagrangian3::getScalarSamplerFunc(const scalarGrid3& source) const
 {
     auto sourceSampler = cubicBufferSamplerScalar( 
