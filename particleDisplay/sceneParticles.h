@@ -22,6 +22,7 @@
 #include <particleEmitterSet3.h>
 #include <gridPointGenerator3.h>
 #include <frame.h>
+#include <common.h>
 //
 
 class fluidSim
@@ -30,7 +31,7 @@ private:
     int mCurrentFrame;
     int mFrameLength;
     flipSolver3Ptr mSolver;
-    double mFPS;
+    FloatType mFPS;
     size_t mResolution;
 public:
     fluidSim( ):
@@ -51,7 +52,7 @@ public:
         mSolver = std::shared_ptr<flipSolver3>(
             new flipSolver3(
                 size3( mResolution, 2 * mResolution, mResolution),
-                vector3( 1.0/(double)mResolution, 1.0/(double)mResolution, 1.0/(double)mResolution ),
+                vector3( (FloatType)1.0/(FloatType)mResolution, (FloatType)1.0/(FloatType)mResolution, (FloatType)1.0/(FloatType)mResolution ),
                 vector3( 0.0, 0.0, 0.0 )),
             [] (flipSolver3* obj) {
                 delete obj;
@@ -61,19 +62,19 @@ public:
 
 
         vector3 gridSpacing = grids->gridSpacing();
-        double dx = gridSpacing.x;
+        FloatType dx = gridSpacing.x;
         boundingBox3 domain = grids->boundingBox();
 
         // emitter
         sphere3Ptr sphere = std::shared_ptr< sphere3 >(
-            new sphere3( domain.midPoint(), domain.width() * 0.25 ),
+            new sphere3( domain.midPoint(), domain.width() * (FloatType)0.25 ),
             [] ( sphere3* obj ){
                 delete obj;
             });
 
         implicitSurface3Ptr implicitSphere = std::make_shared<surfaceToImplicit3>(sphere);
         volumeParticleEmitter3Ptr emitter2 = std::shared_ptr< volumeParticleEmitter3 >(
-            new volumeParticleEmitter3( implicitSphere, domain, 0.5 * dx ),
+            new volumeParticleEmitter3( implicitSphere, domain, (FloatType)0.5 * dx ),
             [] (volumeParticleEmitter3* obj ){
                 delete obj;
             });
@@ -98,7 +99,7 @@ public:
 
         printf( "\nfluid sim updating frame: %d\n", frameNumber );
 
-        frame f(0, 1.0 / mFPS);
+        frame f(0, (FloatType)1.0 / mFPS);
         f.index = (size_t)frameNumber;
         mSolver->update( f );
 
