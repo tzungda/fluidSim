@@ -21,7 +21,7 @@ particleSystemData3::particleSystemData3(size_t numberOfParticles) {
         kDefaultHashGridResolution,
         kDefaultHashGridResolution,
         kDefaultHashGridResolution,
-        2.0 * mRadius);
+        (FloatType)2.0 * mRadius);
 
     resize(numberOfParticles);
 }
@@ -202,7 +202,7 @@ void particleSystemData3::buildNeighborSearcher(FloatType maxSearchRadius)
         kDefaultHashGridResolution,
         kDefaultHashGridResolution,
         kDefaultHashGridResolution,
-        2.0 * maxSearchRadius);
+        (FloatType)2.0 * maxSearchRadius);
 
     mNeighborSearcher->build(positions());
 

@@ -5,13 +5,15 @@
 #include <chrono>
 #include <string>
 
+#include "common.h"
+
 class timer {
 public:
     
     timer( const std::string &info );
     virtual ~timer( );
 
-    double durationInSeconds() const;
+    FloatType durationInSeconds() const;
 
     void reset();
 

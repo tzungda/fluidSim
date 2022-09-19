@@ -12,13 +12,13 @@ public:
 
     std::string typeName() const override {return "pointHashGridSearcher3";}
 
-    pointHashGridSearcher3(const size3& resolution, double gridSpacing);
+    pointHashGridSearcher3(const size3& resolution, FloatType gridSpacing);
 
     pointHashGridSearcher3(
         size_t resolutionX,
         size_t resolutionY,
         size_t resolutionZ,
-        double gridSpacing);
+        FloatType gridSpacing);
 
     pointHashGridSearcher3(const pointHashGridSearcher3& other);
 
@@ -26,11 +26,11 @@ public:
 
     void forEachNearbyPoint(
         const vector3& origin,
-        double radius,
+        FloatType radius,
         const ForEachNearbyPointFunc& callback) const override;
 
     bool hasNearbyPoint(
-        const vector3& origin, double radius) const override;
+        const vector3& origin, FloatType radius) const override;
 
     void add(const vector3& point);
 
@@ -48,7 +48,7 @@ public:
 
 
 private:
-    double mGridSpacing = 1.0;
+    FloatType mGridSpacing = (FloatType)1.0;
     size3 mResolution = size3(1, 1, 1);
     std::vector<vector3> mPoints;
     std::vector<std::vector<size_t>> mBuckets;

@@ -91,7 +91,7 @@ void volumeParticleEmitter3::emit(
                 kDefaultHashGridResolution,
                 kDefaultHashGridResolution,
                 kDefaultHashGridResolution),
-            2.0 * mSpacing);
+            (FloatType)2.0 * mSpacing);
         if (!mAllowOverlapping) {
             neighborSearcher.build(particles->positions());
         }

@@ -296,7 +296,7 @@ void picSolver3::buildSignedDistanceField()
 
     {
         timer t("        picSolver3::buildSignedDistanceField" );
-        mParticles->buildNeighborSearcher(2 * radius);
+        mParticles->buildNeighborSearcher( sdfBandRadius );
     }
     const pointNeighborSearcher3Ptr& searcher = mParticles->neighborSearcher();
 

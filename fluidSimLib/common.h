@@ -7,7 +7,7 @@
 #ifdef SINGLE_FLOAT
 #define FloatType float
 #else
-#define FloatType double
+#define FloatType FloatType
 #endif
 
 #endif
