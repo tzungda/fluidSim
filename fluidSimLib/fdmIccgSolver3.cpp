@@ -94,11 +94,11 @@ bool fdmIccgSolver3::solve(fdmLinearSystem3* system)
     mQ.resize(size);
     mS.resize(size);
 
-    system->x.set(0.0);
-    mR.set(0.0);
-    mD.set(0.0);
-    mQ.set(0.0);
-    mS.set(0.0);
+    system->x.setZero();
+    mR.setZero();
+    mD.setZero();
+    mQ.setZero();
+    mS.setZero();
 
     mPrecond.build(matrix);
 
@@ -155,10 +155,10 @@ void fdmIccgSolver3::pcg( const  fdmMatrix3& A,
     unsigned int* lastNumberOfIterations,
     double* lastResidualNorm )
 {
-    fdmBlas3::set(0, r);
-    fdmBlas3::set(0, d);
-    fdmBlas3::set(0, q);
-    fdmBlas3::set(0, s);
+    fdmBlas3::setZero(r);
+    fdmBlas3::setZero(d);
+    fdmBlas3::setZero(q);
+    fdmBlas3::setZero(s);
 
     M->build(A);
 
