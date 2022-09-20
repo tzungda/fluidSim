@@ -70,6 +70,11 @@ void dataBuffer3::set( const dataBuffer3& other )
     mSize = other.mSize;
 }
 
+void dataBuffer3::setZero()
+{
+    memset( &mData[0], 0, sizeof( double )*mData.size() );
+}
+
 size3 dataBuffer3::size( ) const
 {
     return mSize;
