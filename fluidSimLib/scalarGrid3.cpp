@@ -95,6 +95,14 @@ void scalarGrid3::forEachDataPointIndex(
     mData.forEachIndex(func);
 }
 
+#ifdef _OPENMP
+void scalarGrid3::forEachDataPointIndexOpenMP(
+    const std::function<void(size_t, size_t, size_t)>& func) const
+{
+    mData.forEachIndexOpenMP(func);
+}
+#endif
+
 dataBuffer3& scalarGrid3::data()
 {
     return mData;
@@ -182,14 +190,14 @@ void scalarGrid3::setScalarGrid(const scalarGrid3& other)
     resetSampler();
 }
 
-void scalarGrid3::getData(std::vector<double>* data) const 
+void scalarGrid3::getData(std::vector<double>* data) const
 {
     size_t size = dataSize().x * dataSize().y * dataSize().z;
     data->resize(size);
     std::copy(mData.begin(), mData.end(), data->begin());
 }
 
-void scalarGrid3::setData(const std::vector<double>& data) 
+void scalarGrid3::setData(const std::vector<double>& data)
 {
     std::copy(data.begin(), data.end(), mData.begin());
 }

@@ -85,6 +85,15 @@ public:
     void forEachWIndex(
         const std::function<void(size_t, size_t, size_t)>& func) const;
 
+#ifdef _OPENMP
+    void forEachUIndexOpenMP(
+        const std::function<void(size_t, size_t, size_t)>& func) const;
+    void forEachVIndexOpenMP(
+        const std::function<void(size_t, size_t, size_t)>& func) const;
+    void forEachWIndexOpenMP(
+        const std::function<void(size_t, size_t, size_t)>& func) const;
+#endif
+
     double divergenceAtCellCenterByIndex(size_t i, size_t j, size_t k) const;
 
     vector3 valueAtCellCenterByIndex(size_t i, size_t j, size_t k) const;

@@ -4,6 +4,10 @@
 
 #include <vector>
 
+#ifdef _OPENMP
+#include <omp.h>
+#endif
+
 #include "size3.h"
 
 struct fdmMatrixRow3 {
@@ -46,15 +50,33 @@ public:
     {
         for (size_t k = 0; k < mSize.z; ++k)
         {
-            for (size_t j = 0; j < mSize.y; ++j) 
+            for (size_t j = 0; j < mSize.y; ++j)
             {
-                for (size_t i = 0; i < mSize.x; ++i) 
+                for (size_t i = 0; i < mSize.x; ++i)
                 {
                     func(i, j, k);
                 }
             }
         }
     }
+
+#ifdef _OPENMP
+    template <typename Callback>
+    void forEachIndexOpenMP(Callback func) const
+    {
+#pragma omp parallel for
+        for ( int k = 0; k < (int)mSize.z; ++k)
+        {
+            for ( int j = 0; j < (int)mSize.y; ++j)
+            {
+                for ( int i = 0; i < (int)mSize.x; ++i)
+                {
+                    func(i, j, k);
+                }
+            }
+        }
+    }
+#endif
 
     void set( const fdmMatrixRow3& value );
     void set( const fdmMatrix3& value );

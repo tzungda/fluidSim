@@ -3,6 +3,11 @@
 #define dataBuffer3_H
 
 #include <vector>
+
+#ifdef _OPENMP
+#include <omp.h>
+#endif
+
 #include "size3.h"
 #include "vector3.h"
 
@@ -43,6 +48,24 @@ public:
         }
     }
 
+#ifdef _OPENMP
+    template <typename Callback>
+    void forEachIndexOpenMP(Callback func) const
+    {
+#pragma omp parallel for
+        for (int k = 0; k < (int)mSize.z; ++k)
+        {
+            for (int j = 0; j < (int)mSize.y; ++j)
+            {
+                for (int i = 0; i < (int)mSize.x; ++i)
+                {
+                    func(i, j, k);
+                }
+            }
+        }
+    }
+#endif
+
     template <typename Callback>
     void forEach(Callback func) const
     {
@@ -57,6 +80,25 @@ public:
             }
         }
     }
+
+#ifdef _OPENMP
+    template <typename Callback>
+    void forEachOpenMP(Callback func) const
+    {
+#pragma omp parallel for
+        for (int k = 0; k < (int)mSize.z; ++k)
+        {
+            for (int j = 0; j < (int)mSize.y; ++j)
+            {
+                for (int i = 0; i < (int)mSize.x; ++i)
+                {
+                    func((*this)(i, j, k));
+                }
+            }
+        }
+
+    }
+#endif
 
     void set( double value );
     void set( const dataBuffer3& value );
