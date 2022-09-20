@@ -60,10 +60,11 @@ void flipSolver3::transferFromGridsToParticles()
     });
 
     // Transfer delta to the particles
-    //parallelFor(kZeroSize, numberOfParticles, [&](size_t i) {
-    //    velocities[i] += mDelta.sample(positions[i]);
-    //});
+#ifdef _OPENMP
+    for ( int i = 0; i < (int)numberOfParticles; ++i )
+#else
     for ( size_t i = 0; i < numberOfParticles; ++i )
+#endif
     {
         velocities[i] += mDelta.sample(positions[i]);
     }
