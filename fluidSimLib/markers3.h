@@ -26,6 +26,7 @@ public:
 
 public:
     void set( char value );
+    void setZero();
     void resize( const size3& size, const char initValue = 0.0 );
 
     void resize( size_t width, size_t height, size_t depth, const char initValue = 0 );
