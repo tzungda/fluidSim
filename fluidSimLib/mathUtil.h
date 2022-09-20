@@ -6,6 +6,10 @@
 #include <basetsd.h>
 #include <limits>
 
+#ifdef _OPENMP
+#include <omp.h>
+#endif
+
 #include "vector3.h"
 #include "dataBuffer3.h"
 #include "markers3.h"
