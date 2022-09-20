@@ -34,7 +34,7 @@ double LinearBufferSampler::operator()( const vector3& pt ) const
     double cx, cy, cz;
 
     vector3 tmp( pt.x - mOrigin.x, pt.y - mOrigin.y, pt.z - mOrigin.z );
-    vector3 normalizedX( tmp.x / mGridSpacing.x, tmp.y / mGridSpacing.y, tmp.z / mGridSpacing.z );
+    vector3 normalizedX( tmp.x * mInvGridSpacing.x, tmp.y * mInvGridSpacing.y, tmp.z * mInvGridSpacing.z );
 
     SSIZE_T isize = mDataBuffer->size().x;
     SSIZE_T jsize = mDataBuffer->size().y;
@@ -140,7 +140,7 @@ vector3 LinearVecBufferSampler::operator()( const vector3& pt ) const
     double cx, cy, cz;
 
     vector3 tmp( pt.x - mOrigin.x, pt.y - mOrigin.y, pt.z - mOrigin.z );
-    vector3 normalizedX( tmp.x / mGridSpacing.x, tmp.y / mGridSpacing.y, tmp.z / mGridSpacing.z );
+    vector3 normalizedX( tmp.x * mInvGridSpacing.x, tmp.y * mInvGridSpacing.y, tmp.z * mInvGridSpacing.z );
 
     SSIZE_T isize = mDataBuffer->size().x;
     SSIZE_T jsize = mDataBuffer->size().y;
@@ -253,6 +253,9 @@ cubicBufferSamplerVec::cubicBufferSamplerVec(
     const vecDataBuffer3* dataBuffer, const vector3 &gridSpacing, const vector3& gridOrigin)
 {
     mGridSpacing = gridSpacing;
+    mInvGridSpacing.x = 1.0 / mGridSpacing.x;
+    mInvGridSpacing.y = 1.0 / mGridSpacing.y;
+    mInvGridSpacing.z = 1.0 / mGridSpacing.z;
     mOrigin = gridOrigin;
     mDataBuffer = dataBuffer;
 }
@@ -262,6 +265,7 @@ cubicBufferSamplerVec::cubicBufferSamplerVec(
     const cubicBufferSamplerVec& other)
 {
     mGridSpacing = other.mGridSpacing;
+    mInvGridSpacing = other.mInvGridSpacing;
     mOrigin = other.mOrigin;
     mDataBuffer = other.mDataBuffer;
 }
@@ -274,7 +278,7 @@ vector3 cubicBufferSamplerVec::operator()(const vector3& x) const {
     double fx, fy, fz;
 
     SSIZE_T kZeroSSize = 0;
-    vector3 normalizedX = (x - mOrigin) / mGridSpacing;
+    vector3 normalizedX = (x - mOrigin) * mInvGridSpacing;
 
     mathUtil::getBarycentric(normalizedX.x, 0, iSize - 1, &i, &fx);
     mathUtil::getBarycentric(normalizedX.y, 0, jSize - 1, &j, &fy);
@@ -334,6 +338,9 @@ std::function<vector3(const vector3&)> cubicBufferSamplerVec::functor() const {
 cubicBufferSamplerScalar::cubicBufferSamplerScalar( const dataBuffer3* dataBuffer, const vector3 &gridSpacing, const vector3& gridOrigin)
 {
     mGridSpacing = gridSpacing;
+    mInvGridSpacing.x = 1.0 / mGridSpacing.x;
+    mInvGridSpacing.y = 1.0 / mGridSpacing.y;
+    mInvGridSpacing.z = 1.0 / mGridSpacing.z;
     mOrigin = gridOrigin;
     mDataBuffer = dataBuffer;
 }
@@ -342,6 +349,7 @@ cubicBufferSamplerScalar::cubicBufferSamplerScalar( const dataBuffer3* dataBuffe
 cubicBufferSamplerScalar::cubicBufferSamplerScalar(const cubicBufferSamplerScalar& other)
 {
     mGridSpacing = other.mGridSpacing;
+    mInvGridSpacing = other.mInvGridSpacing;
     mOrigin = other.mOrigin;
     mDataBuffer = other.mDataBuffer;
 }
@@ -356,7 +364,7 @@ double cubicBufferSamplerScalar::operator()(const vector3& pt) const
     double fx, fy, fz;
 
     SSIZE_T kZeroSSize = 0;
-    vector3 normalizedX = (pt - mOrigin) / mGridSpacing;
+    vector3 normalizedX = (pt - mOrigin) * mInvGridSpacing;
 
     mathUtil::getBarycentric(normalizedX.x, 0, iSize - 1, &i, &fx);
     mathUtil::getBarycentric(normalizedX.y, 0, jSize - 1, &j, &fy);
