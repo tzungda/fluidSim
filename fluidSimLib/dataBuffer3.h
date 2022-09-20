@@ -102,6 +102,7 @@ public:
 
     void set( double value );
     void set( const dataBuffer3& value );
+    void setZero();
 
     size3 size( ) const;
 
