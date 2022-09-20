@@ -138,28 +138,40 @@ void gridFluidSolver3::computeGravity(double timeIntervalInSeconds)
 
         if (std::abs(mGravity.x) > mathUtil::eps())
         {
+#ifdef _OPENMP
+            vel->forEachUIndexOpenMP([&](size_t i, size_t j, size_t k) {
+#else
             vel->forEachUIndex([&](size_t i, size_t j, size_t k) {
+#endif
                 mGrids->velocity()->u(i, j, k) += timeIntervalInSeconds * mGravity.x;
             });
-        }
+            }
 
         if (std::abs(mGravity.y) > mathUtil::eps())
         {
+#ifdef _OPENMP
+            vel->forEachVIndexOpenMP([&](size_t i, size_t j, size_t k) {
+#else
             vel->forEachVIndex([&](size_t i, size_t j, size_t k) {
+#endif
                 mGrids->velocity()->v(i, j, k) += timeIntervalInSeconds * mGravity.y;
             });
-        }
+            }
 
         if (std::abs(mGravity.z) > mathUtil::eps())
         {
+#ifdef _OPENMP
+            vel->forEachWIndexOpenMP([&](size_t i, size_t j, size_t k) {
+#else
             vel->forEachWIndex([&](size_t i, size_t j, size_t k) {
+#endif
                 mGrids->velocity()->w(i, j, k) += timeIntervalInSeconds * mGravity.z;
             });
-        }
+            }
 
         applyBoundaryCondition();
-    }
-}
+        }
+        }
 
 void gridFluidSolver3::resizeGrid(
     const size3& newSize,

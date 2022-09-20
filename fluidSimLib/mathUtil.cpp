@@ -255,7 +255,11 @@ void mathUtil::extrapolateToRegion( const dataBuffer3 &input, const markers3& va
     markers3 valid0(size);
     markers3 valid1(size);
 
+#ifdef _OPENMP
+    valid0.forEachIndexOpenMP([&](size_t i, size_t j, size_t k) {
+#else
     valid0.forEachIndex([&](size_t i, size_t j, size_t k) {
+#endif
         valid0(i, j, k) = valid(i, j, k);
         output(i, j, k) = input(i, j, k);
     });
@@ -320,7 +324,7 @@ void mathUtil::extrapolateToRegion( const dataBuffer3 &input, const markers3& va
 
         valid0.swap(valid1);
     }
-}
+    }
 
 void mathUtil::extrapolateToRegion( const vecDataBuffer3 &input, const markers3& valid, unsigned int numberOfIterations, vecDataBuffer3 &output )
 {
@@ -503,3 +507,4 @@ vector3 mathUtil::uniformSampleSphere( double u1, double u2 )
     double z = r * std::sin(phi);
     return vector3(x, y, z);
 }
+

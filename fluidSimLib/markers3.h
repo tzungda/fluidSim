@@ -3,6 +3,11 @@
 #define markers3_H
 
 #include <vector>
+
+#ifdef _OPENMP
+#include <omp.h>
+#endif
+
 #include "size3.h"
 #include "vector3.h"
 
@@ -28,6 +33,24 @@ public:
     const char valueByIndex( size_t i, size_t j, size_t k ) const;
 
     char& valueByIndex( size_t i, size_t j, size_t k );
+
+#ifdef _OPENMP
+    template <typename Callback>
+    void forEachIndexOpenMP(Callback func) const
+    {
+#pragma omp parallel for
+        for ( int k = 0; k < (int)mSize.z; ++k)
+        {
+            for ( int j = 0; j < (int)mSize.y; ++j)
+            {
+                for ( int i = 0; i < (int)mSize.x; ++i)
+                {
+                    func(i, j, k);
+                }
+            }
+        }
+    }
+#endif
 
     template <typename Callback>
     void forEachIndex(Callback func) const

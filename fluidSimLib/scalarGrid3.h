@@ -43,6 +43,11 @@ public:
     void forEachDataPointIndex(
         const std::function<void(size_t, size_t, size_t)>& func) const;
 
+#ifdef _OPENMP
+    void forEachDataPointIndexOpenMP(
+        const std::function<void(size_t, size_t, size_t)>& func) const;
+#endif
+
     //size3 size( ) const;
     dataBuffer3& data();
     const dataBuffer3& data() const;
@@ -72,3 +77,4 @@ private:
 typedef std::shared_ptr<scalarGrid3> scalarGrid3Ptr;
 
 #endif
+

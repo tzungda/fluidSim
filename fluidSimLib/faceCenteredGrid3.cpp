@@ -270,6 +270,26 @@ void faceCenteredGrid3::forEachWIndex(
     mDataW.forEachIndex(func);
 }
 
+#ifdef _OPENMP
+void faceCenteredGrid3::forEachUIndexOpenMP(
+    const std::function<void(size_t, size_t, size_t)>& func) const
+{
+    mDataU.forEachIndexOpenMP(func);
+}
+
+void faceCenteredGrid3::forEachVIndexOpenMP(
+    const std::function<void(size_t, size_t, size_t)>& func) const
+{
+    mDataV.forEachIndexOpenMP(func);
+}
+
+void faceCenteredGrid3::forEachWIndexOpenMP(
+    const std::function<void(size_t, size_t, size_t)>& func) const
+{
+    mDataW.forEachIndexOpenMP(func);
+}
+#endif
+
 double faceCenteredGrid3::divergenceAtCellCenterByIndex( size_t i, size_t j, size_t k ) const
 {
     const vector3& gs = gridSpacing();
@@ -481,3 +501,4 @@ void faceCenteredGrid3::setData(const std::vector<double>& data)
         mDataW(i, j, k) = data[cnt++];
     });
 }
+

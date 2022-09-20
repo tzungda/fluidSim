@@ -5,20 +5,20 @@
 #include "mathUtil.h"
 #include "boundaryDef.h"
 
-gridFractionalBoundaryConditionSolver3::gridFractionalBoundaryConditionSolver3() 
+gridFractionalBoundaryConditionSolver3::gridFractionalBoundaryConditionSolver3()
 {
 }
 
-gridFractionalBoundaryConditionSolver3::~gridFractionalBoundaryConditionSolver3() 
+gridFractionalBoundaryConditionSolver3::~gridFractionalBoundaryConditionSolver3()
 {
 }
 
 void gridFractionalBoundaryConditionSolver3::constrainVelocity(
     faceCenteredGrid3* velocity,
-    unsigned int extrapolationDepth) 
+    unsigned int extrapolationDepth)
 {
     size3 size = velocity->resolution();
-    if (mColliderSdf.resolution() != size) 
+    if (mColliderSdf.resolution() != size)
     {
         updateCollider(
             collider(),
@@ -41,7 +41,11 @@ void gridFractionalBoundaryConditionSolver3::constrainVelocity(
     vector3 h = velocity->gridSpacing();
 
     // Assign collider's velocity first and initialize markers
+#ifdef _OPENMP
+    velocity->forEachUIndexOpenMP([&](size_t i, size_t j, size_t k) {
+#else
     velocity->forEachUIndex([&](size_t i, size_t j, size_t k) {
+#endif
         vector3 pt = uPos(i, j, k);
         double phi0 = mColliderSdf.sample(pt - vector3(0.5 * h.x, 0.0, 0.0));
         double phi1 = mColliderSdf.sample(pt + vector3(0.5 * h.x, 0.0, 0.0));
@@ -55,9 +59,13 @@ void gridFractionalBoundaryConditionSolver3::constrainVelocity(
             velocity->u(i, j, k ) = colliderVel.x;
             uMarker(i, j, k) = 0;
         }
-        });
+    });
 
+#ifdef _OPENMP
+    velocity->forEachVIndexOpenMP([&](size_t i, size_t j, size_t k) {
+#else
     velocity->forEachVIndex([&](size_t i, size_t j, size_t k) {
+#endif
         vector3 pt = vPos(i, j, k);
         double phi0 = mColliderSdf.sample(pt - vector3(0.0, 0.5 * h.y, 0.0));
         double phi1 = mColliderSdf.sample(pt + vector3(0.0, 0.5 * h.y, 0.0));
@@ -71,9 +79,13 @@ void gridFractionalBoundaryConditionSolver3::constrainVelocity(
             velocity->v( i, j, k ) = colliderVel.y;
             vMarker(i, j, k) = 0;
         }
-        });
+    });
 
+#ifdef _OPENMP
+    velocity->forEachWIndexOpenMP([&](size_t i, size_t j, size_t k) {
+#else
     velocity->forEachWIndex([&](size_t i, size_t j, size_t k) {
+#endif
         vector3 pt = wPos(i, j, k);
         double phi0 = mColliderSdf.sample(pt - vector3(0.0, 0.0, 0.5 * h.z));
         double phi1 = mColliderSdf.sample(pt + vector3(0.0, 0.0, 0.5 * h.z));
@@ -87,7 +99,7 @@ void gridFractionalBoundaryConditionSolver3::constrainVelocity(
             velocity->w( i, j, k ) = colliderVel.z;
             wMarker(i, j, k) = 0;
         }
-        });
+    });
 
     // free-slip: extrapolate fluid velocity into the collider
     mathUtil::extrapolateToRegion(
@@ -99,7 +111,11 @@ void gridFractionalBoundaryConditionSolver3::constrainVelocity(
 
     // no-flux: project the extrapolated velocity to the collider's surface
     // normal
+#ifdef _OPENMP
+    velocity->forEachUIndexOpenMP([&](size_t i, size_t j, size_t k) {
+#else
     velocity->forEachUIndex([&](size_t i, size_t j, size_t k) {
+#endif
         vector3 pt = uPos(i, j, k);
         if ( mathUtil::isInsideSdf(mColliderSdf.sample(pt))) {
             vector3 colliderVel = collider()->velocityAt(pt);
@@ -119,9 +135,13 @@ void gridFractionalBoundaryConditionSolver3::constrainVelocity(
         } else {
             uTemp(i, j, k) = velocity->u( i, j, k );
         }
-        });
+    });
 
+#ifdef _OPENMP
+    velocity->forEachVIndexOpenMP([&](size_t i, size_t j, size_t k) {
+#else
     velocity->forEachVIndex([&](size_t i, size_t j, size_t k) {
+#endif
         vector3 pt = vPos(i, j, k);
         if (mathUtil::isInsideSdf(mColliderSdf.sample(pt))) {
             vector3 colliderVel = collider()->velocityAt(pt);
@@ -141,9 +161,13 @@ void gridFractionalBoundaryConditionSolver3::constrainVelocity(
         } else {
             vTemp(i, j, k) = velocity->v( i, j, k );
         }
-        });
+    });
 
+#ifdef _OPENMP
+    velocity->forEachWIndexOpenMP([&](size_t i, size_t j, size_t k) {
+#else
     velocity->forEachWIndex([&](size_t i, size_t j, size_t k) {
+#endif
         vector3 pt = wPos(i, j, k);
         if (mathUtil::isInsideSdf(mColliderSdf.sample(pt))) {
             vector3 colliderVel = collider()->velocityAt(pt);
@@ -163,54 +187,66 @@ void gridFractionalBoundaryConditionSolver3::constrainVelocity(
         } else {
             wTemp(i, j, k) = velocity->w( i, j, k );
         }
-        });
+    });
 
     // transfer results
+#ifdef _OPENMP
+    velocity->uData().forEachIndexOpenMP([&](size_t i, size_t j, size_t k) {
+        velocity->u( i, j, k ) = uTemp(i, j, k);
+    });
+    velocity->vData().forEachIndexOpenMP([&](size_t i, size_t j, size_t k) {
+        velocity->v( i, j, k ) = vTemp(i, j, k);
+    });
+    velocity->wData().forEachIndexOpenMP([&](size_t i, size_t j, size_t k) {
+        velocity->w( i, j, k ) = wTemp(i, j, k);
+    });
+#else
     velocity->uData().forEachIndex([&](size_t i, size_t j, size_t k) {
         velocity->u( i, j, k ) = uTemp(i, j, k);
-        });
+    });
     velocity->vData().forEachIndex([&](size_t i, size_t j, size_t k) {
         velocity->v( i, j, k ) = vTemp(i, j, k);
-        });
+    });
     velocity->wData().forEachIndex([&](size_t i, size_t j, size_t k) {
         velocity->w( i, j, k ) = wTemp(i, j, k);
-        });
+    });
+#endif
 
     // no-flux: Project velocity on the domain boundary if closed
     if (closedDomainBoundaryFlag() & kDirectionLeft) {
-        for (size_t k = 0; k < velocity->uData().size().z; ++k) 
+        for (size_t k = 0; k < velocity->uData().size().z; ++k)
         {
-            for (size_t j = 0; j < velocity->uData().size().y; ++j) 
+            for (size_t j = 0; j < velocity->uData().size().y; ++j)
             {
                 velocity->u( 0, j, k ) = 0.0;
             }
         }
     }
-    if (closedDomainBoundaryFlag() & kDirectionRight) 
+    if (closedDomainBoundaryFlag() & kDirectionRight)
     {
-        for (size_t k = 0; k < velocity->uData().size().z; ++k) 
+        for (size_t k = 0; k < velocity->uData().size().z; ++k)
         {
-            for (size_t j = 0; j < velocity->uData().size().y; ++j) 
+            for (size_t j = 0; j < velocity->uData().size().y; ++j)
             {
                 velocity->u( velocity->uData().size().x - 1, j, k ) = 0.0;
             }
         }
     }
-    if (closedDomainBoundaryFlag() & kDirectionDown) 
+    if (closedDomainBoundaryFlag() & kDirectionDown)
     {
-        for (size_t k = 0; k < velocity->vData().size().z; ++k) 
+        for (size_t k = 0; k < velocity->vData().size().z; ++k)
         {
-            for (size_t i = 0; i < velocity->vData().size().x; ++i) 
+            for (size_t i = 0; i < velocity->vData().size().x; ++i)
             {
                 velocity->v( i, 0, k ) = 0.0;
             }
         }
     }
-    if (closedDomainBoundaryFlag() & kDirectionUp) 
+    if (closedDomainBoundaryFlag() & kDirectionUp)
     {
-        for (size_t k = 0; k < velocity->vData().size().z; ++k) 
+        for (size_t k = 0; k < velocity->vData().size().z; ++k)
         {
-            for (size_t i = 0; i < velocity->vData().size().x; ++i) 
+            for (size_t i = 0; i < velocity->vData().size().x; ++i)
             {
                 velocity->v( i, velocity->vData().size().y - 1, k ) = 0.0;
             }
@@ -218,25 +254,25 @@ void gridFractionalBoundaryConditionSolver3::constrainVelocity(
     }
     if (closedDomainBoundaryFlag() & kDirectionBack)
     {
-        for (size_t j = 0; j < velocity->wData().size().y; ++j) 
+        for (size_t j = 0; j < velocity->wData().size().y; ++j)
         {
-            for (size_t i = 0; i < velocity->wData().size().x; ++i) 
+            for (size_t i = 0; i < velocity->wData().size().x; ++i)
             {
                 velocity->w( i, j, 0 ) = 0.0;
             }
         }
     }
-    if (closedDomainBoundaryFlag() & kDirectionFront) 
+    if (closedDomainBoundaryFlag() & kDirectionFront)
     {
-        for (size_t j = 0; j < velocity->wData().size().y; ++j) 
+        for (size_t j = 0; j < velocity->wData().size().y; ++j)
         {
-            for (size_t i = 0; i < velocity->wData().size().x; ++i) 
+            for (size_t i = 0; i < velocity->wData().size().x; ++i)
             {
                 velocity->w(i, j, velocity->wData().size().z - 1) = 0.0;
             }
         }
     }
-}
+    }
 
 const cellCenteredScalarGrid3&
 gridFractionalBoundaryConditionSolver3::colliderSdf() const {
@@ -246,25 +282,25 @@ gridFractionalBoundaryConditionSolver3::colliderSdf() const {
 void gridFractionalBoundaryConditionSolver3::onColliderUpdated(
     const size3& gridSize,
     const vector3& gridSpacing,
-    const vector3& gridOrigin) 
+    const vector3& gridOrigin)
 {
     mColliderSdf.resize(gridSize, gridSpacing, gridOrigin);
 
-    if (collider() != nullptr) 
+    if (collider() != nullptr)
     {
         surface3Ptr surface = collider()->surface();
         implicitSurface3Ptr implicitSurface
             = std::dynamic_pointer_cast<implicitSurface3>(surface);
-        if (implicitSurface == nullptr) 
+        if (implicitSurface == nullptr)
         {
             implicitSurface = std::make_shared<surfaceToImplicit3>(surface);
         }
 
         mColliderSdf.fill([&](const vector3& pt) {
             return implicitSurface->signedDistance(pt);
-            });
+        });
     }
-    else 
+    else
     {
         mColliderSdf.fill(mathUtil::maxFloat());
     }

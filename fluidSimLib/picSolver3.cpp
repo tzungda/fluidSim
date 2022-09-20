@@ -122,10 +122,10 @@ void picSolver3::transferFromParticlesToGrids() {
     flow->gridSpacing(),
     flow->wOrigin());
     */
-    for (size_t i = 0; i < numberOfParticles; ++i) {
-        std::array<size3, 8> indices;
-        std::array<double, 8> weights;
-
+    std::array<size3, 8> indices;
+    std::array<double, 8> weights;
+    for (size_t i = 0; i < numberOfParticles; ++i)
+    {
         uSampler.getCoordinatesAndWeights(positions[i], &indices, &weights);
         for (int j = 0; j < 8; ++j) {
             flow->u(indices[j]) += velocities[i].x * weights[j];
@@ -148,6 +148,23 @@ void picSolver3::transferFromParticlesToGrids() {
         }
     }
 
+#ifdef _OPENMP
+    uWeight.forEachIndexOpenMP([&](size_t i, size_t j, size_t k) {
+        if (uWeight(i, j, k) > 0.0) {
+            flow->u(i, j, k) /= uWeight(i, j, k);
+        }
+    });
+    vWeight.forEachIndexOpenMP([&](size_t i, size_t j, size_t k) {
+        if (vWeight(i, j, k) > 0.0) {
+            flow->v(i, j, k) /= vWeight(i, j, k);
+        }
+    });
+    wWeight.forEachIndexOpenMP([&](size_t i, size_t j, size_t k) {
+        if (wWeight(i, j, k) > 0.0) {
+            flow->w(i, j, k) /= wWeight(i, j, k);
+        }
+    });
+#else
     uWeight.forEachIndex([&](size_t i, size_t j, size_t k) {
         if (uWeight(i, j, k) > 0.0) {
             flow->u(i, j, k) /= uWeight(i, j, k);
@@ -163,6 +180,7 @@ void picSolver3::transferFromParticlesToGrids() {
             flow->w(i, j, k) /= wWeight(i, j, k);
         }
     });
+#endif
 }
 
 void picSolver3::transferFromGridsToParticles() {
@@ -291,7 +309,11 @@ void picSolver3::buildSignedDistanceField() {
 
     mParticles->buildNeighborSearcher(2 * radius);
     auto searcher = mParticles->neighborSearcher();
+#ifdef _OPENMP
+    sdf->forEachDataPointIndexOpenMP([&] (size_t i, size_t j, size_t k) {
+#else
     sdf->forEachDataPointIndex([&] (size_t i, size_t j, size_t k) {
+#endif
         vector3 pt = sdfPos(i, j, k);
         double minDist = sdfBandRadius;
         searcher->forEachNearbyPoint(
@@ -302,10 +324,11 @@ void picSolver3::buildSignedDistanceField() {
     });
 
     extrapolateIntoCollider(sdf.get());
-}
+    }
 
 void picSolver3::updateParticleEmitter(double timeIntervalInSeconds) {
     if (mParticleEmitter != nullptr) {
         mParticleEmitter->update(currentTimeInSeconds(), timeIntervalInSeconds);
     }
 }
+

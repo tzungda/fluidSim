@@ -32,17 +32,29 @@ void flipSolver3::transferFromGridsToParticles()
     size_t numberOfParticles = particleSystemData()->numberOfParticles();
 
     // Compute delta
+#ifdef _OPENMP
+    flow->forEachUIndexOpenMP([&](size_t i, size_t j, size_t k)
+#else
     flow->forEachUIndex([&](size_t i, size_t j, size_t k)
+#endif
     {
         mDelta.u(i, j, k) = flow->u(i, j, k) - mDelta.u(i, j, k);
     });
 
+#ifdef _OPENMP
+    flow->forEachVIndexOpenMP([&](size_t i, size_t j, size_t k)
+#else
     flow->forEachVIndex([&](size_t i, size_t j, size_t k)
+#endif
     {
         mDelta.v(i, j, k) = flow->v(i, j, k) - mDelta.v(i, j, k);
     });
 
+#ifdef _OPENMP
+    flow->forEachWIndexOpenMP([&](size_t i, size_t j, size_t k)
+#else
     flow->forEachWIndex([&](size_t i, size_t j, size_t k)
+#endif
     {
         mDelta.w(i, j, k) = flow->w(i, j, k) - mDelta.w(i, j, k);
     });
@@ -56,3 +68,4 @@ void flipSolver3::transferFromGridsToParticles()
         velocities[i] += mDelta.sample(positions[i]);
     }
 }
+
