@@ -19,6 +19,9 @@ struct fdmBlas3 {
 
     //! Sets entire element of given vector \p result with scalar \p s.
     static void set(double s, dataBuffer3* result);
+    
+    //! Sets whole buffer to 0
+    static void setZero( dataBuffer3* result );
 
     //! Copies entire element of given vector \p result with other vector \p v.
     static void set(const dataBuffer3& v, dataBuffer3* result);
