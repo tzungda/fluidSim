@@ -25,6 +25,11 @@ void markers3::set( char value )
     }
 }
 
+void markers3::setZero()
+{
+    memset( &mData[0], 0, sizeof( char )*mData.size() );
+}
+
 void markers3::resize( const size3& size, const char initValue )
 {
     markers3 tempBuffer;
