@@ -41,12 +41,12 @@ void gridFractionalBoundaryConditionSolver3::constrainVelocity(
     vector3 h = velocity->gridSpacing();
 
     // Assign collider's velocity first and initialize markers
-    velocity->forEachUIndex([&](SizeType i, SizeType j, SizeType k) {
+    velocity->forEachUIndex([&](size_t i, size_t j, size_t k) {
         vector3 pt = uPos(i, j, k);
-        FloatType phi0 = mColliderSdf.sample(pt - vector3((FloatType)0.5 * h.x, (FloatType)0.0, (FloatType)0.0));
-        FloatType phi1 = mColliderSdf.sample(pt + vector3((FloatType)0.5 * h.x, (FloatType)0.0, (FloatType)0.0));
-        FloatType frac = mathUtil::fractionInsideSdf(phi0, phi1);
-        frac = (FloatType)1.0 - mathUtil::clamp(frac, (FloatType)0.0, (FloatType)1.0);
+        double phi0 = mColliderSdf.sample(pt - vector3(0.5 * h.x, 0.0, 0.0));
+        double phi1 = mColliderSdf.sample(pt + vector3(0.5 * h.x, 0.0, 0.0));
+        double frac = mathUtil::fractionInsideSdf(phi0, phi1);
+        frac = 1.0 - mathUtil::clamp(frac, 0.0, 1.0);
 
         if (frac > 0.0) {
             uMarker(i, j, k) = 1;
@@ -57,12 +57,12 @@ void gridFractionalBoundaryConditionSolver3::constrainVelocity(
         }
         });
 
-    velocity->forEachVIndex([&](SizeType i, SizeType j, SizeType k) {
+    velocity->forEachVIndex([&](size_t i, size_t j, size_t k) {
         vector3 pt = vPos(i, j, k);
-        FloatType phi0 = mColliderSdf.sample(pt - vector3((FloatType)0.0, (FloatType)0.5 * h.y, (FloatType)0.0));
-        FloatType phi1 = mColliderSdf.sample(pt + vector3((FloatType)0.0, (FloatType)0.5 * h.y, (FloatType)0.0));
-        FloatType frac = mathUtil::fractionInsideSdf(phi0, phi1);
-        frac = (FloatType)1.0 - mathUtil::clamp(frac, (FloatType)0.0, (FloatType)1.0);
+        double phi0 = mColliderSdf.sample(pt - vector3(0.0, 0.5 * h.y, 0.0));
+        double phi1 = mColliderSdf.sample(pt + vector3(0.0, 0.5 * h.y, 0.0));
+        double frac = mathUtil::fractionInsideSdf(phi0, phi1);
+        frac = 1.0 - mathUtil::clamp(frac, 0.0, 1.0);
 
         if (frac > 0.0) {
             vMarker(i, j, k) = 1;
@@ -73,12 +73,12 @@ void gridFractionalBoundaryConditionSolver3::constrainVelocity(
         }
         });
 
-    velocity->forEachWIndex([&](SizeType i, SizeType j, SizeType k) {
+    velocity->forEachWIndex([&](size_t i, size_t j, size_t k) {
         vector3 pt = wPos(i, j, k);
-        FloatType phi0 = mColliderSdf.sample(pt - vector3((FloatType)0.0, (FloatType)0.0, (FloatType)0.5 * h.z));
-        FloatType phi1 = mColliderSdf.sample(pt + vector3((FloatType)0.0, (FloatType)0.0, (FloatType)0.5 * h.z));
-        FloatType frac = mathUtil::fractionInsideSdf(phi0, phi1);
-        frac = (FloatType)1.0 - mathUtil::clamp(frac, (FloatType)0.0, (FloatType)1.0);
+        double phi0 = mColliderSdf.sample(pt - vector3(0.0, 0.0, 0.5 * h.z));
+        double phi1 = mColliderSdf.sample(pt + vector3(0.0, 0.0, 0.5 * h.z));
+        double frac = mathUtil::fractionInsideSdf(phi0, phi1);
+        frac = 1.0 - mathUtil::clamp(frac, 0.0, 1.0);
 
         if (frac > 0.0) {
             wMarker(i, j, k) = 1;
@@ -99,7 +99,7 @@ void gridFractionalBoundaryConditionSolver3::constrainVelocity(
 
     // no-flux: project the extrapolated velocity to the collider's surface
     // normal
-    velocity->forEachUIndex([&](SizeType i, SizeType j, SizeType k) {
+    velocity->forEachUIndex([&](size_t i, size_t j, size_t k) {
         vector3 pt = uPos(i, j, k);
         if ( mathUtil::isInsideSdf(mColliderSdf.sample(pt))) {
             vector3 colliderVel = collider()->velocityAt(pt);
@@ -121,7 +121,7 @@ void gridFractionalBoundaryConditionSolver3::constrainVelocity(
         }
         });
 
-    velocity->forEachVIndex([&](SizeType i, SizeType j, SizeType k) {
+    velocity->forEachVIndex([&](size_t i, size_t j, size_t k) {
         vector3 pt = vPos(i, j, k);
         if (mathUtil::isInsideSdf(mColliderSdf.sample(pt))) {
             vector3 colliderVel = collider()->velocityAt(pt);
@@ -143,7 +143,7 @@ void gridFractionalBoundaryConditionSolver3::constrainVelocity(
         }
         });
 
-    velocity->forEachWIndex([&](SizeType i, SizeType j, SizeType k) {
+    velocity->forEachWIndex([&](size_t i, size_t j, size_t k) {
         vector3 pt = wPos(i, j, k);
         if (mathUtil::isInsideSdf(mColliderSdf.sample(pt))) {
             vector3 colliderVel = collider()->velocityAt(pt);
@@ -166,21 +166,21 @@ void gridFractionalBoundaryConditionSolver3::constrainVelocity(
         });
 
     // transfer results
-    velocity->uData().forEachIndex([&](SizeType i, SizeType j, SizeType k) {
+    velocity->uData().forEachIndex([&](size_t i, size_t j, size_t k) {
         velocity->u( i, j, k ) = uTemp(i, j, k);
         });
-    velocity->vData().forEachIndex([&](SizeType i, SizeType j, SizeType k) {
+    velocity->vData().forEachIndex([&](size_t i, size_t j, size_t k) {
         velocity->v( i, j, k ) = vTemp(i, j, k);
         });
-    velocity->wData().forEachIndex([&](SizeType i, SizeType j, SizeType k) {
+    velocity->wData().forEachIndex([&](size_t i, size_t j, size_t k) {
         velocity->w( i, j, k ) = wTemp(i, j, k);
         });
 
     // no-flux: Project velocity on the domain boundary if closed
     if (closedDomainBoundaryFlag() & kDirectionLeft) {
-        for (SizeType k = 0; k < velocity->uData().size().z; ++k) 
+        for (size_t k = 0; k < velocity->uData().size().z; ++k) 
         {
-            for (SizeType j = 0; j < velocity->uData().size().y; ++j) 
+            for (size_t j = 0; j < velocity->uData().size().y; ++j) 
             {
                 velocity->u( 0, j, k ) = 0.0;
             }
@@ -188,9 +188,9 @@ void gridFractionalBoundaryConditionSolver3::constrainVelocity(
     }
     if (closedDomainBoundaryFlag() & kDirectionRight) 
     {
-        for (SizeType k = 0; k < velocity->uData().size().z; ++k) 
+        for (size_t k = 0; k < velocity->uData().size().z; ++k) 
         {
-            for (SizeType j = 0; j < velocity->uData().size().y; ++j) 
+            for (size_t j = 0; j < velocity->uData().size().y; ++j) 
             {
                 velocity->u( velocity->uData().size().x - 1, j, k ) = 0.0;
             }
@@ -198,9 +198,9 @@ void gridFractionalBoundaryConditionSolver3::constrainVelocity(
     }
     if (closedDomainBoundaryFlag() & kDirectionDown) 
     {
-        for (SizeType k = 0; k < velocity->vData().size().z; ++k) 
+        for (size_t k = 0; k < velocity->vData().size().z; ++k) 
         {
-            for (SizeType i = 0; i < velocity->vData().size().x; ++i) 
+            for (size_t i = 0; i < velocity->vData().size().x; ++i) 
             {
                 velocity->v( i, 0, k ) = 0.0;
             }
@@ -208,9 +208,9 @@ void gridFractionalBoundaryConditionSolver3::constrainVelocity(
     }
     if (closedDomainBoundaryFlag() & kDirectionUp) 
     {
-        for (SizeType k = 0; k < velocity->vData().size().z; ++k) 
+        for (size_t k = 0; k < velocity->vData().size().z; ++k) 
         {
-            for (SizeType i = 0; i < velocity->vData().size().x; ++i) 
+            for (size_t i = 0; i < velocity->vData().size().x; ++i) 
             {
                 velocity->v( i, velocity->vData().size().y - 1, k ) = 0.0;
             }
@@ -218,9 +218,9 @@ void gridFractionalBoundaryConditionSolver3::constrainVelocity(
     }
     if (closedDomainBoundaryFlag() & kDirectionBack)
     {
-        for (SizeType j = 0; j < velocity->wData().size().y; ++j) 
+        for (size_t j = 0; j < velocity->wData().size().y; ++j) 
         {
-            for (SizeType i = 0; i < velocity->wData().size().x; ++i) 
+            for (size_t i = 0; i < velocity->wData().size().x; ++i) 
             {
                 velocity->w( i, j, 0 ) = 0.0;
             }
@@ -228,9 +228,9 @@ void gridFractionalBoundaryConditionSolver3::constrainVelocity(
     }
     if (closedDomainBoundaryFlag() & kDirectionFront) 
     {
-        for (SizeType j = 0; j < velocity->wData().size().y; ++j) 
+        for (size_t j = 0; j < velocity->wData().size().y; ++j) 
         {
-            for (SizeType i = 0; i < velocity->wData().size().x; ++i) 
+            for (size_t i = 0; i < velocity->wData().size().x; ++i) 
             {
                 velocity->w(i, j, velocity->wData().size().z - 1) = 0.0;
             }

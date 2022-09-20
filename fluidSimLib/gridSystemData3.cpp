@@ -62,36 +62,36 @@ boundingBox3 gridSystemData3::boundingBox() const
     return mVelocity->boundingBox();
 }
 
-SizeType gridSystemData3::addScalarGrid3Data(const scalarGrid3Ptr scalarGrid3Data, FloatType initValue)
+size_t gridSystemData3::addScalarGrid3Data(const scalarGrid3Ptr scalarGrid3Data, double initValue)
 {
-    SizeType attrIdx = (SizeType)mScalarGrid3DataList.size();
+    size_t attrIdx = mScalarGrid3DataList.size();
     scalarGrid3Data->fill( initValue );
     mScalarGrid3DataList.push_back(scalarGrid3Data);
 
     return attrIdx;
 }
 
-SizeType gridSystemData3::addVectorGrid3Data(const vectorGrid3Ptr vectorGrid3Data, const vector3& initValue)
+size_t gridSystemData3::addVectorGrid3Data(const vectorGrid3Ptr vectorGrid3Data, const vector3& initValue)
 {
-    SizeType attrIdx = (SizeType)mVectorGrid3DataList.size();
+    size_t attrIdx = mVectorGrid3DataList.size();
     vectorGrid3Data->fill( initValue );
     mVectorGrid3DataList.push_back(vectorGrid3Data);
 
     return attrIdx;
 }
 
-SizeType gridSystemData3::addAdvectableScalarData(const scalarGrid3Ptr& scalarGrid3Data, FloatType initialVal)
+size_t gridSystemData3::addAdvectableScalarData(const scalarGrid3Ptr& scalarGrid3Data, double initialVal)
 {
-    SizeType attrIdx = (SizeType)this->mAdvectableScalarDataList.size();
+    size_t attrIdx = this->mAdvectableScalarDataList.size();
     scalarGrid3Data->fill( initialVal );
     mAdvectableScalarDataList.push_back(scalarGrid3Data);
 
     return attrIdx;
 }
 
-SizeType gridSystemData3::addAdvectableVectorGrid3Data(const vectorGrid3Ptr vectorGrid3Data, const vector3& initValue)
+size_t gridSystemData3::addAdvectableVectorGrid3Data(const vectorGrid3Ptr vectorGrid3Data, const vector3& initValue)
 {
-    SizeType attrIdx = (SizeType)this->mAdvectableVectorDataList.size();
+    size_t attrIdx = this->mAdvectableVectorDataList.size();
     vectorGrid3Data->fill( initValue );
     mAdvectableVectorDataList.push_back(vectorGrid3Data);
 
@@ -103,49 +103,49 @@ const faceCenteredGrid3Ptr& gridSystemData3::velocity() const
     return mVelocity;
 }
 
-SizeType gridSystemData3::velocityIndex() const
+size_t gridSystemData3::velocityIndex() const
 {
     return mVelocityIdx;
 }
 
-const scalarGrid3Ptr& gridSystemData3::scalarGrid3DataAt(SizeType ind) const
+const scalarGrid3Ptr& gridSystemData3::scalarGrid3DataAt(size_t ind) const
 {
     return mScalarGrid3DataList[ind];
 }
 
-const vectorGrid3Ptr& gridSystemData3::vectorGrid3DataAt(SizeType ind) const
+const vectorGrid3Ptr& gridSystemData3::vectorGrid3DataAt(size_t ind) const
 {
     return mVectorGrid3DataList[ind];
 }
 
-const scalarGrid3Ptr& gridSystemData3::advectableScalarDataAt(SizeType idx) const
+const scalarGrid3Ptr& gridSystemData3::advectableScalarDataAt(size_t idx) const
 {
     return mAdvectableScalarDataList[idx];
 }
 
-const vectorGrid3Ptr& gridSystemData3::advectableVectorDataAt(SizeType idx) const
+const vectorGrid3Ptr& gridSystemData3::advectableVectorDataAt(size_t idx) const
 {
     return mAdvectableVectorDataList[idx];
 }
 
-SizeType gridSystemData3::numOfScalarGrid3Data() const
+size_t gridSystemData3::numOfScalarGrid3Data() const
 {
-    return (SizeType)mScalarGrid3DataList.size();
+    return mScalarGrid3DataList.size();
 }
 
-SizeType gridSystemData3::numOfVectorGrid3Data() const
+size_t gridSystemData3::numOfVectorGrid3Data() const
 {
-    return (SizeType)mVectorGrid3DataList.size();
+    return mVectorGrid3DataList.size();
 }
 
-SizeType gridSystemData3::numberOfAdvectableScalarData() const
+size_t gridSystemData3::numberOfAdvectableScalarData() const
 {
-    return (SizeType)mAdvectableScalarDataList.size();
+    return mAdvectableScalarDataList.size();
 }
 
-SizeType gridSystemData3::numberOfAdvectableVectorData() const
+size_t gridSystemData3::numberOfAdvectableVectorData() const
 {
-    return (SizeType)mAdvectableVectorDataList.size();
+    return mAdvectableVectorDataList.size();
 }
 
 

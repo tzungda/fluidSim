@@ -14,82 +14,82 @@
 class mathUtil
 {
 public:
-    static FloatType eps( )
-    { return std::numeric_limits<FloatType>::epsilon(); }
-    static FloatType maxFloat( )
-    { return std::numeric_limits<FloatType>::max(); }
-    static FloatType minFloat( )
-    { return std::numeric_limits<FloatType>::min(); }
-    static bool isInsideSdf( FloatType phi )
+    static double eps( )
+    { return std::numeric_limits<double>::epsilon(); }
+    static double maxFloat( )
+    { return std::numeric_limits<double>::max(); }
+    static double minFloat( )
+    { return std::numeric_limits<double>::min(); }
+    static bool isInsideSdf( double phi )
     { return phi < 0.0;}
-    static FloatType square(FloatType x)
+    static double square(double x)
     { return x * x; }
-    static FloatType cubic(FloatType x)
+    static double cubic(double x)
     { return x * x * x; }
-    static FloatType pi( )
-    { return (FloatType)3.14159265358979323846264338327950288; }
-    static FloatType invPi( )
-    { return (FloatType)(1.0/3.14159265358979323846264338327950288); }
+    static double pi( )
+    { return 3.14159265358979323846264338327950288; }
+    static double invPi( )
+    { return 1.0/3.14159265358979323846264338327950288; }
 
     //kPiF = 3.14159265358979323846264338327950288f;
 
-    static int sign( FloatType x );
+    static int sign( double x );
 
-    static vector3 projectAndApplyFriction( const vector3& vel, const vector3& normal, FloatType frictionCoefficient );
+    static vector3 projectAndApplyFriction( const vector3& vel, const vector3& normal, double frictionCoefficient );
 
-    static FloatType fractionInsideSdf( FloatType phi0, FloatType phi1 );
+    static double fractionInsideSdf( double phi0, double phi1 );
 
-    static FloatType fractionInside( FloatType phiBottomLeft, FloatType phiBottomRight, FloatType phiTopLeft, FloatType phiTopRight );
+    static double fractionInside( double phiBottomLeft, double phiBottomRight, double phiTopLeft, double phiTopRight );
 
-    static void cycleArray(FloatType* arr, int size) ;
+    static void cycleArray(double* arr, int size) ;
 
-    static FloatType monotonicCatmullRom( const FloatType& f0,
-        const FloatType& f1,
-        const FloatType& f2,
-        const FloatType& f3,
-        FloatType f );
+    static double monotonicCatmullRom( const double& f0,
+        const double& f1,
+        const double& f2,
+        const double& f3,
+        double f );
     static vector3 monotonicCatmullRom( const vector3& f0,
         const vector3& f1,
         const vector3& f2,
         const vector3& f3,
-        FloatType f );
+        double f );
 
-    static FloatType clamp(FloatType val, FloatType low, FloatType high);
+    static double clamp(double val, double low, double high);
     static vector3 clamp( const vector3& val, const vector3& low, const vector3& high);
 
     static void extrapolateToRegion( const dataBuffer3 &input, const markers3& valid, unsigned int numberOfIterations, dataBuffer3 &output );
     static void extrapolateToRegion( const vecDataBuffer3 &input, const markers3& valid, unsigned int numberOfIterations, vecDataBuffer3 &output );
 
     static void getBarycentric(
-        FloatType x,
-        SSizeType iLow,
-        SSizeType iHigh,
-        SSizeType* i,
-        FloatType* f);
+        double x,
+        SSIZE_T iLow,
+        SSIZE_T iHigh,
+        SSIZE_T* i,
+        double* f);
 
-    static FloatType lerp(const FloatType& a, const FloatType& b, FloatType c);
+    static double lerp(const double& a, const double& b, double c);
 
-    static FloatType bilerp( const FloatType& a00, const FloatType& a10, const FloatType& a01, const FloatType& a11,
-        FloatType c0, FloatType c1 );
+    static double bilerp( const double& a00, const double& a10, const double& a01, const double& a11,
+        double c0, double c1 );
 
-    static FloatType trilerp(
-        const FloatType& a000,
-        const FloatType& a100,
-        const FloatType& a010,
-        const FloatType& a110,
-        const FloatType& a001,
-        const FloatType& a101,
-        const FloatType& a011,
-        const FloatType& a111,
-        FloatType c0,
-        FloatType c1,
-        FloatType c2);
+    static double trilerp(
+        const double& a000,
+        const double& a100,
+        const double& a010,
+        const double& a110,
+        const double& a001,
+        const double& a101,
+        const double& a011,
+        const double& a111,
+        double c0,
+        double c1,
+        double c2);
 
-    static FloatType absmax( FloatType x, FloatType y );
+    static double absmax( double x, double y );
 
-    static FloatType smearedHeavisideSdf( FloatType phi );
+    static double smearedHeavisideSdf( double phi );
 
-    static vector3 uniformSampleSphere( FloatType u1, FloatType u2 );
+    static vector3 uniformSampleSphere( double u1, double u2 );
 
 
 };

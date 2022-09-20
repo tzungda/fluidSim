@@ -29,29 +29,29 @@ void flipSolver3::transferFromGridsToParticles()
     const faceCenteredGrid3Ptr& flow = gridSystemData()->velocity();
     std::vector<vector3>& positions = particleSystemData()->positions();
     std::vector<vector3>& velocities = particleSystemData()->velocities();
-    SizeType numberOfParticles = particleSystemData()->numberOfParticles();
+    size_t numberOfParticles = particleSystemData()->numberOfParticles();
 
     // Compute delta
-    flow->forEachUIndex([&](SizeType i, SizeType j, SizeType k)
+    flow->forEachUIndex([&](size_t i, size_t j, size_t k)
     {
         mDelta.u(i, j, k) = flow->u(i, j, k) - mDelta.u(i, j, k);
     });
 
-    flow->forEachVIndex([&](SizeType i, SizeType j, SizeType k)
+    flow->forEachVIndex([&](size_t i, size_t j, size_t k)
     {
         mDelta.v(i, j, k) = flow->v(i, j, k) - mDelta.v(i, j, k);
     });
 
-    flow->forEachWIndex([&](SizeType i, SizeType j, SizeType k)
+    flow->forEachWIndex([&](size_t i, size_t j, size_t k)
     {
         mDelta.w(i, j, k) = flow->w(i, j, k) - mDelta.w(i, j, k);
     });
 
     // Transfer delta to the particles
-    //parallelFor(kZeroSize, numberOfParticles, [&](SizeType i) {
+    //parallelFor(kZeroSize, numberOfParticles, [&](size_t i) {
     //    velocities[i] += mDelta.sample(positions[i]);
     //});
-    for ( SizeType i = 0; i < numberOfParticles; ++i )
+    for ( size_t i = 0; i < numberOfParticles; ++i )
     {
         velocities[i] += mDelta.sample(positions[i]);
     }

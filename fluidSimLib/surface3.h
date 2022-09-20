@@ -10,7 +10,7 @@
 //==========================================================
 struct surfaceRayIntersection3 {
     bool isIntersecting = false;
-    FloatType t = std::numeric_limits<FloatType>::max();;
+    double t = std::numeric_limits<double>::max();;
     vector3 point;
     vector3 normal;
 };
@@ -33,7 +33,7 @@ public:
 
     bool intersects(const ray3& ray) const;
 
-    FloatType closestDistance(const vector3& otherPoint) const;
+    double closestDistance(const vector3& otherPoint) const;
 
     surfaceRayIntersection3 closestIntersection(const ray3& ray) const;
 
@@ -65,7 +65,7 @@ protected:
 
     //! Returns the closest distance from the given point \p otherPoint to the
     //! point on the surface in local frame.
-    virtual FloatType closestDistanceLocal(const vector3& otherPoint) const;
+    virtual double closestDistanceLocal(const vector3& otherPoint) const;
 };
 
 typedef std::shared_ptr<surface3> surface3Ptr;

@@ -16,12 +16,12 @@ implicitSurface3::~implicitSurface3()
 {
 }
 
-FloatType implicitSurface3::signedDistance(const vector3& otherPoint) const
+double implicitSurface3::signedDistance(const vector3& otherPoint) const
 {
     return signedDistanceLocal(transform.toLocal(otherPoint));
 }
 
-FloatType implicitSurface3::closestDistanceLocal( const vector3& otherPoint) const
+double implicitSurface3::closestDistanceLocal( const vector3& otherPoint) const
 {
     return std::fabs(signedDistanceLocal(otherPoint));
 }

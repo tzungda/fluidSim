@@ -15,8 +15,8 @@ gridBackwardEulerDiffusionSolver3::gridBackwardEulerDiffusionSolver3(
 
 void gridBackwardEulerDiffusionSolver3::solve(
     const scalarGrid3& source,
-    FloatType diffusionCoefficient,
-    FloatType timeIntervalInSeconds,
+    double diffusionCoefficient,
+    double timeIntervalInSeconds,
     scalarGrid3* dest,
     const scalarField3& boundarySdf,
     const scalarField3& fluidSdf) 
@@ -36,7 +36,7 @@ void gridBackwardEulerDiffusionSolver3::solve(
 
         // Assign the solution
         source.forEachDataPointIndex(
-            [&](SizeType i, SizeType j, SizeType k) {
+            [&](size_t i, size_t j, size_t k) {
                 (*dest)(i, j, k) = mSystem.x(i, j, k);
             });
     }
@@ -44,8 +44,8 @@ void gridBackwardEulerDiffusionSolver3::solve(
 
 void gridBackwardEulerDiffusionSolver3::solve(
     const extendVectorGrid3& source,
-    FloatType diffusionCoefficient,
-    FloatType timeIntervalInSeconds,
+    double diffusionCoefficient,
+    double timeIntervalInSeconds,
     extendVectorGrid3* dest,
     const scalarField3& boundarySdf,
     const scalarField3& fluidSdf)
@@ -67,7 +67,7 @@ void gridBackwardEulerDiffusionSolver3::solve(
 
         // Assign the solution
         source.forEachDataPointIndex(
-            [&](SizeType i, SizeType j, SizeType k) {
+            [&](size_t i, size_t j, size_t k) {
                 (*dest)(i, j, k).x = mSystem.x(i, j, k);
             });
     }
@@ -82,7 +82,7 @@ void gridBackwardEulerDiffusionSolver3::solve(
 
         // Assign the solution
         source.forEachDataPointIndex(
-            [&](SizeType i, SizeType j, SizeType k) {
+            [&](size_t i, size_t j, size_t k) {
                 (*dest)(i, j, k).y = mSystem.x(i, j, k);
             });
     }
@@ -97,7 +97,7 @@ void gridBackwardEulerDiffusionSolver3::solve(
 
         // Assign the solution
         source.forEachDataPointIndex(
-            [&](SizeType i, SizeType j, SizeType k) {
+            [&](size_t i, size_t j, size_t k) {
                 (*dest)(i, j, k).z = mSystem.x(i, j, k);
             });
     }
@@ -105,8 +105,8 @@ void gridBackwardEulerDiffusionSolver3::solve(
 
 void gridBackwardEulerDiffusionSolver3::solve(
     const faceCenteredGrid3& source,
-    FloatType diffusionCoefficient,
-    FloatType timeIntervalInSeconds,
+    double diffusionCoefficient,
+    double timeIntervalInSeconds,
     faceCenteredGrid3* dest,
     const scalarField3& boundarySdf,
     const scalarField3& fluidSdf)
@@ -127,7 +127,7 @@ void gridBackwardEulerDiffusionSolver3::solve(
 
         // Assign the solution
         source.forEachUIndex(
-            [&](SizeType i, SizeType j, SizeType k) {
+            [&](size_t i, size_t j, size_t k) {
                 dest->u(i, j, k) = mSystem.x(i, j, k);
             });
     }
@@ -145,7 +145,7 @@ void gridBackwardEulerDiffusionSolver3::solve(
 
         // Assign the solution
         source.forEachVIndex(
-            [&](SizeType i, SizeType j, SizeType k) {
+            [&](size_t i, size_t j, size_t k) {
                 dest->v(i, j, k) = mSystem.x(i, j, k);
             });
     }
@@ -163,7 +163,7 @@ void gridBackwardEulerDiffusionSolver3::solve(
 
         // Assign the solution
         source.forEachWIndex(
-            [&](SizeType i, SizeType j, SizeType k) {
+            [&](size_t i, size_t j, size_t k) {
                 dest->w(i, j, k) = mSystem.x(i, j, k);
             });
     }
@@ -177,13 +177,13 @@ void gridBackwardEulerDiffusionSolver3::setLinearSystemSolver(
 
 void gridBackwardEulerDiffusionSolver3::buildMarkers(
     const size3& size,
-    const std::function<vector3(SizeType, SizeType, SizeType)>& pos,
+    const std::function<vector3(size_t, size_t, size_t)>& pos,
     const scalarField3& boundarySdf,
     const scalarField3& fluidSdf) 
 {
     mMarkers.resize(size);
 
-    mMarkers.forEachIndex([&](SizeType i, SizeType j, SizeType k) {
+    mMarkers.forEachIndex([&](size_t i, size_t j, size_t k) {
         if (mathUtil::isInsideSdf(boundarySdf.sample(pos(i, j, k)))) {
             mMarkers(i, j, k) = kBoundary;
         } else if (mathUtil::isInsideSdf(fluidSdf.sample(pos(i, j, k)))) {
@@ -204,7 +204,7 @@ void gridBackwardEulerDiffusionSolver3::buildMatrix(
 
     // Build linear system
     mSystem.A.forEachIndex(
-        [&](SizeType i, SizeType j, SizeType k) {
+        [&](size_t i, size_t j, size_t k) {
             auto& row = mSystem.A(i, j, k);
 
             // Initialize
@@ -288,7 +288,7 @@ void gridBackwardEulerDiffusionSolver3::buildVectors(
 
     // Build linear system
     mSystem.x.forEachIndex(
-        [&](SizeType i, SizeType j, SizeType k) 
+        [&](size_t i, size_t j, size_t k) 
         {
             mSystem.b(i, j, k) = mSystem.x(i, j, k) = f(i, j, k);
 
@@ -329,7 +329,7 @@ void gridBackwardEulerDiffusionSolver3::buildVectors(
 void gridBackwardEulerDiffusionSolver3::buildVectors(
     const vecDataBuffer3& f,
     const vector3& c,
-    SizeType component)
+    size_t component)
 {
     size3 size = f.size();
 
@@ -338,7 +338,7 @@ void gridBackwardEulerDiffusionSolver3::buildVectors(
 
     // Build linear system
     mSystem.x.forEachIndex(
-        [&](SizeType i, SizeType j, SizeType k) {
+        [&](size_t i, size_t j, size_t k) {
             mSystem.b(i, j, k) = mSystem.x(i, j, k) = f(i, j, k)[component];
 
             if (mBoundaryType == Dirichlet && mMarkers(i, j, k) == kFluid) 

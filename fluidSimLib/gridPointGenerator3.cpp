@@ -3,13 +3,13 @@
 
 void gridPointGenerator3::forEachPoint(
     const boundingBox3& boundingBox,
-    FloatType spacing,
+    double spacing,
     const std::function<bool(const vector3&)>& callback) const
 {
     vector3 position;
-    FloatType boxWidth = boundingBox.width();
-    FloatType boxHeight = boundingBox.height();
-    FloatType boxDepth = boundingBox.depth();
+    double boxWidth = boundingBox.width();
+    double boxHeight = boundingBox.height();
+    double boxDepth = boundingBox.depth();
 
     bool shouldQuit = false;
     for (int k = 0; k * spacing <= boxDepth && !shouldQuit; ++k) {

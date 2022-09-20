@@ -17,7 +17,7 @@ public:
 
     void solve(
         const faceCenteredGrid3& input,
-        FloatType timeIntervalInSeconds,
+        double timeIntervalInSeconds,
         faceCenteredGrid3* output,
         const scalarField3& boundarySdf
         = constantScalarField3(mathUtil::maxFloat()),
@@ -44,7 +44,7 @@ private:
 
     void buildMarkers(
         const size3& size,
-        const std::function<vector3(SizeType, SizeType, SizeType)>& pos,
+        const std::function<vector3(size_t, size_t, size_t)>& pos,
         const scalarField3& boundarySdf,
         const scalarField3& fluidSdf);
 

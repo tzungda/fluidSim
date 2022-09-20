@@ -4,28 +4,27 @@
 //#include <algorithm>  
 #include <limits>
 //#include <tuple>
-#include "common.h"
 
 class vector3
 {
 public:
 
-    FloatType x;
+    double x;
 
-    FloatType y;
+    double y;
 
-    FloatType z;
+    double z;
 
 
     vector3();
 
-    vector3(FloatType x, FloatType y, FloatType z);
+    vector3(double x, double y, double z);
 
     vector3(const vector3& v);
 
-    void set(FloatType s);
+    void set(double s);
 
-    void set(FloatType x, FloatType y, FloatType z);
+    void set(double x, double y, double z);
 
     void set(const vector3& v);
 
@@ -33,58 +32,58 @@ public:
 
     void normalize();
 
-    vector3 add(FloatType v) const;
+    vector3 add(double v) const;
 
     vector3 add( const vector3& v) const;
 
-    vector3 sub(FloatType v) const;
+    vector3 sub(double v) const;
 
     vector3 sub(const vector3& v) const;
 
-    vector3 mul(FloatType v) const;
+    vector3 mul(double v) const;
 
     vector3 mul(const vector3& v) const;
 
-    vector3 div(FloatType v) const;
+    vector3 div(double v) const;
 
     vector3 div(const vector3& v) const;
 
-    FloatType dot(const vector3& v) const;
+    double dot(const vector3& v) const;
 
     vector3 cross(const vector3& v) const;
 
-    vector3 rdiv(FloatType v) const;
+    vector3 rdiv(double v) const;
 
     vector3 rdiv(const vector3& v) const;
 
 
     //! Returns the sum of all the components (i.e. x + y + z).
-    FloatType sum() const;
+    double sum() const;
 
     //! Returns the average of all the components.
-    FloatType avg() const;
+    double avg() const;
 
     //! Returns the minimum value among x, y, and z.
-    FloatType min() const;
+    double min() const;
 
     //! Returns the maximum value among x, y, and z.
-    FloatType max() const;
+    double max() const;
 
 
     //! Returns normalized vector.
     vector3 normalized() const;
 
     //! Returns the length of the vector.
-    FloatType length() const;
+    double length() const;
 
     //! Returns the squared length of the vector.
-    FloatType lengthSquared() const;
+    double lengthSquared() const;
 
     //! Returns the distance to the other vector.
-    FloatType distanceTo(const vector3& other) const;
+    double distanceTo(const vector3& other) const;
 
     //! Returns the squared distance to the other vector.
-    FloatType distanceSquaredTo(const vector3& other) const;
+    double distanceSquaredTo(const vector3& other) const;
 
     //! Returns the reflection vector3 to the surface with given surface normal.
     vector3 reflected(const vector3& normal) const;
@@ -98,34 +97,34 @@ public:
     //! Returns true if \p other is the same as this vector.
     bool isEqual(const vector3& other) const;
 
-    bool isSimilar( const vector3& other, FloatType eps = 0.000001f ) const;
+    bool isSimilar( const vector3& other, double eps = 0.000001f ) const;
 
-    FloatType& operator[](SizeType i);
-    const FloatType& operator[](SizeType i) const;
+    double& operator[](size_t i);
+    const double& operator[](size_t i) const;
 
-    //! SeFloatType x and y with other vector3 \p pt.
+    //! Sedouble x and y with other vector3 \p pt.
     vector3& operator=(const vector3& v);
 
     //! Computes this += (v, v)
-    vector3& operator+=(FloatType v);
+    vector3& operator+=(double v);
 
     //! Computes this += (v.x, v.y)
     vector3& operator+=(const vector3& v);
 
     //! Computes this -= (v, v)
-    vector3& operator-=(FloatType v);
+    vector3& operator-=(double v);
 
     //! Computes this -= (v.x, v.y)
     vector3& operator-=(const vector3& v);
 
     //! Computes this *= (v, v)
-    vector3& operator*=(FloatType v);
+    vector3& operator*=(double v);
 
     //! Computes this *= (v.x, v.y)
     vector3& operator*=(const vector3& v);
 
     //! Computes this /= (v, v)
-    vector3& operator/=(FloatType v);
+    vector3& operator/=(double v);
 
     //! Computes this /= (v.x, v.y)
     vector3& operator/=(const vector3& v);
@@ -133,7 +132,7 @@ public:
     //! Returns true if \p other is the same as this vector.
     bool operator==(const vector3& v) const;
 
-    //! Returns true if \p other is the noFloatType same as this vector.
+    //! Returns true if \p other is the nodouble same as this vector.
     bool operator!=(const vector3& v) const;
 
    
@@ -143,27 +142,27 @@ vector3 operator+(const vector3& a);
 
 vector3 operator-(const vector3& a);
 
-vector3 operator+(const vector3& a, FloatType b);
+vector3 operator+(const vector3& a, double b);
 
-vector3 operator+(FloatType a, const vector3& b);
+vector3 operator+(double a, const vector3& b);
 
 vector3 operator+(const vector3& a, const vector3& b);
 
-vector3 operator-(const vector3& a, FloatType b);
+vector3 operator-(const vector3& a, double b);
 
-vector3 operator-(FloatType a, const vector3& b);
+vector3 operator-(double a, const vector3& b);
 
 vector3 operator-(const vector3& a, const vector3& b);
 
-vector3 operator*(const vector3& a, FloatType b);
+vector3 operator*(const vector3& a, double b);
 
-vector3 operator*( FloatType a, const vector3& b);
+vector3 operator*( double a, const vector3& b);
 
 vector3 operator*(const vector3& a, const vector3& b);
 
-vector3 operator/(const vector3& a, FloatType b);
+vector3 operator/(const vector3& a, double b);
 
-vector3 operator/(FloatType a, const vector3& b);
+vector3 operator/(double a, const vector3& b);
 
 vector3 operator/(const vector3& a, const vector3& b);
 

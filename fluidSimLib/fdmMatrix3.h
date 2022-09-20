@@ -8,13 +8,13 @@
 
 struct fdmMatrixRow3 {
     //! Diagonal component of the matrix (row, row).
-    FloatType center = 0.0;
+    double center = 0.0;
     //! Off-diagonal element where colum refers to (i+1, j, k) grid point.
-    FloatType right = 0.0;
+    double right = 0.0;
     //! Off-diagonal element where column refers to (i, j+1, k) grid point.
-    FloatType up = 0.0;
+    double up = 0.0;
     //! OFf-diagonal element where column refers to (i, j, k+1) grid point.
-    FloatType front = 0.0;
+    double front = 0.0;
 };
 
 class fdmMatrix3
@@ -28,27 +28,27 @@ public:
 
     fdmMatrix3( const size3& size, const fdmMatrixRow3 &initValue = fdmMatrixRow3() );
 
-    fdmMatrix3( SizeType width, SizeType height, SizeType depth, const fdmMatrixRow3 &initValue = fdmMatrixRow3() );
+    fdmMatrix3( size_t width, size_t height, size_t depth, const fdmMatrixRow3 &initValue = fdmMatrixRow3() );
 
     fdmMatrix3( const fdmMatrix3& other );
 
 public:
     void resize( const size3& size, const fdmMatrixRow3 &initValue = fdmMatrixRow3() );
 
-    void resize( SizeType width, SizeType height, SizeType depth, const fdmMatrixRow3 &initValue = fdmMatrixRow3() );
+    void resize( size_t width, size_t height, size_t depth, const fdmMatrixRow3 &initValue = fdmMatrixRow3() );
 
-    const fdmMatrixRow3& valueByIndex( SizeType i, SizeType j, SizeType k ) const;
+    const fdmMatrixRow3& valueByIndex( size_t i, size_t j, size_t k ) const;
 
-    fdmMatrixRow3& valueByIndex( SizeType i, SizeType j, SizeType k );
+    fdmMatrixRow3& valueByIndex( size_t i, size_t j, size_t k );
 
     template <typename Callback>
     void forEachIndex(Callback func) const
     {
-        for (SizeType k = 0; k < mSize.z; ++k)
+        for (size_t k = 0; k < mSize.z; ++k)
         {
-            for (SizeType j = 0; j < mSize.y; ++j) 
+            for (size_t j = 0; j < mSize.y; ++j) 
             {
-                for (SizeType i = 0; i < mSize.x; ++i) 
+                for (size_t i = 0; i < mSize.x; ++i) 
                 {
                     func(i, j, k);
                 }
@@ -61,18 +61,18 @@ public:
 
     size3 size( ) const;
 
-    SizeType width( ) const;
+    size_t width( ) const;
 
-    SizeType height( ) const;
+    size_t height( ) const;
 
-    SizeType depth( ) const;
+    size_t depth( ) const;
 
     fdmMatrixRow3 *data( );
 
     void swap( fdmMatrix3& other );
 
-    fdmMatrixRow3& operator()(SizeType i, SizeType j, SizeType k);
-    const fdmMatrixRow3& operator()( SizeType i, SizeType j, SizeType k ) const;
+    fdmMatrixRow3& operator()(size_t i, size_t j, size_t k);
+    const fdmMatrixRow3& operator()( size_t i, size_t j, size_t k ) const;
 };
 
 #endif

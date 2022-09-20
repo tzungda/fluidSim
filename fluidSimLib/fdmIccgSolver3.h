@@ -7,7 +7,7 @@
 class fdmIccgSolver3: public fdmLinearSystemSolver3
 {
 public:
-    fdmIccgSolver3(unsigned int maxNumberOfIterations, FloatType tolerance);
+    fdmIccgSolver3(unsigned int maxNumberOfIterations, double tolerance);
 
     //! Solves the given linear system.
     bool solve( fdmLinearSystem3* system) override;
@@ -19,9 +19,9 @@ public:
     unsigned int lastNumberOfIterations() const;
 
     //! Returns the max residual tolerance for the Jacobi method.
-    FloatType tolerance() const;
+    double tolerance() const;
 
-    FloatType lastResidual() const;
+    double lastResidual() const;
 
    
 
@@ -40,8 +40,8 @@ private:
 
     unsigned int mMaxNumberOfIterations;
     unsigned int mLastNumberOfIterations;
-    FloatType mTolerance;
-    FloatType mLastResidualNorm;
+    double mTolerance;
+    double mLastResidualNorm;
 
     dataBuffer3 mR;
     dataBuffer3 mD;
@@ -53,7 +53,7 @@ public:
     static void pcg( const  fdmMatrix3& A,
         const dataBuffer3& b,
         unsigned int maxNumberOfIterations,
-        FloatType tolerance,
+        double tolerance,
         Preconditioner* M,
         dataBuffer3* x,
         dataBuffer3* r,
@@ -61,7 +61,7 @@ public:
         dataBuffer3* q,
         dataBuffer3* s,
         unsigned int* lastNumberOfIterations,
-        FloatType* lastResidualNorm );
+        double* lastResidualNorm );
 };
 
 typedef std::shared_ptr<fdmIccgSolver3> fdmIccgSolver3Ptr;

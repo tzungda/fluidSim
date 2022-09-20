@@ -10,7 +10,7 @@ public:
    
     void forEachPoint(
         const boundingBox3& boundingBox,
-        FloatType spacing,
+        double spacing,
         const std::function<bool(const vector3&)>& callback) const;
 };
 

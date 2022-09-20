@@ -19,33 +19,33 @@ simAnimation::~simAnimation()
 
 void simAnimation::onUpdate(const frame& f)
 {
-    if (f.index > mCurrentFrame.index) 
+    if (f.index > mCurrentFrame.index)
     {
         unsigned int numberOfFrames = f.index - mCurrentFrame.index;
 
-        for (unsigned int i = 0; i < numberOfFrames; ++i) 
+        for (unsigned int i = 0; i < numberOfFrames; ++i)
         {
             advanceTimeStep(f.timeIntervalInSeconds);
         }
 
         mCurrentFrame = f;
-    } 
-    else if (f.index == 0 && !mHasInitialized) 
+    }
+    else if (f.index == 0 && !mHasInitialized)
     {
         initialize();
     }
 }
 
 
-void simAnimation::advanceTimeStep( FloatType timeIntervalInSeconds )
+void simAnimation::advanceTimeStep( double timeIntervalInSeconds )
 {
     mCurrentTime = mCurrentFrame.timeInSeconds();
 
     if ( mIsUsingFixedSubTimeSteps )
     {
         // perform fixed time-stepping
-        const FloatType actualTimeInterval
-            = timeIntervalInSeconds / static_cast<FloatType>(mNumberOfFixedSubTimeSteps);
+        const double actualTimeInterval
+            = timeIntervalInSeconds / static_cast<double>(mNumberOfFixedSubTimeSteps);
 
         for (unsigned int i = 0; i < mNumberOfFixedSubTimeSteps; ++i)
         {
@@ -57,12 +57,12 @@ void simAnimation::advanceTimeStep( FloatType timeIntervalInSeconds )
     else
     {
         // perform adaptive time-stepping
-        FloatType remainingTime = timeIntervalInSeconds;
-        while (remainingTime > std::numeric_limits<FloatType>::epsilon())
+        double remainingTime = timeIntervalInSeconds;
+        while (remainingTime > std::numeric_limits<double>::epsilon())
         {
-            unsigned int numSteps = mNumberOfFixedSubTimeSteps;
-            FloatType actualTimeInterval
-                = remainingTime / static_cast<FloatType>(numSteps);
+            unsigned int numSteps = numberOfSubTimeSteps(remainingTime);
+            double actualTimeInterval
+                = remainingTime / static_cast<double>(numSteps);
 
             onAdvanceTimeStep(actualTimeInterval);
             remainingTime -= actualTimeInterval;
@@ -91,6 +91,11 @@ void simAnimation::setNumberOfFixedSubTimeSteps(unsigned int numberOfSteps)
     mNumberOfFixedSubTimeSteps = numberOfSteps;
 }
 
+unsigned int simAnimation::numberOfSubTimeSteps(
+    double timeIntervalInSeconds) const
+{
+    return mNumberOfFixedSubTimeSteps;
+}
 
 void simAnimation::advanceSingleFrame()
 {
@@ -108,7 +113,7 @@ void simAnimation::setCurrentFrame(const frame& frame)
     mCurrentFrame = frame;
 }
 
-FloatType simAnimation::currentTimeInSeconds() const
+double simAnimation::currentTimeInSeconds() const
 {
     return mCurrentTime;
 }
@@ -122,5 +127,3 @@ void simAnimation::initialize()
 void simAnimation::onInitialize()
 {
 }
-
-

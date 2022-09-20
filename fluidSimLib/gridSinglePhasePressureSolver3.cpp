@@ -8,7 +8,7 @@ const char kFluid = 0;
 const char kAir = 1;
 const char kBoundary = 2;
 
-const FloatType kDefaultTolerance = 1e-6f;
+const double kDefaultTolerance = 1e-6f;
 
 gridSinglePhasePressureSolver3::gridSinglePhasePressureSolver3() 
 {
@@ -21,7 +21,7 @@ gridSinglePhasePressureSolver3::~gridSinglePhasePressureSolver3()
 
 void gridSinglePhasePressureSolver3::solve(
     const faceCenteredGrid3& input,
-    FloatType timeIntervalInSeconds,
+    double timeIntervalInSeconds,
     faceCenteredGrid3* output,
     const scalarField3& boundarySdf,
     const vectorField3& boundaryVelocity,
@@ -63,12 +63,12 @@ const dataBuffer3& gridSinglePhasePressureSolver3::pressure() const
 
 void gridSinglePhasePressureSolver3::buildMarkers(
     const size3& size,
-    const std::function<vector3(SizeType, SizeType, SizeType)>& pos,
+    const std::function<vector3(size_t, size_t, size_t)>& pos,
     const scalarField3& boundarySdf,
     const scalarField3& fluidSdf)
 {
     mMarkers.resize(size);
-    mMarkers.forEachIndex([&](SizeType i, SizeType j, SizeType k) {
+    mMarkers.forEachIndex([&](size_t i, size_t j, size_t k) {
         vector3 pt = pos(i, j, k);
         if (mathUtil::isInsideSdf(boundarySdf.sample(pt))) 
         {
@@ -97,7 +97,7 @@ void gridSinglePhasePressureSolver3::buildSystem(
     vector3 invHSqr = invH * invH;
 
     // Build linear system
-    mSystem.A.forEachIndex([&](SizeType i, SizeType j, SizeType k) {
+    mSystem.A.forEachIndex([&](size_t i, size_t j, size_t k) {
         auto& row = mSystem.A(i, j, k);
 
         // initialize
@@ -165,7 +165,7 @@ void gridSinglePhasePressureSolver3::applyPressureGradient(
 
     vector3 invH = 1.0 / input.gridSpacing();
 
-    mSystem.x.forEachIndex([&](SizeType i, SizeType j, SizeType k) {
+    mSystem.x.forEachIndex([&](size_t i, size_t j, size_t k) {
         if (mMarkers(i, j, k) == kFluid) {
             if (i + 1 < size.x && mMarkers(i + 1, j, k) != kBoundary) 
             {

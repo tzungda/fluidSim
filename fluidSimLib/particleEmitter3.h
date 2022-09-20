@@ -11,14 +11,14 @@ class particleEmitter3
 {
 public:
 
-    typedef std::function<void(particleEmitter3*, FloatType, FloatType)>
+    typedef std::function<void(particleEmitter3*, double, double)>
         OnBeginUpdateCallback;
 
     particleEmitter3();
 
     virtual ~particleEmitter3();
 
-    void update(FloatType currentTimeInSeconds, FloatType timeIntervalInSeconds);
+    void update(double currentTimeInSeconds, double timeIntervalInSeconds);
 
     const particleSystemData3Ptr& target() const;
 
@@ -31,8 +31,8 @@ protected:
     virtual void onSetTarget(const particleSystemData3Ptr& particles);
 
     virtual void onUpdate(
-        FloatType currentTimeInSeconds,
-        FloatType timeIntervalInSeconds) = 0;
+        double currentTimeInSeconds,
+        double timeIntervalInSeconds) = 0;
 
 private:
     particleSystemData3Ptr mParticles;

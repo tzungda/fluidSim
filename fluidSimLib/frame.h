@@ -2,25 +2,23 @@
 #ifndef frame_H
 #define frame_H
 
-#include "common.h"
-
 struct frame
 {
     frame()
     {
         index = 0;
-        timeIntervalInSeconds = (FloatType)(1.0 / 60.0);
+        timeIntervalInSeconds = 1.0 / 60.0;
     }
 
-    frame(unsigned int newIndex, FloatType newTimeInvervalInSeconds)
+    frame(unsigned int newIndex, double newTimeInvervalInSeconds)
     {
         index = newIndex;
         timeIntervalInSeconds = newTimeInvervalInSeconds;
     }
 
-    FloatType timeInSeconds() const
+    double timeInSeconds() const
     {
-        return timeIntervalInSeconds * (FloatType)index;
+        return timeIntervalInSeconds * (double)index;
     }
 
     void advance()
@@ -41,7 +39,7 @@ struct frame
 
 
     unsigned int index;
-    FloatType timeIntervalInSeconds;
+    double timeIntervalInSeconds;
 };
 
 #endif

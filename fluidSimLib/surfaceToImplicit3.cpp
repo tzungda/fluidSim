@@ -33,7 +33,7 @@ vector3 surfaceToImplicit3::closestNormalLocal( const vector3& otherPoint) const
     return mSurface->closestNormal(otherPoint);
 }
 
-FloatType surfaceToImplicit3::closestDistanceLocal( const vector3& otherPoint) const
+double surfaceToImplicit3::closestDistanceLocal( const vector3& otherPoint) const
 {
     return mSurface->closestDistance(otherPoint);
 }
@@ -53,7 +53,7 @@ boundingBox3 surfaceToImplicit3::boundingBoxLocal() const
     return mSurface->boundingBox();
 }
 
-FloatType surfaceToImplicit3::signedDistanceLocal( const vector3& otherPoint) const 
+double surfaceToImplicit3::signedDistanceLocal( const vector3& otherPoint) const 
 {
     vector3 x = mSurface->closestPoint(otherPoint);
     vector3 n = mSurface->closestNormal(otherPoint);

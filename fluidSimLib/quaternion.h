@@ -7,18 +7,18 @@
 class quaternion
 {
 public:
-    FloatType w;
-    FloatType x;
-    FloatType y;
-    FloatType z;
+    double w;
+    double x;
+    double y;
+    double z;
 
     quaternion();
 
-    quaternion(FloatType newW, FloatType newX, FloatType newY, FloatType newZ);
+    quaternion(double newW, double newX, double newY, double newZ);
 
     quaternion(const matrix33& m33);
 
-    void set(FloatType newW, FloatType newX, FloatType newY, FloatType newZ);
+    void set(double newW, double newX, double newY, double newZ);
     void set(const matrix33& m33);
 
     void setIdentity();

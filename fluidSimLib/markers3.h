@@ -17,26 +17,26 @@ public:
 
     markers3( const size3& size, const char initValue = 0.0 );
 
-    markers3( SizeType width, SizeType height, SizeType depth, const char initValue = 0 );
+    markers3( size_t width, size_t height, size_t depth, const char initValue = 0 );
 
 public:
     void set( char value );
     void resize( const size3& size, const char initValue = 0.0 );
 
-    void resize( SizeType width, SizeType height, SizeType depth, const char initValue = 0 );
+    void resize( size_t width, size_t height, size_t depth, const char initValue = 0 );
 
-    const char valueByIndex( SizeType i, SizeType j, SizeType k ) const;
+    const char valueByIndex( size_t i, size_t j, size_t k ) const;
 
-    char& valueByIndex( SizeType i, SizeType j, SizeType k );
+    char& valueByIndex( size_t i, size_t j, size_t k );
 
     template <typename Callback>
     void forEachIndex(Callback func) const
     {
-        for (SizeType k = 0; k < mSize.z; ++k)
+        for (size_t k = 0; k < mSize.z; ++k)
         {
-            for (SizeType j = 0; j < mSize.y; ++j)
+            for (size_t j = 0; j < mSize.y; ++j)
             {
-                for (SizeType i = 0; i < mSize.x; ++i)
+                for (size_t i = 0; i < mSize.x; ++i)
                 {
                     func(i, j, k);
                 }
@@ -46,18 +46,18 @@ public:
 
     size3 size( ) const;
 
-    SizeType width( ) const;
+    size_t width( ) const;
 
-    SizeType height( ) const;
+    size_t height( ) const;
 
-    SizeType depth( ) const;
+    size_t depth( ) const;
 
     char *data( );
 
     void swap( markers3& other );
 
-    char& operator()(SizeType i, SizeType j, SizeType k);
-    const char& operator()(SizeType i, SizeType j, SizeType k) const;
+    char& operator()(size_t i, size_t j, size_t k);
+    const char& operator()(size_t i, size_t j, size_t k) const;
     //
     char& operator()( const size3& pt );
     const char& operator()( const size3& pt ) const;

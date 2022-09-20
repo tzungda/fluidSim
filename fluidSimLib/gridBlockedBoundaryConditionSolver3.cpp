@@ -24,7 +24,7 @@ void gridBlockedBoundaryConditionSolver3::constrainVelocity(
     auto vPos = velocity->vPosition();
     auto wPos = velocity->wPosition();
 
-    mMarker.forEachIndex([&](SizeType i, SizeType j, SizeType k) 
+    mMarker.forEachIndex([&](size_t i, size_t j, size_t k) 
     {
         if (mMarker(i, j, k) == kCollider) 
         {
@@ -81,7 +81,7 @@ void gridBlockedBoundaryConditionSolver3::onColliderUpdated(
     const cellCenteredScalarGrid3& sdf = colliderSdf();
 
     mMarker.resize(gridSize);
-    mMarker.forEachIndex([&](SizeType i, SizeType j, SizeType k) {
+    mMarker.forEachIndex([&](size_t i, size_t j, size_t k) {
         if ( mathUtil::isInsideSdf(sdf(i, j, k))) {
             mMarker(i, j, k) = kCollider;
         } else {

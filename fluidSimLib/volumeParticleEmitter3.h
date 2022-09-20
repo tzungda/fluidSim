@@ -17,10 +17,10 @@ public:
     volumeParticleEmitter3(
         const implicitSurface3Ptr& implicitSurface,
         const boundingBox3& bounds,
-        FloatType spacing,
+        double spacing,
         const vector3& initialVel = vector3(),
-        SizeType maxNumberOfParticles = std::numeric_limits<SizeType>::max(),
-        FloatType jitter = 0.0,
+        size_t maxNumberOfParticles = std::numeric_limits<size_t>::max(),
+        double jitter = 0.0,
         bool isOneShot = true,
         bool allowOverlapping = false,
         uint32_t seed = 0);
@@ -28,9 +28,9 @@ public:
 
     void setPointGenerator(const pointGenerator3Ptr& newPointsGen);
 
-    FloatType jitter() const;
+    double jitter() const;
 
-    void setJitter(FloatType newJitter);
+    void setJitter(double newJitter);
 
     bool isOneShot() const;
 
@@ -40,14 +40,14 @@ public:
 
     void setAllowOverlapping(bool newValue);
 
-    SizeType maxNumberOfParticles() const;
+    size_t maxNumberOfParticles() const;
 
-    void setMaxNumberOfParticles(SizeType newMaxNumberOfParticles);
+    void setMaxNumberOfParticles(size_t newMaxNumberOfParticles);
 
-    FloatType spacing() const;
+    double spacing() const;
 
     //! Sets the spacing between particles.
-    void setSpacing(FloatType newSpacing);
+    void setSpacing(double newSpacing);
 
     //! Sets the initial velocity of the particles.
     vector3 initialVelocity() const;
@@ -61,14 +61,14 @@ private:
 
     implicitSurface3Ptr mImplicitSurface;
     boundingBox3 mBounds;
-    FloatType mSpacing;
+    double mSpacing;
     vector3 mInitialVel;
     pointGenerator3Ptr mPointsGen;
 
-    SizeType mMaxNumberOfParticles = std::numeric_limits<SizeType>::max();
-    SizeType mNumberOfEmittedParticles = 0;
+    size_t mMaxNumberOfParticles = std::numeric_limits<size_t>::max();
+    size_t mNumberOfEmittedParticles = 0;
 
-    FloatType mJitter = 0.0;
+    double mJitter = 0.0;
     bool mIsOneShot = true;
     bool mAllowOverlapping = false;
 
@@ -79,15 +79,15 @@ private:
     //! \param[in]  timeIntervalInSeconds   The time-step interval.
     //!
     void onUpdate(
-        FloatType currentTimeInSeconds,
-        FloatType timeIntervalInSeconds) override;
+        double currentTimeInSeconds,
+        double timeIntervalInSeconds) override;
 
     void emit(
         const particleSystemData3Ptr& particles,
         std::vector<vector3>* newPositions,
         std::vector<vector3>* newVelocities);
 
-    FloatType random();
+    double random();
 };
 
 typedef std::shared_ptr<volumeParticleEmitter3> volumeParticleEmitter3Ptr;

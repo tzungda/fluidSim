@@ -13,29 +13,29 @@ struct fdmLinearSystem3
 
 //! BLAS operator wrapper for 3-D finite differencing.
 struct fdmBlas3 {
-    typedef FloatType ScalarType;
+    typedef double ScalarType;
     typedef dataBuffer3 VectorType;
     typedef fdmMatrix3 MatrixType;
 
     //! Sets entire element of given vector \p result with scalar \p s.
-    static void set(FloatType s, dataBuffer3* result);
+    static void set(double s, dataBuffer3* result);
 
     //! Copies entire element of given vector \p result with other vector \p v.
     static void set(const dataBuffer3& v, dataBuffer3* result);
 
     //! Sets entire element of given matrix \p result with scalar \p s.
-    static void set(FloatType s, fdmMatrix3* result);
+    static void set(double s, fdmMatrix3* result);
 
     //! Copies entire element of given matrix \p result with other matrix \p v.
     static void set(const fdmMatrix3& m, fdmMatrix3* result);
 
     //! Performs dot product with vector \p a and \p b.
-    static FloatType dot(const dataBuffer3& a, const dataBuffer3& b);
+    static double dot(const dataBuffer3& a, const dataBuffer3& b);
 
     //! Performs ax + y operation where \p a is a matrix and \p x and \p y are
     //! vectors.
     static void axpy(
-        FloatType a, const dataBuffer3& x, const dataBuffer3& y, dataBuffer3* result);
+        double a, const dataBuffer3& x, const dataBuffer3& y, dataBuffer3* result);
 
     //! Performs matrix-vector multiplication.
     static void mvm(
@@ -49,10 +49,10 @@ struct fdmBlas3 {
         dataBuffer3* result);
 
     //! Returns L2-norm of the given vector \p v.
-    static FloatType l2Norm(const dataBuffer3& v);
+    static double l2Norm(const dataBuffer3& v);
 
     //! Returns Linf-norm of the given vector \p v.
-    static FloatType lInfNorm(const dataBuffer3& v);
+    static double lInfNorm(const dataBuffer3& v);
 };
 
 #endif

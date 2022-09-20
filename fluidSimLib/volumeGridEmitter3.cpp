@@ -21,7 +21,7 @@ volumeGridEmitter3::~volumeGridEmitter3()
 void volumeGridEmitter3::addSignedDistanceTarget(
     const scalarGrid3Ptr& scalarGridTarget)
 {
-    auto mapper = [] (FloatType sdf, const vector3&, FloatType oldVal)
+    auto mapper = [] (double sdf, const vector3&, double oldVal)
     {
         return std::min(oldVal, sdf);
     };
@@ -30,13 +30,13 @@ void volumeGridEmitter3::addSignedDistanceTarget(
 
 void volumeGridEmitter3::addStepFunctionTarget(
     const scalarGrid3Ptr& scalarGridTarget,
-    FloatType minValue,
-    FloatType maxValue)
+    double minValue,
+    double maxValue)
 {
-    FloatType smoothingWidth = scalarGridTarget->gridSpacing().min();
+    double smoothingWidth = scalarGridTarget->gridSpacing().min();
     auto mapper = [minValue, maxValue, smoothingWidth, scalarGridTarget]
-    (FloatType sdf, const vector3&, FloatType oldVal) {
-        FloatType step = (FloatType)1.0 - mathUtil::smearedHeavisideSdf(sdf / smoothingWidth);
+    (double sdf, const vector3&, double oldVal) {
+        double step = 1.0 - mathUtil::smearedHeavisideSdf(sdf / smoothingWidth);
         return std::max(oldVal, (maxValue - minValue) * step + minValue);
     };
     addTarget(scalarGridTarget, mapper);
@@ -67,8 +67,8 @@ bool volumeGridEmitter3::isOneShot() const
 }
 
 void volumeGridEmitter3::onUpdate(
-    FloatType currentTimeInSeconds,
-    FloatType timeIntervalInSeconds)
+    double currentTimeInSeconds,
+    double timeIntervalInSeconds)
 {
     if (mHasEmitted && mIsOneShot)
     {
@@ -88,9 +88,9 @@ void volumeGridEmitter3::emit()
 
         auto pos = grid->dataPosition();
         grid->forEachDataPointIndex(
-            [&] (SizeType i, SizeType j, SizeType k) {
+            [&] (size_t i, size_t j, size_t k) {
             vector3 gx = pos(i, j, k);
-            FloatType sdf = sourceRegion()->signedDistance(gx);
+            double sdf = sourceRegion()->signedDistance(gx);
             (*grid)(i, j, k) = mapper(sdf, gx, (*grid)(i, j, k));
         });
     }
@@ -104,9 +104,9 @@ void volumeGridEmitter3::emit()
         if (extendVecGrid != nullptr) {
             vectorGrid3::DataPositionFunc pos = extendVecGrid->dataPosition();
             extendVecGrid->forEachDataPointIndex(
-                [&] (SizeType i, SizeType j, SizeType k) {
+                [&] (size_t i, size_t j, size_t k) {
                 vector3 gx = pos(i, j, k);
-                FloatType sdf = sourceRegion()->signedDistance(gx);
+                double sdf = sourceRegion()->signedDistance(gx);
                 if ( mathUtil::isInsideSdf(sdf)) {
                     (*extendVecGrid)(i, j, k)
                         = mapper(sdf, gx, (*extendVecGrid)(i, j, k));
@@ -123,25 +123,25 @@ void volumeGridEmitter3::emit()
             vectorGrid3::DataPositionFunc wPos = faceCentered->wPosition();
 
             faceCentered->forEachUIndex(
-                [&] (SizeType i, SizeType j, SizeType k) {
+                [&] (size_t i, size_t j, size_t k) {
                 vector3 gx = uPos(i, j, k);
-                FloatType sdf = sourceRegion()->signedDistance(gx);
+                double sdf = sourceRegion()->signedDistance(gx);
                 vector3 oldVal = faceCentered->sample(gx);
                 vector3 newVal = mapper(sdf, gx, oldVal);
                 faceCentered->u(i, j, k) = newVal.x;
             });
             faceCentered->forEachVIndex(
-                [&] (SizeType i, SizeType j, SizeType k) {
+                [&] (size_t i, size_t j, size_t k) {
                 vector3 gx = vPos(i, j, k);
-                FloatType sdf = sourceRegion()->signedDistance(gx);
+                double sdf = sourceRegion()->signedDistance(gx);
                 vector3 oldVal = faceCentered->sample(gx);
                 vector3 newVal = mapper(sdf, gx, oldVal);
                 faceCentered->v(i, j, k) = newVal.y;
             });
             faceCentered->forEachWIndex(
-                [&] (SizeType i, SizeType j, SizeType k) {
+                [&] (size_t i, size_t j, size_t k) {
                 vector3 gx = wPos(i, j, k);
-                FloatType sdf = sourceRegion()->signedDistance(gx);
+                double sdf = sourceRegion()->signedDistance(gx);
                 vector3 oldVal = faceCentered->sample(gx);
                 vector3 newVal = mapper(sdf, gx, oldVal);
                 faceCentered->w(i, j, k) = newVal.z;

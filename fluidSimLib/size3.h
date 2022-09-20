@@ -2,22 +2,20 @@
 #ifndef size3_H
 #define size3_H
 
-#include "common.h"
-
 class size3
 {
 public:
 
-    SizeType x;
+    size_t x;
 
-    SizeType y;
+    size_t y;
 
-    SizeType z;
+    size_t z;
 
 
     size3();
 
-    size3( SizeType _x, SizeType _y, SizeType _z );
+    size3( size_t _x, size_t _y, size_t _z );
 
     size3& operator=(const size3& v);
     bool operator!=(const size3& v) const;

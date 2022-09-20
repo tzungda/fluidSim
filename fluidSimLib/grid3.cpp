@@ -42,35 +42,35 @@ void grid3::setSize(const size3& resolution, const vector3& gridSpacing, const v
     mOrigin = origin;
     mGridSpacing = gridSpacing;
 
-    vector3 upper(gridSpacing.x * (FloatType)resolution.x + origin.x, gridSpacing.y * (FloatType)resolution.y + origin.y, gridSpacing.z * (FloatType)resolution.z + origin.z);
+    vector3 upper(gridSpacing.x * (double)resolution.x + origin.x, gridSpacing.y * (double)resolution.y + origin.y, gridSpacing.z * (double)resolution.z + origin.z);
     mBoundingBox = boundingBox3(origin, upper);
 }
 
 
-vector3 grid3::cellCenterPosition(SizeType i, SizeType j, SizeType k) const
+vector3 grid3::cellCenterPosition(size_t i, size_t j, size_t k) const
 {
     const vector3& h = mGridSpacing;
     const vector3& o = mOrigin;
-    return vector3(o.x + (i + (FloatType)0.5) * h.x, o.y + (j + (FloatType)0.5) * h.y, o.z + (k + (FloatType)0.5) * h.z);
+    return vector3(o.x + (i + 0.5) * h.x, o.y + (j + 0.5) * h.y, o.z + (k + 0.5) * h.z);
 }
 
 grid3::DataPositionFunc grid3::cellCenterPosition() const
 {
     vector3 h = mGridSpacing;
     vector3 o = mOrigin;
-    return [h, o](SizeType i, SizeType j, SizeType k) {
-        return o + h * vector3(i + (FloatType)0.5, j + (FloatType)0.5, k + (FloatType)0.5);
+    return [h, o](size_t i, size_t j, size_t k) {
+        return o + h * vector3(i + 0.5, j + 0.5, k + 0.5);
     };
 }
 
 void grid3::forEachCellIndex(
-    const std::function<void(SizeType, SizeType, SizeType)>& func) const
+    const std::function<void(size_t, size_t, size_t)>& func) const
 {
-    for (SizeType k = 0; k < mResolution.z; ++k)
+    for (size_t k = 0; k < mResolution.z; ++k)
     {
-        for (SizeType j = 0; j < mResolution.y; ++j) 
+        for (size_t j = 0; j < mResolution.y; ++j) 
         {
-            for (SizeType i = 0; i < mResolution.x; ++i) 
+            for (size_t i = 0; i < mResolution.x; ++i) 
             {
                 func(i, j, k);
             }

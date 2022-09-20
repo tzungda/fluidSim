@@ -13,7 +13,7 @@ sphere3::sphere3(
 
 sphere3::sphere3(
     const vector3& center,
-    FloatType radius,
+    double radius,
     const transform3& transform,
     bool isNormalFlipped):
     surface3(transform, isNormalFlipped)
@@ -36,7 +36,7 @@ vector3 sphere3::closestPointLocal(const vector3& otherPoint) const
     return radius * closestNormalLocal(otherPoint) + center;
 }
 
-FloatType sphere3::closestDistanceLocal(const vector3& otherPoint) const
+double sphere3::closestDistanceLocal(const vector3& otherPoint) const
 {
     return std::fabs(center.distanceTo(otherPoint) - radius);
 }
@@ -44,20 +44,20 @@ FloatType sphere3::closestDistanceLocal(const vector3& otherPoint) const
 bool sphere3::intersectsLocal(const ray3& ray) const
 {
     vector3 r = ray.origin - center;
-    FloatType b = ray.direction.dot(r);
-    FloatType c = r.lengthSquared() - radius * radius;
-    FloatType d = b * b - c;
+    double b = ray.direction.dot(r);
+    double c = r.lengthSquared() - radius * radius;
+    double d = b * b - c;
 
     if (d > 0.0) 
     {
         d = std::sqrt(d);
-        FloatType tMin = -b - d;
-        FloatType tMax = -b + d;
+        double tMin = -b - d;
+        double tMax = -b + d;
 
         if (tMin < 0.0) 
         {
             tMin = tMax;
-            tMax = std::numeric_limits<FloatType>::max();
+            tMax = std::numeric_limits<double>::max();
         }
 
         if (tMin >= 0.0)
@@ -92,20 +92,20 @@ surfaceRayIntersection3 sphere3::closestIntersectionLocal(
 {
     surfaceRayIntersection3 intersection;
     vector3 r = ray.origin - center;
-    FloatType b = ray.direction.dot(r);
-    FloatType c = r.lengthSquared() - radius*radius;
-    FloatType d = b * b - c;
+    double b = ray.direction.dot(r);
+    double c = r.lengthSquared() - radius*radius;
+    double d = b * b - c;
 
     if (d > 0.0)
     {
         d = std::sqrt(d);
-        FloatType tMin = -b - d;
-        FloatType tMax = -b + d;
+        double tMin = -b - d;
+        double tMax = -b + d;
 
         if (tMin < 0.0)
         {
             tMin = tMax;
-            tMax = std::numeric_limits<FloatType>::max();
+            tMax = std::numeric_limits<double>::max();
         }
 
         if (tMin < 0.0) 

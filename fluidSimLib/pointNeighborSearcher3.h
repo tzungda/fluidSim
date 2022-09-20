@@ -12,7 +12,7 @@
 class pointNeighborSearcher3
 {
 public:
-    typedef std::function<void(SizeType, const vector3&)>
+    typedef std::function<void(size_t, const vector3&)>
         ForEachNearbyPointFunc;
 
     pointNeighborSearcher3();
@@ -25,12 +25,12 @@ public:
 
     virtual void forEachNearbyPoint(
         const vector3& origin,
-        FloatType radius,
+        double radius,
         const ForEachNearbyPointFunc& callback) const = 0;
 
 
     virtual bool hasNearbyPoint(
-        const vector3& origin, FloatType radius) const = 0;
+        const vector3& origin, double radius) const = 0;
 
 
     virtual std::shared_ptr<pointNeighborSearcher3> clone() const = 0;

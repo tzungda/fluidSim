@@ -25,62 +25,62 @@ gridSmokeSolver3::~gridSmokeSolver3()
 {
 }
 
-FloatType gridSmokeSolver3::smokeDiffusionCoefficient() const
+double gridSmokeSolver3::smokeDiffusionCoefficient() const
 {
     return mSmokeDiffusionCoefficient;
 }
 
-void gridSmokeSolver3::setSmokeDiffusionCoefficient(FloatType newValue)
+void gridSmokeSolver3::setSmokeDiffusionCoefficient(double newValue)
 {
-    mSmokeDiffusionCoefficient = std::max<FloatType>(newValue, (FloatType)0.0);
+    mSmokeDiffusionCoefficient = std::max(newValue, 0.0);
 }
 
-FloatType gridSmokeSolver3::temperatureDiffusionCoefficient() const
+double gridSmokeSolver3::temperatureDiffusionCoefficient() const
 {
     return mTemperatureDiffusionCoefficient;
 }
 
-void gridSmokeSolver3::setTemperatureDiffusionCoefficient(FloatType newValue)
+void gridSmokeSolver3::setTemperatureDiffusionCoefficient(double newValue)
 {
-    mTemperatureDiffusionCoefficient = std::max<FloatType>(newValue, (FloatType)0.0);
+    mTemperatureDiffusionCoefficient = std::max(newValue, 0.0);
 }
 
-FloatType gridSmokeSolver3::buoyancySmokeDensityFactor() const
+double gridSmokeSolver3::buoyancySmokeDensityFactor() const
 {
     return mBuoyancySmokeDensityFactor;
 }
 
-void gridSmokeSolver3::setBuoyancySmokeDensityFactor(FloatType newValue)
+void gridSmokeSolver3::setBuoyancySmokeDensityFactor(double newValue)
 {
     mBuoyancySmokeDensityFactor = newValue;
 }
 
-FloatType gridSmokeSolver3::buoyancyTemperatureFactor() const
+double gridSmokeSolver3::buoyancyTemperatureFactor() const
 {
     return mBuoyancyTemperatureFactor;
 }
 
-void gridSmokeSolver3::setBuoyancyTemperatureFactor(FloatType newValue)
+void gridSmokeSolver3::setBuoyancyTemperatureFactor(double newValue)
 {
     mBuoyancyTemperatureFactor = newValue;
 }
 
-FloatType gridSmokeSolver3::smokeDecayFactor() const
+double gridSmokeSolver3::smokeDecayFactor() const
 {
     return mSmokeDecayFactor;
 }
 
-void gridSmokeSolver3::setSmokeDecayFactor(FloatType newValue)
+void gridSmokeSolver3::setSmokeDecayFactor(double newValue)
 {
     mSmokeDecayFactor = mathUtil::clamp(newValue, 0.0, 1.0);
 }
 
-FloatType gridSmokeSolver3::smokeTemperatureDecayFactor() const
+double gridSmokeSolver3::smokeTemperatureDecayFactor() const
 {
     return mTemperatureDecayFactor;
 }
 
-void gridSmokeSolver3::setTemperatureDecayFactor(FloatType newValue)
+void gridSmokeSolver3::setTemperatureDecayFactor(double newValue)
 {
     mTemperatureDecayFactor = mathUtil::clamp(newValue, 0.0, 1.0);
 }
@@ -95,17 +95,17 @@ scalarGrid3Ptr gridSmokeSolver3::temperature() const
     return gridSystemData()->advectableScalarDataAt(mTemperatureDataId);
 }
 
-void gridSmokeSolver3::onEndAdvanceTimeStep(FloatType timeIntervalInSeconds)
+void gridSmokeSolver3::onEndAdvanceTimeStep(double timeIntervalInSeconds)
 {
     computeDiffusion(timeIntervalInSeconds);
 }
 
-void gridSmokeSolver3::computeExternalForces(FloatType timeIntervalInSeconds)
+void gridSmokeSolver3::computeExternalForces(double timeIntervalInSeconds)
 {
     computeBuoyancyForce(timeIntervalInSeconds);
 }
 
-void gridSmokeSolver3::computeDiffusion(FloatType timeIntervalInSeconds)
+void gridSmokeSolver3::computeDiffusion(double timeIntervalInSeconds)
 {
     if (diffusionSolver() != nullptr)
     {
@@ -140,17 +140,17 @@ void gridSmokeSolver3::computeDiffusion(FloatType timeIntervalInSeconds)
 
     scalarGrid3Ptr den = smokeDensity();
     den->forEachDataPointIndex(
-        [&](SizeType i, SizeType j, SizeType k) {
-        (*den)(i, j, k) *= (FloatType)1.0 - mSmokeDecayFactor;
+        [&](size_t i, size_t j, size_t k) {
+        (*den)(i, j, k) *= 1.0 - mSmokeDecayFactor;
     });
     scalarGrid3Ptr temp = temperature();
     temp->forEachDataPointIndex(
-        [&](SizeType i, SizeType j, SizeType k) {
-        (*temp)(i, j, k) *= (FloatType)1.0 - mTemperatureDecayFactor;
+        [&](size_t i, size_t j, size_t k) {
+        (*temp)(i, j, k) *= 1.0 - mTemperatureDecayFactor;
     });
 }
 
-void gridSmokeSolver3::computeBuoyancyForce(FloatType timeIntervalInSeconds)
+void gridSmokeSolver3::computeBuoyancyForce(double timeIntervalInSeconds)
 {
     auto grids = gridSystemData();
     auto vel = grids->velocity();
@@ -167,11 +167,11 @@ void gridSmokeSolver3::computeBuoyancyForce(FloatType timeIntervalInSeconds)
         scalarGrid3Ptr den = smokeDensity();
         scalarGrid3Ptr temp = temperature();
 
-        FloatType tAmb = 0.0;
-        temp->forEachCellIndex([&](SizeType i, SizeType j, SizeType k) {
+        double tAmb = 0.0;
+        temp->forEachCellIndex([&](size_t i, size_t j, size_t k) {
             tAmb += (*temp)(i, j, k);
         });
-        tAmb /= static_cast<FloatType>(
+        tAmb /= static_cast<double>(
             temp->resolution().x * temp->resolution().y * temp->resolution().z);
 
         vectorGrid3::DataPositionFunc uPos = vel->uPosition();
@@ -180,9 +180,9 @@ void gridSmokeSolver3::computeBuoyancyForce(FloatType timeIntervalInSeconds)
 
         if (std::abs(up.x) > mathUtil::eps())
         {
-            vel->forEachUIndex([&](SizeType i, SizeType j, SizeType k) {
+            vel->forEachUIndex([&](size_t i, size_t j, size_t k) {
                 vector3 pt = uPos(i, j, k);
-                FloatType fBuoy
+                double fBuoy
                     = mBuoyancySmokeDensityFactor * den->sample(pt)
                     + mBuoyancyTemperatureFactor * (temp->sample(pt) - tAmb);
                 vel->u( i, j, k ) += timeIntervalInSeconds * fBuoy * up.x;
@@ -191,9 +191,9 @@ void gridSmokeSolver3::computeBuoyancyForce(FloatType timeIntervalInSeconds)
 
         if (std::abs(up.y) > mathUtil::eps())
         {
-            vel->forEachVIndex([&](SizeType i, SizeType j, SizeType k) {
+            vel->forEachVIndex([&](size_t i, size_t j, size_t k) {
                 vector3 pt = vPos(i, j, k);
-                FloatType fBuoy
+                double fBuoy
                     = mBuoyancySmokeDensityFactor * den->sample(pt)
                     + mBuoyancyTemperatureFactor * (temp->sample(pt) - tAmb);
                 vel->v( i, j, k ) += timeIntervalInSeconds * fBuoy * up.y;
@@ -202,9 +202,9 @@ void gridSmokeSolver3::computeBuoyancyForce(FloatType timeIntervalInSeconds)
 
         if (std::abs(up.z) > mathUtil::eps())
         {
-            vel->forEachWIndex([&](SizeType i, SizeType j, SizeType k) {
+            vel->forEachWIndex([&](size_t i, size_t j, size_t k) {
                 vector3 pt = wPos(i, j, k);
-                FloatType fBuoy
+                double fBuoy
                     = mBuoyancySmokeDensityFactor * den->sample(pt)
                     + mBuoyancyTemperatureFactor * (temp->sample(pt) - tAmb);
                 vel->w( i, j, k ) += timeIntervalInSeconds * fBuoy * up.z;

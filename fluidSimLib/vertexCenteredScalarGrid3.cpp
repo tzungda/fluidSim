@@ -6,7 +6,7 @@ vertexCenteredScalarGrid3::vertexCenteredScalarGrid3()
 {
 }
 
-vertexCenteredScalarGrid3::vertexCenteredScalarGrid3(const size3& resolution, const vector3& gridSpacing, const vector3& origin, FloatType initValue)
+vertexCenteredScalarGrid3::vertexCenteredScalarGrid3(const size3& resolution, const vector3& gridSpacing, const vector3& origin, double initValue)
 {
     resize(resolution, gridSpacing, origin, initValue);
 }

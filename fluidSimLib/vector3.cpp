@@ -15,7 +15,7 @@ vector3::vector3() :
 }
 
  
-vector3::vector3(FloatType newX, FloatType newY, FloatType newZ) :
+vector3::vector3(double newX, double newY, double newZ) :
     x(newX),
     y(newY),
     z(newZ) 
@@ -33,7 +33,7 @@ vector3::vector3(const vector3& v) :
 
 // Basic setters
  
-void vector3::set(FloatType s) 
+void vector3::set(double s) 
 {
     x = s;
     y = s;
@@ -41,7 +41,7 @@ void vector3::set(FloatType s)
 }
 
  
-void vector3::set(FloatType newX, FloatType newY, FloatType newZ) 
+void vector3::set(double newX, double newY, double newZ) 
 {
     x = newX;
     y = newY;
@@ -65,7 +65,7 @@ void vector3::setZero()
  
 void vector3::normalize() 
 {
-    FloatType l = length();
+    double l = length();
     x /= l;
     y /= l;
     z /= l;
@@ -73,7 +73,7 @@ void vector3::normalize()
 
 // Binary operators: new instance = this (+) v
  
-vector3 vector3::add(FloatType v) const 
+vector3 vector3::add(double v) const 
 {
     return vector3(x + v, y + v, z + v);
 }
@@ -85,7 +85,7 @@ vector3 vector3::add(const vector3& v) const
 }
 
  
-vector3 vector3::sub(FloatType v) const 
+vector3 vector3::sub(double v) const 
 {
     return vector3(x - v, y - v, z - v);
 }
@@ -97,7 +97,7 @@ vector3 vector3::sub(const vector3& v) const
 }
 
  
-vector3 vector3::mul(FloatType v) const 
+vector3 vector3::mul(double v) const 
 {
     return vector3(x * v, y * v, z * v);
 }
@@ -108,7 +108,7 @@ vector3 vector3::mul(const vector3& v) const {
 }
 
  
-vector3 vector3::div(FloatType v) const {
+vector3 vector3::div(double v) const {
     return vector3(x / v, y / v, z / v);
 }
 
@@ -118,7 +118,7 @@ vector3 vector3::div(const vector3& v) const {
 }
 
  
-FloatType vector3::dot(const vector3& v) const {
+double vector3::dot(const vector3& v) const {
     return x * v.x + y * v.y + z * v.z;
 }
 
@@ -127,7 +127,7 @@ vector3 vector3::cross(const vector3& v) const {
     return vector3(y*v.z - v.y*z, z*v.x - v.z*x, x*v.y - v.x*y);
 }
 
-vector3 vector3::rdiv(FloatType v) const
+vector3 vector3::rdiv(double v) const
 {
     return vector3(v / x, v / y, v / z);
 }
@@ -137,25 +137,25 @@ vector3 vector3::rdiv(const vector3& v) const
     return vector3(v.x / x, v.y / y, v.z / z);
 }
  
-FloatType vector3::sum() const 
+double vector3::sum() const 
 {
     return x + y + z;
 }
 
  
-FloatType vector3::avg() const 
+double vector3::avg() const 
 {
-    return (x + y + z)/(FloatType)3.0;
+    return (x + y + z)/3.0;
 }
 
  
-FloatType vector3::min() const 
+double vector3::min() const 
 {
     return std::min(std::min(x, y), z);
 }
 
  
-FloatType vector3::max() const 
+double vector3::max() const 
 {
     return std::max(std::max(x, y), z);
 }
@@ -164,29 +164,29 @@ FloatType vector3::max() const
  
 vector3 vector3::normalized() const 
 {
-    FloatType l = length();
+    double l = length();
     return vector3(x / l, y / l, z / l);
 }
 
  
-FloatType vector3::length() const 
+double vector3::length() const 
 {
     return std::sqrt(x * x + y * y + z * z);
 }
 
  
-FloatType vector3::lengthSquared() const {
+double vector3::lengthSquared() const {
     return x * x + y * y + z * z;
 }
 
  
-FloatType vector3::distanceTo(const vector3& other) const 
+double vector3::distanceTo(const vector3& other) const 
 {
     return sub(other).length();
 }
 
  
-FloatType vector3::distanceSquaredTo(const vector3& other) const 
+double vector3::distanceSquaredTo(const vector3& other) const 
 {
     return sub(other).lengthSquared();
 }
@@ -220,19 +220,19 @@ bool vector3::isEqual(const vector3& other) const
     return x == other.x && y == other.y && z == other.z;
 }
 
-bool vector3::isSimilar( const vector3& other, FloatType eps ) const
+bool vector3::isSimilar( const vector3& other, double eps ) const
 {
     return (std::fabs(x - other.x) < eps) &&
         (std::fabs(y - other.y) < eps) &&
         (std::fabs(z - other.z) < eps);
 }
 
-FloatType& vector3::operator[](SizeType i)
+double& vector3::operator[](size_t i)
 {
     return (&x)[i];
 }
 
-const FloatType& vector3::operator[](SizeType i) const
+const double& vector3::operator[](size_t i) const
 {
     return (&x)[i];
 }
@@ -244,7 +244,7 @@ vector3& vector3::operator=(const vector3& v)
 }
 
  
-vector3& vector3::operator+=(FloatType v) 
+vector3& vector3::operator+=(double v) 
 {
     x += v;
     y += v;
@@ -262,7 +262,7 @@ vector3& vector3::operator+=(const vector3& v)
 }
 
  
-vector3& vector3::operator-=(FloatType v) 
+vector3& vector3::operator-=(double v) 
 {
     x -= v;
     y -= v;
@@ -280,7 +280,7 @@ vector3& vector3::operator-=(const vector3& v)
 }
 
  
-vector3& vector3::operator*=(FloatType v)
+vector3& vector3::operator*=(double v)
 {
     x *= v;
     y *= v;
@@ -298,7 +298,7 @@ vector3& vector3::operator*=(const vector3& v)
 }
 
  
-vector3& vector3::operator/=(FloatType v)
+vector3& vector3::operator/=(double v)
 {
     x /= v;
     y /= v;
@@ -337,12 +337,12 @@ vector3 operator-(const vector3& a)
     return vector3( -a.x, -a.y, -a.z );
 }
 
-vector3 operator+(const vector3& a, FloatType b)
+vector3 operator+(const vector3& a, double b)
 {
     return a.add( b );
 }
 
-vector3 operator+(FloatType a, const vector3& b)
+vector3 operator+(double a, const vector3& b)
 {
     return b.add( a );
 }
@@ -352,12 +352,12 @@ vector3 operator+(const vector3& a, const vector3& b)
     return a.add( b );
 }
 
-vector3 operator-(const vector3& a, FloatType b)
+vector3 operator-(const vector3& a, double b)
 {
     return a.sub( b );
 }
 
-vector3 operator-(FloatType a, const vector3& b)
+vector3 operator-(double a, const vector3& b)
 {
     return vector3( a - b.x, a - b.y, a - b.z );
 }
@@ -367,12 +367,12 @@ vector3 operator-(const vector3& a, const vector3& b)
     return a.sub( b );
 }
 
-vector3 operator*(const vector3& a, FloatType b)
+vector3 operator*(const vector3& a, double b)
 {
     return a.mul( b );
 }
 
-vector3 operator*( FloatType a, const vector3& b)
+vector3 operator*( double a, const vector3& b)
 {
     return b.mul( a );
 }
@@ -382,12 +382,12 @@ vector3 operator*(const vector3& a, const vector3& b)
     return a.mul( b );
 }
 
-vector3 operator/(const vector3& a, FloatType b)
+vector3 operator/(const vector3& a, double b)
 {
     return a.div( b );
 }
 
-vector3 operator/(FloatType a, const vector3& b)
+vector3 operator/(double a, const vector3& b)
 {
     return vector3( a/b.x, a/b.y, a/b.z );
 }

@@ -12,7 +12,7 @@ pointGenerator3::~pointGenerator3()
 
 void pointGenerator3::generate(
     const boundingBox3& boundingBox,
-    FloatType spacing,
+    double spacing,
     std::vector<vector3>* points) const
 {
     forEachPoint(

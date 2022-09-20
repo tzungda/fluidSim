@@ -19,7 +19,7 @@ public:
    
     void solve(
         const faceCenteredGrid3& input,
-        FloatType timeIntervalInSeconds,
+        double timeIntervalInSeconds,
         faceCenteredGrid3* output,
         const scalarField3& boundarySdf
         = constantScalarField3(mathUtil::maxFloat()),

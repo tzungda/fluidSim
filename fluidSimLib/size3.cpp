@@ -7,7 +7,7 @@ size3::size3()
     x = y = z = 0;
 }
 
-size3::size3(SizeType _x, SizeType _y, SizeType _z)
+size3::size3(size_t _x, size_t _y, size_t _z)
 {
     x = _x, y = _y, z = _z;
 }

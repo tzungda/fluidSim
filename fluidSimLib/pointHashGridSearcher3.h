@@ -12,13 +12,13 @@ public:
 
     std::string typeName() const override {return "pointHashGridSearcher3";}
 
-    pointHashGridSearcher3(const size3& resolution, FloatType gridSpacing);
+    pointHashGridSearcher3(const size3& resolution, double gridSpacing);
 
     pointHashGridSearcher3(
-        SizeType resolutionX,
-        SizeType resolutionY,
-        SizeType resolutionZ,
-        FloatType gridSpacing);
+        size_t resolutionX,
+        size_t resolutionY,
+        size_t resolutionZ,
+        double gridSpacing);
 
     pointHashGridSearcher3(const pointHashGridSearcher3& other);
 
@@ -26,17 +26,17 @@ public:
 
     void forEachNearbyPoint(
         const vector3& origin,
-        FloatType radius,
+        double radius,
         const ForEachNearbyPointFunc& callback) const override;
 
     bool hasNearbyPoint(
-        const vector3& origin, FloatType radius) const override;
+        const vector3& origin, double radius) const override;
 
     void add(const vector3& point);
 
-    const std::vector<std::vector<SizeType>>& buckets() const;
+    const std::vector<std::vector<size_t>>& buckets() const;
 
-    SizeType getHashKeyFromBucketIndex(const size3& bucketIndex) const;
+    size_t getHashKeyFromBucketIndex(const size3& bucketIndex) const;
 
     size3 getBucketIndex(const vector3& position) const;
 
@@ -48,14 +48,14 @@ public:
 
 
 private:
-    FloatType mGridSpacing = (FloatType)1.0;
+    double mGridSpacing = 1.0;
     size3 mResolution = size3(1, 1, 1);
     std::vector<vector3> mPoints;
-    std::vector<std::vector<SizeType>> mBuckets;
+    std::vector<std::vector<size_t>> mBuckets;
 
-    SizeType getHashKeyFromPosition(const vector3& position) const;
+    size_t getHashKeyFromPosition(const vector3& position) const;
 
-    void getNearbyKeys(const vector3& position, SizeType* bucketIndices) const;
+    void getNearbyKeys(const vector3& position, size_t* bucketIndices) const;
 };
 
 typedef std::shared_ptr< pointHashGridSearcher3 > pointHashGridSearcher3Ptr;

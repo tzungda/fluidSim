@@ -10,7 +10,7 @@ vectorField3::~vectorField3()
 {
 }
 
-FloatType vectorField3::divergence(const vector3&) const
+double vectorField3::divergence(const vector3&) const
 {
     return 0.0;
 }

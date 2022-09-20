@@ -13,26 +13,26 @@ virtual ~semiLagrangian3();
     virtual void advect(
         const scalarGrid3& input,
         const vectorField3& flow,
-        FloatType dt,
+        double dt,
         scalarGrid3* output,
-        const scalarField3& boundarySdf = constantScalarField3(std::numeric_limits<FloatType>::max()) ) override;
+        const scalarField3& boundarySdf = constantScalarField3(std::numeric_limits<double>::max()) ) override;
 
     virtual void advect(
         const extendVectorGrid3& input,
         const vectorField3& flow,
-        FloatType dt,
+        double dt,
         extendVectorGrid3* output,
-        const scalarField3& boundarySdf = constantScalarField3(std::numeric_limits<FloatType>::max()) ) override;
+        const scalarField3& boundarySdf = constantScalarField3(std::numeric_limits<double>::max()) ) override;
 
     virtual void advect(
         const faceCenteredGrid3& input,
         const vectorField3& flow,
-        FloatType dt, faceCenteredGrid3* output,
-        const scalarField3& boundarySdf = constantScalarField3(std::numeric_limits<FloatType>::max()) ) override;
+        double dt, faceCenteredGrid3* output,
+        const scalarField3& boundarySdf = constantScalarField3(std::numeric_limits<double>::max()) ) override;
 
 protected:
 
-    virtual std::function<FloatType(const vector3&)>
+    virtual std::function<double(const vector3&)>
         getScalarSamplerFunc(const scalarGrid3& input) const;
 
 
@@ -46,8 +46,8 @@ protected:
 private:
     vector3 backTrace(
         const vectorField3& flow,
-        FloatType dt,
-        FloatType h,
+        double dt,
+        double h,
         const vector3& pt0,
         const scalarField3& boundarySdf);
 

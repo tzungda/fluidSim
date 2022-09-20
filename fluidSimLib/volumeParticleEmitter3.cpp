@@ -6,15 +6,15 @@
 #include "pointHashGridSearcher3.h"
 #include "mathUtil.h"
 
-static const SizeType kDefaultHashGridResolution = 64;
+static const size_t kDefaultHashGridResolution = 64;
 
 volumeParticleEmitter3::volumeParticleEmitter3(
     const implicitSurface3Ptr& implicitSurface,
     const boundingBox3& bounds,
-    FloatType spacing,
+    double spacing,
     const vector3& initialVel,
-    SizeType maxNumberOfParticles,
-    FloatType jitter,
+    size_t maxNumberOfParticles,
+    double jitter,
     bool isOneShot,
     bool allowOverlapping,
     uint32_t seed) :
@@ -32,8 +32,8 @@ volumeParticleEmitter3::volumeParticleEmitter3(
 }
 
 void volumeParticleEmitter3::onUpdate(
-    FloatType currentTimeInSeconds,
-    FloatType timeIntervalInSeconds)
+    double currentTimeInSeconds,
+    double timeIntervalInSeconds)
 {
 
     auto particles = target();
@@ -60,8 +60,8 @@ void volumeParticleEmitter3::emit(
     std::vector<vector3>* newVelocities)
 {
     // Reserving more space for jittering
-    const FloatType j = jitter();
-    const FloatType maxJitterDist = (FloatType)0.5 * j * mSpacing;
+    const double j = jitter();
+    const double maxJitterDist = 0.5 * j * mSpacing;
 
     if (mAllowOverlapping || mIsOneShot) {
         mPointsGen->forEachPoint(
@@ -91,7 +91,7 @@ void volumeParticleEmitter3::emit(
                 kDefaultHashGridResolution,
                 kDefaultHashGridResolution,
                 kDefaultHashGridResolution),
-            (FloatType)2.0 * mSpacing);
+            2.0 * mSpacing);
         if (!mAllowOverlapping) {
             neighborSearcher.build(particles->positions());
         }
@@ -130,12 +130,12 @@ void volumeParticleEmitter3::setPointGenerator( const pointGenerator3Ptr& newPoi
     mPointsGen = newPointsGen;
 }
 
-FloatType volumeParticleEmitter3::jitter() const
+double volumeParticleEmitter3::jitter() const
 {
     return mJitter;
 }
 
-void volumeParticleEmitter3::setJitter(FloatType newJitter)
+void volumeParticleEmitter3::setJitter(double newJitter)
 {
     mJitter = mathUtil::clamp(newJitter, 0.0, 1.0);
 }
@@ -160,22 +160,22 @@ void volumeParticleEmitter3::setAllowOverlapping(bool newValue)
     mAllowOverlapping = newValue;
 }
 
-SizeType volumeParticleEmitter3::maxNumberOfParticles() const
+size_t volumeParticleEmitter3::maxNumberOfParticles() const
 {
     return mMaxNumberOfParticles;
 }
 
-void volumeParticleEmitter3::setMaxNumberOfParticles( SizeType newMaxNumberOfParticles )
+void volumeParticleEmitter3::setMaxNumberOfParticles( size_t newMaxNumberOfParticles )
 {
     mMaxNumberOfParticles = newMaxNumberOfParticles;
 }
 
-FloatType volumeParticleEmitter3::spacing() const
+double volumeParticleEmitter3::spacing() const
 {
     return mSpacing;
 }
 
-void volumeParticleEmitter3::setSpacing(FloatType newSpacing)
+void volumeParticleEmitter3::setSpacing(double newSpacing)
 {
     mSpacing = newSpacing;
 }
@@ -190,8 +190,8 @@ void volumeParticleEmitter3::setInitialVelocity(const vector3& newInitialVel)
     mInitialVel = newInitialVel;
 }
 
-FloatType volumeParticleEmitter3::random()
+double volumeParticleEmitter3::random()
 {
     std::uniform_real_distribution<> d(0.0, 1.0);
-    return (FloatType)d(mRng);
+    return d(mRng);
 }

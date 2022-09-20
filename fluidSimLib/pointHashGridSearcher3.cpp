@@ -8,34 +8,32 @@
 
 pointHashGridSearcher3::pointHashGridSearcher3(
     const size3& resolution,
-    FloatType gridSpacing) :
+    double gridSpacing) :
     pointHashGridSearcher3(
         resolution.x,
         resolution.y,
         resolution.z,
-        gridSpacing) 
-{
+        gridSpacing) {
 }
 
 pointHashGridSearcher3::pointHashGridSearcher3(
-    SizeType resolutionX,
-    SizeType resolutionY,
-    SizeType resolutionZ,
-    FloatType gridSpacing) :
-    mGridSpacing(gridSpacing) 
-{
-    mResolution.x = std::max(static_cast<SSizeType>(resolutionX), (SSizeType)1);
-    mResolution.y = std::max(static_cast<SSizeType>(resolutionY), (SSizeType)1);
-    mResolution.z = std::max(static_cast<SSizeType>(resolutionZ), (SSizeType)1);
+    size_t resolutionX,
+    size_t resolutionY,
+    size_t resolutionZ,
+    double gridSpacing) :
+    mGridSpacing(gridSpacing) {
+    mResolution.x = std::max(static_cast<SSIZE_T>(resolutionX), (SSIZE_T)1);
+    mResolution.y = std::max(static_cast<SSIZE_T>(resolutionY), (SSIZE_T)1);
+    mResolution.z = std::max(static_cast<SSIZE_T>(resolutionZ), (SSIZE_T)1);
 }
 
-pointHashGridSearcher3::pointHashGridSearcher3( const pointHashGridSearcher3& other ) 
-{
+pointHashGridSearcher3::pointHashGridSearcher3(
+    const pointHashGridSearcher3& other) {
     set(other);
 }
 
-void pointHashGridSearcher3::build( const std::vector<vector3>& points) 
-{
+void pointHashGridSearcher3::build(
+    const std::vector<vector3>& points) {
     mBuckets.clear();
     mPoints.clear();
 
@@ -48,37 +46,33 @@ void pointHashGridSearcher3::build( const std::vector<vector3>& points)
     }
 
     // Put points into buckets
-    for (SizeType i = 0; i < points.size(); ++i) {
+    for (size_t i = 0; i < points.size(); ++i) {
         mPoints[i] = points[i];
-        SizeType key = getHashKeyFromPosition(points[i]);
+        size_t key = getHashKeyFromPosition(points[i]);
         mBuckets[key].push_back(i);
     }
 }
 
 void pointHashGridSearcher3::forEachNearbyPoint(
     const vector3& origin,
-    FloatType radius,
-    const std::function<void(SizeType, const vector3&)>& callback) const 
-{
-    if (mBuckets.empty()) 
-    {
+    double radius,
+    const std::function<void(size_t, const vector3&)>& callback) const {
+    if (mBuckets.empty()) {
         return;
     }
 
-    SizeType nearbyKeys[8];
+    size_t nearbyKeys[8];
     getNearbyKeys(origin, nearbyKeys);
 
-    const FloatType queryRadiusSquared = radius * radius;
+    const double queryRadiusSquared = radius * radius;
 
-    for (int i = 0; i < 8; i++) 
-    {
+    for (int i = 0; i < 8; i++) {
         const auto& bucket = mBuckets[nearbyKeys[i]];
-        SizeType numberOfPointsInBucket = (SizeType)bucket.size();
+        size_t numberOfPointsInBucket = bucket.size();
 
-        for (SizeType j = 0; j < numberOfPointsInBucket; ++j) 
-        {
-            SizeType pointIndex = bucket[j];
-            FloatType rSquared = (mPoints[pointIndex] - origin).lengthSquared();
+        for (size_t j = 0; j < numberOfPointsInBucket; ++j) {
+            size_t pointIndex = bucket[j];
+            double rSquared = (mPoints[pointIndex] - origin).lengthSquared();
             if (rSquared <= queryRadiusSquared) {
                 callback(pointIndex, mPoints[pointIndex]);
             }
@@ -88,23 +82,23 @@ void pointHashGridSearcher3::forEachNearbyPoint(
 
 bool pointHashGridSearcher3::hasNearbyPoint(
     const vector3& origin,
-    FloatType radius) const {
+    double radius) const {
     if (mBuckets.empty()) {
         return false;
     }
 
-    SizeType nearbyKeys[8];
+    size_t nearbyKeys[8];
     getNearbyKeys(origin, nearbyKeys);
 
-    const FloatType queryRadiusSquared = radius * radius;
+    const double queryRadiusSquared = radius * radius;
 
     for (int i = 0; i < 8; i++) {
         const auto& bucket = mBuckets[nearbyKeys[i]];
-        SizeType numberOfPointsInBucket = (SizeType)bucket.size();
+        size_t numberOfPointsInBucket = bucket.size();
 
-        for (SizeType j = 0; j < numberOfPointsInBucket; ++j) {
-            SizeType pointIndex = bucket[j];
-            FloatType rSquared = (mPoints[pointIndex] - origin).lengthSquared();
+        for (size_t j = 0; j < numberOfPointsInBucket; ++j) {
+            size_t pointIndex = bucket[j];
+            double rSquared = (mPoints[pointIndex] - origin).lengthSquared();
             if (rSquared <= queryRadiusSquared) {
                 return true;
             }
@@ -114,48 +108,42 @@ bool pointHashGridSearcher3::hasNearbyPoint(
     return false;
 }
 
-void pointHashGridSearcher3::add(const vector3& point) 
-{
-    if (mBuckets.empty()) 
-    {
+void pointHashGridSearcher3::add(const vector3& point) {
+    if (mBuckets.empty()) {
         std::vector<vector3> arr = {point};
         build(arr);
-    }
-    else 
-    {
-        SizeType i = (SizeType)mPoints.size();
+    } else {
+        size_t i = mPoints.size();
         mPoints.push_back(point);
-        SizeType key = getHashKeyFromPosition(point);
+        size_t key = getHashKeyFromPosition(point);
         mBuckets[key].push_back(i);
     }
 }
 
-const std::vector<std::vector<SizeType>>&
-pointHashGridSearcher3::buckets() const 
-{
+const std::vector<std::vector<size_t>>&
+pointHashGridSearcher3::buckets() const {
     return mBuckets;
 }
 
-size3 pointHashGridSearcher3::getBucketIndex(const vector3& position) const 
-{
+size3 pointHashGridSearcher3::getBucketIndex(const vector3& position) const {
     size3 bucketIndex;
-    bucketIndex.x = static_cast<SSizeType>(
+    bucketIndex.x = static_cast<SSIZE_T>(
         std::floor(position.x / mGridSpacing));
-    bucketIndex.y = static_cast<SSizeType>(
+    bucketIndex.y = static_cast<SSIZE_T>(
         std::floor(position.y / mGridSpacing));
-    bucketIndex.z = static_cast<SSizeType>(
+    bucketIndex.z = static_cast<SSIZE_T>(
         std::floor(position.z / mGridSpacing));
     return bucketIndex;
 }
 
-SizeType pointHashGridSearcher3::getHashKeyFromPosition( const vector3& position) const 
-{
+size_t pointHashGridSearcher3::getHashKeyFromPosition(
+    const vector3& position) const {
     size3 bucketIndex = getBucketIndex(position);
     return getHashKeyFromBucketIndex(bucketIndex);
 }
 
-SizeType pointHashGridSearcher3::getHashKeyFromBucketIndex( const size3& bucketIndex) const 
-{
+size_t pointHashGridSearcher3::getHashKeyFromBucketIndex(
+    const size3& bucketIndex) const {
     size3 wrappedIndex = bucketIndex;
     wrappedIndex.x = bucketIndex.x % mResolution.x;
     wrappedIndex.y = bucketIndex.y % mResolution.y;
@@ -169,67 +157,57 @@ SizeType pointHashGridSearcher3::getHashKeyFromBucketIndex( const size3& bucketI
     if (wrappedIndex.z < 0) {
         wrappedIndex.z += mResolution.z;
     }
-    return static_cast<SizeType>(
+    return static_cast<size_t>(
         (wrappedIndex.z * mResolution.y + wrappedIndex.y) * mResolution.x
         + wrappedIndex.x);
 }
 
-void pointHashGridSearcher3::getNearbyKeys( const vector3& position, SizeType* nearbyKeys) const
-{
+void pointHashGridSearcher3::getNearbyKeys(
+    const vector3& position,
+    size_t* nearbyKeys) const {
     size3 originIndex = getBucketIndex(position), nearbyBucketIndices[8];
 
-    for (int i = 0; i < 8; i++) 
-    {
+    for (int i = 0; i < 8; i++) {
         nearbyBucketIndices[i] = originIndex;
     }
 
-    if (( (FloatType)0.5 + (FloatType)originIndex.x ) * mGridSpacing <= position.x) 
-    {
+    if ((originIndex.x + 0.5f) * mGridSpacing <= position.x) {
         nearbyBucketIndices[4].x += 1;
         nearbyBucketIndices[5].x += 1;
         nearbyBucketIndices[6].x += 1;
         nearbyBucketIndices[7].x += 1;
-    } 
-    else 
-    {
+    } else {
         nearbyBucketIndices[4].x -= 1;
         nearbyBucketIndices[5].x -= 1;
         nearbyBucketIndices[6].x -= 1;
         nearbyBucketIndices[7].x -= 1;
     }
 
-    if ( ((FloatType)0.5 + (FloatType)originIndex.y ) * mGridSpacing <= position.y)
-    {
+    if ((originIndex.y + 0.5f) * mGridSpacing <= position.y) {
         nearbyBucketIndices[2].y += 1;
         nearbyBucketIndices[3].y += 1;
         nearbyBucketIndices[6].y += 1;
         nearbyBucketIndices[7].y += 1;
-    } 
-    else 
-    {
+    } else {
         nearbyBucketIndices[2].y -= 1;
         nearbyBucketIndices[3].y -= 1;
         nearbyBucketIndices[6].y -= 1;
         nearbyBucketIndices[7].y -= 1;
     }
 
-    if (((FloatType)0.5 + (FloatType)originIndex.z) * mGridSpacing <= position.z) 
-    {
+    if ((originIndex.z + 0.5f) * mGridSpacing <= position.z) {
         nearbyBucketIndices[1].z += 1;
         nearbyBucketIndices[3].z += 1;
         nearbyBucketIndices[5].z += 1;
         nearbyBucketIndices[7].z += 1;
-    } 
-    else 
-    {
+    } else {
         nearbyBucketIndices[1].z -= 1;
         nearbyBucketIndices[3].z -= 1;
         nearbyBucketIndices[5].z -= 1;
         nearbyBucketIndices[7].z -= 1;
     }
 
-    for (int i = 0; i < 8; i++) 
-    {
+    for (int i = 0; i < 8; i++) {
         nearbyKeys[i] = getHashKeyFromBucketIndex(nearbyBucketIndices[i]);
     }
 }
@@ -244,14 +222,12 @@ pointNeighborSearcher3Ptr pointHashGridSearcher3::clone() const
 }
 
 pointHashGridSearcher3&
-pointHashGridSearcher3::operator=(const pointHashGridSearcher3& other) 
-{
+pointHashGridSearcher3::operator=(const pointHashGridSearcher3& other) {
     set(other);
     return *this;
 }
 
-void pointHashGridSearcher3::set(const pointHashGridSearcher3& other) 
-{
+void pointHashGridSearcher3::set(const pointHashGridSearcher3& other) {
     mGridSpacing = other.mGridSpacing;
     mResolution = other.mResolution;
     mPoints = other.mPoints;

@@ -39,25 +39,25 @@ public:
 
     void set(const faceCenteredGrid3& other);
 
-    FloatType &u(SizeType i, SizeType j, SizeType k);
-    FloatType &v(SizeType i, SizeType j, SizeType k);
-    FloatType &w(SizeType i, SizeType j, SizeType k);
+    double &u(size_t i, size_t j, size_t k);
+    double &v(size_t i, size_t j, size_t k);
+    double &w(size_t i, size_t j, size_t k);
 
-    const FloatType &u(SizeType i, SizeType j, SizeType k) const;
-    const FloatType &v(SizeType i, SizeType j, SizeType k) const;
-    const FloatType &w(SizeType i, SizeType j, SizeType k) const;
+    const double &u(size_t i, size_t j, size_t k) const;
+    const double &v(size_t i, size_t j, size_t k) const;
+    const double &w(size_t i, size_t j, size_t k) const;
 
-    FloatType &u( const size3& pt );
-    FloatType &v( const size3& pt );
-    FloatType &w( const size3& pt );
+    double &u( const size3& pt );
+    double &v( const size3& pt );
+    double &w( const size3& pt );
 
-    const FloatType &u( const size3& pt ) const;
-    const FloatType &v( const size3& pt ) const;
-    const FloatType &w( const size3& pt ) const;
+    const double &u( const size3& pt ) const;
+    const double &v( const size3& pt ) const;
+    const double &w( const size3& pt ) const;
 
-    vector3 uPosition(SizeType i, SizeType j, SizeType k) const;
-    vector3 vPosition(SizeType i, SizeType j, SizeType k) const;
-    vector3 wPosition(SizeType i, SizeType j, SizeType k) const;
+    vector3 uPosition(size_t i, size_t j, size_t k) const;
+    vector3 vPosition(size_t i, size_t j, size_t k) const;
+    vector3 wPosition(size_t i, size_t j, size_t k) const;
 
 
     DataPositionFunc uPosition() const;
@@ -79,16 +79,16 @@ public:
     vector3 wOrigin() const { return mDataOriginW; }
 
     void forEachUIndex(
-        const std::function<void(SizeType, SizeType, SizeType)>& func) const;
+        const std::function<void(size_t, size_t, size_t)>& func) const;
     void forEachVIndex(
-        const std::function<void(SizeType, SizeType, SizeType)>& func) const;
+        const std::function<void(size_t, size_t, size_t)>& func) const;
     void forEachWIndex(
-        const std::function<void(SizeType, SizeType, SizeType)>& func) const;
+        const std::function<void(size_t, size_t, size_t)>& func) const;
 
-    FloatType divergenceAtCellCenterByIndex(SizeType i, SizeType j, SizeType k) const;
+    double divergenceAtCellCenterByIndex(size_t i, size_t j, size_t k) const;
 
-    vector3 valueAtCellCenterByIndex(SizeType i, SizeType j, SizeType k) const;
-    vector3 curlAtCellCenterByIndex(SizeType i, SizeType j, SizeType k) const;
+    vector3 valueAtCellCenterByIndex(size_t i, size_t j, size_t k) const;
+    vector3 curlAtCellCenterByIndex(size_t i, size_t j, size_t k) const;
 
     std::shared_ptr<vectorGrid3> clone() const override;
     vector3 sample(const vector3& x) const override;
@@ -98,8 +98,8 @@ public:
 
 protected:
     void onResize(const size3& resolution, const vector3& gridSpacing, const vector3& origin, const vector3& initValue) override;
-    void getData(std::vector<FloatType>* data) const override;
-    void setData(const std::vector<FloatType>& data) override;
+    void getData(std::vector<double>* data) const override;
+    void setData(const std::vector<double>& data) override;
 };
 
 typedef std::shared_ptr<faceCenteredGrid3> faceCenteredGrid3Ptr;

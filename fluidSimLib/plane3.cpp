@@ -58,12 +58,12 @@ surfaceRayIntersection3 plane3::closestIntersectionLocal( const ray3& ray) const
 {
     surfaceRayIntersection3 intersection;
 
-    FloatType dDotN = ray.direction.dot(normal);
+    double dDotN = ray.direction.dot(normal);
 
     // Check if not parallel
     if (std::fabs(dDotN) > 0) 
     {
-        FloatType t = normal.dot(point - ray.origin) / dDotN;
+        double t = normal.dot(point - ray.origin) / dDotN;
         if (t >= 0.0) 
         {
             intersection.isIntersecting = true;
@@ -78,8 +78,8 @@ surfaceRayIntersection3 plane3::closestIntersectionLocal( const ray3& ray) const
 
 boundingBox3 plane3::boundingBoxLocal() const 
 {
-    static const FloatType eps = std::numeric_limits<FloatType>::epsilon();
-    static const FloatType dmax = std::numeric_limits<FloatType>::max();
+    static const double eps = std::numeric_limits<double>::epsilon();
+    static const double dmax = std::numeric_limits<double>::max();
 
     if (std::fabs(normal.dot(vector3(1.0, 0.0, 0.0)) - 1.0) < eps) 
     {

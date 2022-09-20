@@ -3,7 +3,6 @@
 #define simAnimation_H
 
 #include "frame.h"
-#include "common.h"
 
 class simAnimation
 {
@@ -26,6 +25,9 @@ public:
 
     void setNumberOfFixedSubTimeSteps(unsigned int numberOfSteps);
 
+    virtual unsigned int numberOfSubTimeSteps(
+        double timeIntervalInSeconds) const;
+
     //! Advances a single frame.
     void advanceSingleFrame();
 
@@ -33,27 +35,23 @@ public:
 
     void setCurrentFrame(const frame& frame);
 
-    FloatType currentTimeInSeconds() const;
-   
+    double currentTimeInSeconds() const;
 
-    virtual void onAdvanceTimeStep(FloatType timeIntervalInSeconds) = 0;
-   
+
+    virtual void onAdvanceTimeStep(double timeIntervalInSeconds) = 0;
+
     virtual void onInitialize();
 
-protected:
-    frame mCurrentFrame;
 private:
-    
+    frame mCurrentFrame;
     bool mIsUsingFixedSubTimeSteps = true;
     unsigned int mNumberOfFixedSubTimeSteps = 1;
     bool mHasInitialized = false;
-    FloatType mCurrentTime = 0.0;
+    double mCurrentTime = 0.0;
 
     void onUpdate(const frame& f);
-    void advanceTimeStep( FloatType timeIntervalInSeconds );
+    void advanceTimeStep( double timeIntervalInSeconds );
     void initialize();
 };
 
 #endif
-
-

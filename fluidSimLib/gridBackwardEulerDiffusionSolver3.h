@@ -23,8 +23,8 @@ public:
    
     void solve(
         const scalarGrid3& source,
-        FloatType diffusionCoefficient,
-        FloatType timeIntervalInSeconds,
+        double diffusionCoefficient,
+        double timeIntervalInSeconds,
         scalarGrid3* dest,
         const scalarField3& boundarySdf
         = constantScalarField3(mathUtil::maxFloat()),
@@ -34,8 +34,8 @@ public:
    
     void solve(
         const extendVectorGrid3& source,
-        FloatType diffusionCoefficient,
-        FloatType timeIntervalInSeconds,
+        double diffusionCoefficient,
+        double timeIntervalInSeconds,
         extendVectorGrid3* dest,
         const scalarField3& boundarySdf
         = constantScalarField3(mathUtil::maxFloat()),
@@ -45,8 +45,8 @@ public:
    
     void solve(
         const faceCenteredGrid3& source,
-        FloatType diffusionCoefficient,
-        FloatType timeIntervalInSeconds,
+        double diffusionCoefficient,
+        double timeIntervalInSeconds,
         faceCenteredGrid3* dest,
         const scalarField3& boundarySdf
         = constantScalarField3(mathUtil::maxFloat()),
@@ -65,7 +65,7 @@ private:
 
     void buildMarkers(
         const size3& size,
-        const std::function<vector3(SizeType, SizeType, SizeType)>& pos,
+        const std::function<vector3(size_t, size_t, size_t)>& pos,
         const scalarField3& boundarySdf,
         const scalarField3& fluidSdf);
 
@@ -80,7 +80,7 @@ private:
     void buildVectors(
         const vecDataBuffer3& f,
         const vector3& c,
-        SizeType component);
+        size_t component);
 };
 
 #endif

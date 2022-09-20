@@ -2,7 +2,6 @@
 
 #include "picSolver3.h"
 #include "mathUtil.h"
-#include "timer.h"
 
 picSolver3::picSolver3() : picSolver3({1, 1, 1}, {1, 1, 1}, {0, 0, 0})
 {
@@ -14,10 +13,10 @@ picSolver3::picSolver3(
     const vector3& gridOrigin)
     : gridFluidSolver3(resolution, gridSpacing, gridOrigin)
 {
-    const gridSystemData3Ptr& grids = gridSystemData();
+    auto grids = gridSystemData();
     mSignedDistanceFieldId = grids->addScalarGrid3Data(
         std::make_shared<cellCenteredScalarGrid3>(resolution, gridSpacing, gridOrigin),
-        std::numeric_limits<FloatType>::max());
+        std::numeric_limits<double>::max());
     mParticles = std::make_shared<particleSystemData3>();
 }
 
@@ -29,13 +28,11 @@ scalarGrid3Ptr picSolver3::signedDistanceField() const
     return gridSystemData()->scalarGrid3DataAt(mSignedDistanceFieldId);
 }
 
-const particleSystemData3Ptr& picSolver3::particleSystemData() const 
-{
+const particleSystemData3Ptr& picSolver3::particleSystemData() const {
     return mParticles;
 }
 
-const particleEmitter3Ptr& picSolver3::particleEmitter() const
-{
+const particleEmitter3Ptr& picSolver3::particleEmitter() const {
     return mParticleEmitter;
 }
 
@@ -53,35 +50,20 @@ void picSolver3::onInitialize()
 
 }
 
-void picSolver3::onBeginAdvanceTimeStep(FloatType timeIntervalInSeconds)
+void picSolver3::onBeginAdvanceTimeStep(double timeIntervalInSeconds)
 {
-    {
-        timer t("      picSolver3::updateParticleEmitter" );
-        updateParticleEmitter(timeIntervalInSeconds);
-    }
+    updateParticleEmitter(timeIntervalInSeconds);
 
-    {
-        timer t("      picSolver3::transferFromParticlesToGrids" );
-        transferFromParticlesToGrids();
-    }
+    transferFromParticlesToGrids();
 
-    {
-        timer t("      picSolver3::buildSignedDistanceField" );
-        buildSignedDistanceField();
-    }
+    buildSignedDistanceField();
 
-    {
-        timer t("      picSolver3::extrapolateVelocityToAir" );
-        extrapolateVelocityToAir();
-    }
+    extrapolateVelocityToAir();
 
-    {
-        timer t("      picSolver3::applyBoundaryCondition" );
-        applyBoundaryCondition();
-    }
+    applyBoundaryCondition();
 }
 
-void picSolver3::computeAdvection(FloatType timeIntervalInSeconds)
+void picSolver3::computeAdvection(double timeIntervalInSeconds)
 {
     extrapolateVelocityToAir();
 
@@ -98,17 +80,19 @@ scalarField3Ptr picSolver3::fluidSdf() const
     return signedDistanceField();
 }
 
-void picSolver3::transferFromParticlesToGrids() 
-{
+void picSolver3::transferFromParticlesToGrids() {
     const faceCenteredGrid3Ptr& flow = gridSystemData()->velocity();
     std::vector<vector3>& positions = mParticles->positions();
     std::vector<vector3>& velocities = mParticles->velocities();
-    SizeType numberOfParticles = mParticles->numberOfParticles();
+    size_t numberOfParticles = mParticles->numberOfParticles();
 
     // Clear velocity to zero
     flow->fill(vector3());
 
     // Weighted-average velocity
+    //auto u = flow->uAccessor();
+    //auto v = flow->vAccessor();
+    //auto w = flow->wAccessor();
     dataBuffer3 uWeight(flow->uData().size());
     dataBuffer3 vWeight(flow->vData().size());
     dataBuffer3 wWeight(flow->wData().size());
@@ -124,10 +108,23 @@ void picSolver3::transferFromParticlesToGrids()
         &flow->vData(), flow->gridSpacing(), flow->vOrigin() );
     LinearBufferSampler wSampler(
         &flow->wData(), flow->gridSpacing(), flow->wOrigin() );
-    //
-    for (SizeType i = 0; i < numberOfParticles; ++i) {
+    /*
+    LinearArraySampler3<double, double> uSampler(
+    flow->uConstAccessor(),
+    flow->gridSpacing(),
+    flow->uOrigin());
+    LinearArraySampler3<double, double> vSampler(
+    flow->vConstAccessor(),
+    flow->gridSpacing(),
+    flow->vOrigin());
+    LinearArraySampler3<double, double> wSampler(
+    flow->wConstAccessor(),
+    flow->gridSpacing(),
+    flow->wOrigin());
+    */
+    for (size_t i = 0; i < numberOfParticles; ++i) {
         std::array<size3, 8> indices;
-        std::array<FloatType, 8> weights;
+        std::array<double, 8> weights;
 
         uSampler.getCoordinatesAndWeights(positions[i], &indices, &weights);
         for (int j = 0; j < 8; ++j) {
@@ -150,51 +147,50 @@ void picSolver3::transferFromParticlesToGrids()
             mMarkersW(indices[j]) = 1;
         }
     }
-    //
-    uWeight.forEachIndex([&](SizeType i, SizeType j, SizeType k) {
+
+    uWeight.forEachIndex([&](size_t i, size_t j, size_t k) {
         if (uWeight(i, j, k) > 0.0) {
             flow->u(i, j, k) /= uWeight(i, j, k);
         }
     });
-    vWeight.forEachIndex([&](SizeType i, SizeType j, SizeType k) {
+    vWeight.forEachIndex([&](size_t i, size_t j, size_t k) {
         if (vWeight(i, j, k) > 0.0) {
             flow->v(i, j, k) /= vWeight(i, j, k);
         }
     });
-    wWeight.forEachIndex([&](SizeType i, SizeType j, SizeType k) {
+    wWeight.forEachIndex([&](size_t i, size_t j, size_t k) {
         if (wWeight(i, j, k) > 0.0) {
             flow->w(i, j, k) /= wWeight(i, j, k);
         }
     });
 }
 
-void picSolver3::transferFromGridsToParticles() 
-{
+void picSolver3::transferFromGridsToParticles() {
     const faceCenteredGrid3Ptr& flow = gridSystemData()->velocity();
     std::vector<vector3>& positions = mParticles->positions();
     std::vector<vector3>& velocities = mParticles->velocities();
-    SizeType numberOfParticles = mParticles->numberOfParticles();
+    size_t numberOfParticles = mParticles->numberOfParticles();
 
-    //parallelFor(kZeroSize, numberOfParticles, [&](SizeType i) {
+    //parallelFor(kZeroSize, numberOfParticles, [&](size_t i) {
     //    velocities[i] = flow->sample(positions[i]);
     //    });
-    for ( SizeType i = 0; i < numberOfParticles; ++i )
+    for ( size_t i = 0; i < numberOfParticles; ++i )
     {
         velocities[i] = flow->sample(positions[i]);
     }
 }
 
-void picSolver3::moveParticles(FloatType timeIntervalInSeconds)
+void picSolver3::moveParticles(double timeIntervalInSeconds)
 {
     const faceCenteredGrid3Ptr& flow = gridSystemData()->velocity();
     std::vector<vector3>& positions = mParticles->positions();
     std::vector<vector3>& velocities = mParticles->velocities();
-    SizeType numberOfParticles = mParticles->numberOfParticles();
+    size_t numberOfParticles = mParticles->numberOfParticles();
     int domainBoundaryFlag = closedDomainBoundaryFlag();
     boundingBox3 boundingBox = flow->boundingBox();
 
-    //parallelFor(kZeroSize, numberOfParticles, [&](SizeType i) {
-    for ( SizeType i = 0; i < numberOfParticles; ++i )
+    //parallelFor(kZeroSize, numberOfParticles, [&](size_t i) {
+    for ( size_t i = 0; i < numberOfParticles; ++i )
     {
         vector3 pt0 = positions[i];
         vector3 pt1 = pt0;
@@ -202,13 +198,13 @@ void picSolver3::moveParticles(FloatType timeIntervalInSeconds)
 
         // Adaptive time-stepping
         unsigned int numSubSteps
-            = static_cast<unsigned int>(std::max<FloatType>(maxCfl(), 1.0));
-        FloatType dt = timeIntervalInSeconds / numSubSteps;
+            = static_cast<unsigned int>(std::max(maxCfl(), 1.0));
+        double dt = timeIntervalInSeconds / numSubSteps;
         for (unsigned int t = 0; t < numSubSteps; ++t) {
             vector3 vel0 = flow->sample(pt0);
 
             // Mid-point rule
-            vector3 midPt = pt0 + (FloatType)0.5 * dt * vel0;
+            vector3 midPt = pt0 + 0.5 * dt * vel0;
             vector3 midVel = flow->sample(midPt);
             pt1 = pt0 + dt * midVel;
 
@@ -252,7 +248,7 @@ void picSolver3::moveParticles(FloatType timeIntervalInSeconds)
 
     collider3Ptr col = collider();
     if (col != nullptr) {
-        for ( SizeType i = 0; i < numberOfParticles; ++i )
+        for ( size_t i = 0; i < numberOfParticles; ++i )
         {
             col->resolveCollision(
                 0.0,
@@ -264,7 +260,7 @@ void picSolver3::moveParticles(FloatType timeIntervalInSeconds)
         /* parallelFor(
         kZeroSize,
         numberOfParticles,
-        [&](SizeType i) {
+        [&](size_t i) {
         col->resolveCollision(
         0.0,
         0.0,
@@ -285,42 +281,30 @@ void picSolver3::extrapolateVelocityToAir()
     mathUtil::extrapolateToRegion(vel->wData(), mMarkersW, depth, vel->wData());
 }
 
-void picSolver3::buildSignedDistanceField() 
-{
-    scalarGrid3Ptr sdf = signedDistanceField();
-    scalarGrid3::DataPositionFunc sdfPos = sdf->dataPosition();
-    FloatType maxH = std::max(
+void picSolver3::buildSignedDistanceField() {
+    auto sdf = signedDistanceField();
+    auto sdfPos = sdf->dataPosition();
+    double maxH = std::max(
         std::max( sdf->gridSpacing().x, sdf->gridSpacing().y), sdf->gridSpacing().z);
-    FloatType radius = (FloatType)1.2 * maxH / std::sqrt((FloatType)2.0);
-    FloatType sdfBandRadius = (FloatType)2.0 * radius;
+    double radius = 1.2 * maxH / std::sqrt(2.0);
+    double sdfBandRadius = 2.0 * radius;
 
-    {
-        timer t("        picSolver3::buildSignedDistanceField" );
-        mParticles->buildNeighborSearcher( sdfBandRadius );
-    }
-    const pointNeighborSearcher3Ptr& searcher = mParticles->neighborSearcher();
-
-    {
-        timer t("        picSolver3::sdf->forEachDataPointIndex" );
-        sdf->forEachDataPointIndex([&] (SizeType i, SizeType j, SizeType k) {
-            vector3 pt = sdfPos(i, j, k);
-            FloatType minDist = sdfBandRadius;
-            searcher->forEachNearbyPoint(
-                pt, sdfBandRadius, [&] (SizeType, const vector3& x) {
-                minDist = std::min(minDist, pt.distanceTo(x));
-            });
-            (*sdf)(i, j, k) = minDist - radius;
+    mParticles->buildNeighborSearcher(2 * radius);
+    auto searcher = mParticles->neighborSearcher();
+    sdf->forEachDataPointIndex([&] (size_t i, size_t j, size_t k) {
+        vector3 pt = sdfPos(i, j, k);
+        double minDist = sdfBandRadius;
+        searcher->forEachNearbyPoint(
+            pt, sdfBandRadius, [&] (size_t, const vector3& x) {
+            minDist = std::min(minDist, pt.distanceTo(x));
         });
-    }
+        (*sdf)(i, j, k) = minDist - radius;
+    });
 
-    {
-        timer t("        picSolver3::extrapolateIntoCollider" );
-        extrapolateIntoCollider(sdf.get());
-    }
+    extrapolateIntoCollider(sdf.get());
 }
 
-void picSolver3::updateParticleEmitter(FloatType timeIntervalInSeconds)
-{
+void picSolver3::updateParticleEmitter(double timeIntervalInSeconds) {
     if (mParticleEmitter != nullptr) {
         mParticleEmitter->update(currentTimeInSeconds(), timeIntervalInSeconds);
     }
