@@ -1,0 +1,128 @@
+//---collider3.cpp
+
+#include <cmath>
+#include "collider3.h"
+
+collider3::collider3() 
+{
+}
+
+collider3::~collider3() 
+{
+}
+
+void collider3::resolveCollision(
+    double radius,
+    double restitutionCoefficient,
+    vector3* newPosition,
+    vector3* newVelocity)
+{
+    colliderQueryResult colliderPoint;
+
+    getClosestPoint(mSurface, *newPosition, &colliderPoint);
+
+    // check if the new position is penetrating the surface
+    if (isPenetrating(colliderPoint, *newPosition, radius))
+    {
+        // target point is the closest non-penetrating position from the
+        // new position.
+        vector3 targetNormal = colliderPoint.normal;
+        vector3 targetPoint = colliderPoint.point + radius * targetNormal;
+        vector3 colliderVelAtTargetPoint = colliderPoint.velocity;
+
+        // get new candidate relative velocity from the target point.
+        vector3 relativeVel = *newVelocity - colliderVelAtTargetPoint;
+        double normalDotRelativeVel = targetNormal.dot(relativeVel);
+        vector3 relativeVelN = normalDotRelativeVel * targetNormal;
+        vector3 relativeVelT = relativeVel - relativeVelN;
+
+        // check if the velocity is facing opposite direction of the surface
+        // normal
+        if (normalDotRelativeVel < 0.0)
+        {
+            // apply restitution coefficient to the surface normal component of
+            // the velocity
+            vector3 deltaRelativeVelN
+                = (-restitutionCoefficient - 1.0) * relativeVelN;
+            relativeVelN *= -restitutionCoefficient;
+
+            // apply friction to the tangential component of the velocity
+            // from Bridson et al., Robust Treatment of Collisions, Contact and
+            // friction for Cloth Animation, 2002
+            // http://graphics.stanford.edu/papers/cloth-sig02/cloth.pdf
+            if (relativeVelT.lengthSquared() > 0.0) 
+            {
+                double frictionScale
+                    = std::max(
+                        1.0
+                        - mFrictionCoeffient
+                        * deltaRelativeVelN.length()
+                        / relativeVelT.length(), 0.0);
+                relativeVelT *= frictionScale;
+            }
+
+            // reassemble the components
+            *newVelocity = relativeVelN + relativeVelT + colliderVelAtTargetPoint;
+        }
+
+        // geometric fix
+        *newPosition = targetPoint;
+    }
+}
+
+double collider3::frictionCoefficient() const 
+{
+    return mFrictionCoeffient;
+}
+
+void collider3::setFrictionCoefficient(double newFrictionCoeffient) 
+{
+    mFrictionCoeffient = std::max(newFrictionCoeffient, 0.0);
+}
+
+const surface3Ptr& collider3::surface() const 
+{
+    return mSurface;
+}
+
+void collider3::setSurface(const surface3Ptr& newSurface)
+{
+    mSurface = newSurface;
+}
+
+void collider3::getClosestPoint(
+    const surface3Ptr& surface,
+    const vector3& queryPoint,
+    colliderQueryResult* result) const 
+{
+    result->distance = surface->closestDistance(queryPoint);
+    result->point = surface->closestPoint(queryPoint);
+    result->normal = surface->closestNormal(queryPoint);
+    result->velocity = velocityAt(queryPoint);
+}
+
+bool collider3::isPenetrating(
+    const colliderQueryResult& colliderPoint,
+    const vector3& position,
+    double radius) 
+{
+    return (position - colliderPoint.point).dot(colliderPoint.normal) < 0.0 ||
+        colliderPoint.distance < radius;
+}
+
+void collider3::update(
+    double currentTimeInSeconds,
+    double timeIntervalInSeconds) 
+{
+    if (mOnUpdateCallback) {
+        mOnUpdateCallback(this, currentTimeInSeconds, timeIntervalInSeconds);
+    }
+}
+
+void collider3::setOnBeginUpdateCallback(
+    const onBeginUpdateCallback& callback)
+{
+    mOnUpdateCallback = callback;
+}
+
+
