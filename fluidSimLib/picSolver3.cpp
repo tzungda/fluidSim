@@ -207,8 +207,12 @@ void picSolver3::moveParticles(double timeIntervalInSeconds)
     int domainBoundaryFlag = closedDomainBoundaryFlag();
     boundingBox3 boundingBox = flow->boundingBox();
 
-    //parallelFor(kZeroSize, numberOfParticles, [&](size_t i) {
+#ifdef _OPENMP
+#pragma omp parallel for
+    for ( int i = 0; i < (int)numberOfParticles; ++i )
+#else
     for ( size_t i = 0; i < numberOfParticles; ++i )
+#endif
     {
         vector3 pt0 = positions[i];
         vector3 pt1 = pt0;
