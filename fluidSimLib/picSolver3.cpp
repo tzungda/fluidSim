@@ -99,9 +99,9 @@ void picSolver3::transferFromParticlesToGrids() {
     mMarkersU.resize(flow->uData().size());
     mMarkersV.resize(flow->vData().size());
     mMarkersW.resize(flow->wData().size());
-    mMarkersU.set(0);
-    mMarkersV.set(0);
-    mMarkersW.set(0);
+    mMarkersU.setZero();
+    mMarkersV.setZero();
+    mMarkersW.setZero();
     LinearBufferSampler uSampler(
         &flow->uData(), flow->gridSpacing(), flow->uOrigin() );
     LinearBufferSampler vSampler(
