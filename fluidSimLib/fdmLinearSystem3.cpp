@@ -9,6 +9,11 @@ void fdmBlas3::set(double s, dataBuffer3* result)
     result->set(s);
 }
 
+void fdmBlas3::setZero( dataBuffer3* result )
+{
+    result->setZero();
+}
+
 void fdmBlas3::set(const dataBuffer3& v, dataBuffer3* result)
 {
     result->set(v);
