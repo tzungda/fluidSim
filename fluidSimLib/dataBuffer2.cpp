@@ -8,18 +8,18 @@ dataBuffer2::dataBuffer2()
 {
 }
 
-dataBuffer2::dataBuffer2( const size2& size, const double initValue )
+dataBuffer2::dataBuffer2( const size2& size, const FloatType initValue )
 {
     resize(size, initValue);
 }
 
-dataBuffer2::dataBuffer2( size_t width, size_t height, const double initValue )
+dataBuffer2::dataBuffer2( size_t width, size_t height, const FloatType initValue )
 {
     resize(width, height, initValue);
 }
 
 
-void dataBuffer2::resize( const size2& size, const double initValue )
+void dataBuffer2::resize( const size2& size, const FloatType initValue )
 {
     dataBuffer2 tempBuffer;
     tempBuffer.mData.resize( (size_t)size.x * size.y , initValue );
@@ -38,25 +38,25 @@ void dataBuffer2::resize( const size2& size, const double initValue )
     swap(tempBuffer);
 }
 
-void dataBuffer2::resize( size_t width, size_t height, const double initValue )
+void dataBuffer2::resize( size_t width, size_t height, const FloatType initValue )
 {
     resize( size2(width, height), initValue );
 }
 
-const double dataBuffer2::valueByIndex( size_t i, size_t j ) const
+const FloatType dataBuffer2::valueByIndex( size_t i, size_t j ) const
 {
     return mData[i + mSize.x * j];
 }
 
-double& dataBuffer2::valueByIndex( size_t i, size_t j )
+FloatType& dataBuffer2::valueByIndex( size_t i, size_t j )
 {
     return mData[i + mSize.x * j];
 }
 
 
-void dataBuffer2::set( double value )
+void dataBuffer2::set( FloatType value )
 {
-    for ( double &v: mData )
+    for ( FloatType &v: mData )
     {
         v = value;
     }
@@ -86,27 +86,27 @@ size_t dataBuffer2::height( ) const
 
 
 
-double *dataBuffer2::data( )
+FloatType *dataBuffer2::data( )
 {
     return mData.data();
 }
 
-std::vector<double>::iterator dataBuffer2::begin()
+std::vector<FloatType>::iterator dataBuffer2::begin()
 {
     return mData.begin();
 }
 
-std::vector<double>::const_iterator dataBuffer2::begin() const
+std::vector<FloatType>::const_iterator dataBuffer2::begin() const
 {
     return mData.begin();
 }
 
-std::vector<double>::iterator dataBuffer2::end()
+std::vector<FloatType>::iterator dataBuffer2::end()
 {
     return mData.end();
 }
 
-std::vector<double>::const_iterator dataBuffer2::end() const
+std::vector<FloatType>::const_iterator dataBuffer2::end() const
 {
     return mData.end();
 }
@@ -118,12 +118,12 @@ void dataBuffer2::swap( dataBuffer2& other )
 }
 
 
-double& dataBuffer2::operator()(size_t i, size_t j)
+FloatType& dataBuffer2::operator()(size_t i, size_t j)
 {
     return mData[i + mSize.x * j];
 }
 
-const double& dataBuffer2::operator()( size_t i, size_t j ) const
+const FloatType& dataBuffer2::operator()( size_t i, size_t j ) const
 {
     return mData[i + mSize.x * j];
 }

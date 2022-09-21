@@ -46,8 +46,8 @@ public:
 protected:
     void swapGrid(grid3* other);
     //void setGrid(const grid3& other);
-    virtual void getData(std::vector<double>* data) const = 0;
-    virtual void setData(const std::vector<double>& data) = 0;
+    virtual void getData(std::vector<FloatType>* data) const = 0;
+    virtual void setData(const std::vector<FloatType>& data) = 0;
 };
 
 #endif

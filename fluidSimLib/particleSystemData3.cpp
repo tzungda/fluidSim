@@ -21,7 +21,7 @@ particleSystemData3::particleSystemData3(size_t numberOfParticles) {
         kDefaultHashGridResolution,
         kDefaultHashGridResolution,
         kDefaultHashGridResolution,
-        2.0 * mRadius);
+        (FloatType)2.0 * mRadius);
 
     resize(numberOfParticles);
 }
@@ -37,7 +37,7 @@ void particleSystemData3::resize(size_t newNumberOfParticles) {
     mNumberOfParticles = newNumberOfParticles;
 
     for (auto& attr : mScalarDataList) {
-        attr.resize(newNumberOfParticles, 0.0);
+        attr.resize(newNumberOfParticles, (FloatType)0.0);
     }
 
     for (auto& attr : mVectorDataList) {
@@ -49,7 +49,7 @@ size_t particleSystemData3::numberOfParticles() const {
     return mNumberOfParticles;
 }
 
-size_t particleSystemData3::addScalarData(double initialVal) {
+size_t particleSystemData3::addScalarData(FloatType initialVal) {
     size_t attrIdx = mScalarDataList.size();
     mScalarDataList.emplace_back(numberOfParticles(), initialVal);
     return attrIdx;
@@ -61,20 +61,20 @@ size_t particleSystemData3::addVectorData(const vector3& initialVal) {
     return attrIdx;
 }
 
-double particleSystemData3::radius() const {
+FloatType particleSystemData3::radius() const {
     return mRadius;
 }
 
-void particleSystemData3::setRadius(double newRadius) {
-    mRadius = std::max(newRadius, 0.0);
+void particleSystemData3::setRadius(FloatType newRadius) {
+    mRadius = std::max<FloatType>(newRadius, (FloatType)0.0);
 }
 
-double particleSystemData3::mass() const {
+FloatType particleSystemData3::mass() const {
     return mMass;
 }
 
-void particleSystemData3::setMass(double newMass) {
-    mMass = std::max(newMass, 0.0);
+void particleSystemData3::setMass(FloatType newMass) {
+    mMass = std::max<FloatType>(newMass, (FloatType)0.0);
 }
 
 const std::vector<vector3>& particleSystemData3::positions() const
@@ -107,12 +107,12 @@ std::vector<vector3>& particleSystemData3::forces()
     return vectorDataAt(mForceIdx);
 }
 
-const std::vector<double>& particleSystemData3::scalarDataAt( size_t idx) const
+const std::vector<FloatType>& particleSystemData3::scalarDataAt( size_t idx) const
 {
     return mScalarDataList[idx];
 }
 
-std::vector<double>& particleSystemData3::scalarDataAt(size_t idx)
+std::vector<FloatType>& particleSystemData3::scalarDataAt(size_t idx)
 {
     return mScalarDataList[idx];
 }
@@ -192,20 +192,20 @@ particleSystemData3::neighborLists() const {
     return mNeighborLists;
 }
 
-void particleSystemData3::buildNeighborSearcher(double maxSearchRadius)
+void particleSystemData3::buildNeighborSearcher(FloatType maxSearchRadius)
 {
     // Use pointHashGridSearcher3 by default
     mNeighborSearcher = std::make_shared<pointHashGridSearcher3>(
         kDefaultHashGridResolution,
         kDefaultHashGridResolution,
         kDefaultHashGridResolution,
-        2.0 * maxSearchRadius);
+        (FloatType)2.0 * maxSearchRadius);
 
     mNeighborSearcher->build(positions());
 
 }
 
-void particleSystemData3::buildNeighborLists(double maxSearchRadius)
+void particleSystemData3::buildNeighborLists(FloatType maxSearchRadius)
 {
 
     mNeighborLists.resize(numberOfParticles());

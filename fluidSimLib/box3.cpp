@@ -47,12 +47,12 @@ vector3 box3::closestPointLocal(const vector3& otherPoint) const
         };
 
         vector3 result = planes[0].closestPoint(otherPoint);
-        double distanceSquared = result.distanceSquaredTo(otherPoint);
+        FloatType distanceSquared = result.distanceSquaredTo(otherPoint);
 
         for (int i = 1; i < 6; ++i) 
         {
             vector3 localResult = planes[i].closestPoint(otherPoint);
-            double localDistanceSquared
+            FloatType localDistanceSquared
                 = localResult.distanceSquaredTo(otherPoint);
 
             if (localDistanceSquared < distanceSquared)
@@ -88,12 +88,12 @@ vector3 box3::closestNormalLocal(const vector3& otherPoint) const
     {
         vector3 closestNormal = planes[0].normal;
         vector3 closestPoint = planes[0].closestPoint(otherPoint);
-        double minDistanceSquared = (closestPoint - otherPoint).lengthSquared();
+        FloatType minDistanceSquared = (closestPoint - otherPoint).lengthSquared();
 
         for (int i = 1; i < 6; ++i)
         {
             vector3 localClosestPoint = planes[i].closestPoint(otherPoint);
-            double localDistanceSquared
+            FloatType localDistanceSquared
                 = (localClosestPoint - otherPoint).lengthSquared();
 
             if (localDistanceSquared < minDistanceSquared)
@@ -113,11 +113,11 @@ vector3 box3::closestNormalLocal(const vector3& otherPoint) const
             bound.upperCorner);
         vector3 closestPointToInputPoint = otherPoint - closestPoint;
         vector3 closestNormal = planes[0].normal;
-        double maxCosineAngle = closestNormal.dot(closestPointToInputPoint);
+        FloatType maxCosineAngle = closestNormal.dot(closestPointToInputPoint);
 
         for (int i = 1; i < 6; ++i)
         {
-            double cosineAngle
+            FloatType cosineAngle
                 = planes[i].normal.dot(closestPointToInputPoint);
 
             if (cosineAngle > maxCosineAngle) 

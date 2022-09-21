@@ -14,15 +14,15 @@ public:
         size_t resolutionX,
         size_t resolutionY,
         size_t resolutionZ,
-        double gridSpacingX = 1.0,
-        double gridSpacingY = 1.0,
-        double gridSpacingZ = 1.0,
-        double originX = 0.0,
-        double originY = 0.0,
-        double originZ = 0.0,
-        double initialValueU = 0.0,
-        double initialValueV = 0.0,
-        double initialValueW = 0.0);
+        FloatType gridSpacingX = 1.0,
+        FloatType gridSpacingY = 1.0,
+        FloatType gridSpacingZ = 1.0,
+        FloatType originX = 0.0,
+        FloatType originY = 0.0,
+        FloatType originZ = 0.0,
+        FloatType initialValueU = 0.0,
+        FloatType initialValueV = 0.0,
+        FloatType initialValueW = 0.0);
 
     cellCenteredVectorGrid3(
         const size3& resolution,

@@ -19,15 +19,15 @@ public:
     virtual ~implicitSurface3();
 
     //! Returns signed distance from the given point \p otherPoint.
-    double signedDistance(const vector3& otherPoint) const;
+    FloatType signedDistance(const vector3& otherPoint) const;
 
 protected:
     //! Returns signed distance from the given point \p otherPoint in local
     //! space.
-    virtual double signedDistanceLocal(const vector3& otherPoint) const = 0;
+    virtual FloatType signedDistanceLocal(const vector3& otherPoint) const = 0;
 
 private:
-    double closestDistanceLocal(const vector3& otherPoint) const override;
+    FloatType closestDistanceLocal(const vector3& otherPoint) const override;
 };
 
 typedef std::shared_ptr< implicitSurface3 > implicitSurface3Ptr;

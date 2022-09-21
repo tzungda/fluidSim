@@ -5,7 +5,7 @@
 
 #include "mathUtil.h"
 
-int mathUtil::sign( double x )
+int mathUtil::sign( FloatType x )
 {
     if ( x >= 0.0 )
     {
@@ -15,19 +15,19 @@ int mathUtil::sign( double x )
     }
 }
 
-vector3 mathUtil::projectAndApplyFriction( const vector3& vel, const vector3& normal, double frictionCoefficient )
+vector3 mathUtil::projectAndApplyFriction( const vector3& vel, const vector3& normal, FloatType frictionCoefficient )
 {
     vector3 velt = vel.projected(normal);
     if (velt.lengthSquared() > 0.0)
     {
-        double veln = std::fmax(-vel.dot(normal), 0.0);
-        velt *= std::fmax(1.0 - frictionCoefficient * veln / velt.length(), 0.0);
+        FloatType veln = std::fmax(-vel.dot(normal), (FloatType)0.0);
+        velt *= std::fmax((FloatType)1.0 - frictionCoefficient * veln / velt.length(), (FloatType)0.0);
     }
 
     return velt;
 }
 
-double mathUtil::fractionInsideSdf( double phi0, double phi1 )
+FloatType mathUtil::fractionInsideSdf( FloatType phi0, FloatType phi1 )
 {
     if (isInsideSdf(phi0) && isInsideSdf(phi1))
     {
@@ -47,11 +47,11 @@ double mathUtil::fractionInsideSdf( double phi0, double phi1 )
     }
 }
 
-double mathUtil::fractionInside( double phiBottomLeft, double phiBottomRight, double phiTopLeft, double phiTopRight )
+FloatType mathUtil::fractionInside( FloatType phiBottomLeft, FloatType phiBottomRight, FloatType phiTopLeft, FloatType phiTopRight )
 {
     int inside_count = (phiBottomLeft < 0 ? 1 : 0) + (phiTopLeft < 0 ? 1 : 0) +
         (phiBottomRight < 0 ? 1 : 0) + (phiTopRight < 0 ? 1 : 0);
-    double list[] = {phiBottomLeft, phiBottomRight, phiTopRight, phiTopLeft};
+    FloatType list[] = {phiBottomLeft, phiBottomRight, phiTopRight, phiTopLeft};
 
     if (inside_count == 4)
     {
@@ -66,9 +66,9 @@ double mathUtil::fractionInside( double phiBottomLeft, double phiBottomRight, do
         }
 
         // Work out the area of the exterior triangle
-        double side0 = 1 - fractionInsideSdf(list[0], list[3]);
-        double side1 = 1 - fractionInsideSdf(list[0], list[1]);
-        return 1 - 0.5 * side0 * side1;
+        FloatType side0 = (FloatType)1.0 - fractionInsideSdf(list[0], list[3]);
+        FloatType side1 = (FloatType)1.0 - fractionInsideSdf(list[0], list[1]);
+        return (FloatType)1.0 - (FloatType)0.5 * side0 * side1;
     }
     else if (inside_count == 2)
     {
@@ -81,44 +81,44 @@ double mathUtil::fractionInside( double phiBottomLeft, double phiBottomRight, do
 
         if (list[1] < 0)
         {  // the matching signs are adjacent
-            double side_left = fractionInsideSdf(list[0], list[3]);
-            double side_right = fractionInsideSdf(list[1], list[2]);
-            return 0.5 * (side_left + side_right);
+            FloatType side_left = fractionInsideSdf(list[0], list[3]);
+            FloatType side_right = fractionInsideSdf(list[1], list[2]);
+            return (FloatType)0.5 * (side_left + side_right);
         }
         else
         {  // matching signs are diagonally opposite
            // determine the centre point's sign to disambiguate this case
-            double middle_point = 0.25f * (list[0] + list[1] + list[2] + list[3]);
+            FloatType middle_point = 0.25f * (list[0] + list[1] + list[2] + list[3]);
             if (middle_point < 0)
             {
-                double area = 0.0;
+                FloatType area = 0.0;
 
                 // first triangle (top left)
-                double side1 = 1.0 - fractionInsideSdf(list[0], list[3]);
-                double side3 = 1.0 - fractionInsideSdf(list[2], list[3]);
+                FloatType side1 = (FloatType)1.0 - fractionInsideSdf(list[0], list[3]);
+                FloatType side3 = (FloatType)1.0 - fractionInsideSdf(list[2], list[3]);
 
-                area += 0.5 * side1 * side3;
+                area += (FloatType)0.5 * side1 * side3;
 
                 // second triangle (top right)
-                double side2 = 1.0 - fractionInsideSdf(list[2], list[1]);
-                double side0 = 1.0 - fractionInsideSdf(list[0], list[1]);
-                area += 0.5 * side0 * side2;
+                FloatType side2 = (FloatType)1.0 - fractionInsideSdf(list[2], list[1]);
+                FloatType side0 = (FloatType)1.0 - fractionInsideSdf(list[0], list[1]);
+                area += (FloatType)0.5 * side0 * side2;
 
-                return 1.0 - area;
+                return (FloatType)1.0 - area;
             }
             else
             {
-                double area = 0.0;
+                FloatType area = 0.0;
 
                 // first triangle (bottom left)
-                double side0 = fractionInsideSdf(list[0], list[1]);
-                double side1 = fractionInsideSdf(list[0], list[3]);
-                area += 0.5 * side0 * side1;
+                FloatType side0 = fractionInsideSdf(list[0], list[1]);
+                FloatType side1 = fractionInsideSdf(list[0], list[3]);
+                area += (FloatType)0.5 * side0 * side1;
 
                 // second triangle (top right)
-                double side2 = fractionInsideSdf(list[2], list[1]);
-                double side3 = fractionInsideSdf(list[2], list[3]);
-                area += 0.5 * side2 * side3;
+                FloatType side2 = fractionInsideSdf(list[2], list[1]);
+                FloatType side3 = fractionInsideSdf(list[2], list[3]);
+                area += (FloatType)0.5 * side2 * side3;
                 return area;
             }
         }
@@ -132,9 +132,9 @@ double mathUtil::fractionInside( double phiBottomLeft, double phiBottomRight, do
         }
 
         // Work out the area of the interior triangle, and subtract from 1.
-        double side0 = fractionInsideSdf(list[0], list[3]);
-        double side1 = fractionInsideSdf(list[0], list[1]);
-        return 0.5 * side0 * side1;
+        FloatType side0 = fractionInsideSdf(list[0], list[3]);
+        FloatType side1 = fractionInsideSdf(list[0], list[1]);
+        return (FloatType)0.5 * side0 * side1;
     }
     else
     {
@@ -142,22 +142,22 @@ double mathUtil::fractionInside( double phiBottomLeft, double phiBottomRight, do
     }
 }
 
-void mathUtil::cycleArray(double* arr, int size)
+void mathUtil::cycleArray(FloatType* arr, int size)
 {
-    double t = arr[0];
+    FloatType t = arr[0];
     for (int i = 0; i < size - 1; ++i) arr[i] = arr[i + 1];
     arr[size - 1] = t;
 }
 
-double mathUtil::monotonicCatmullRom( const double& f0,
-    const double& f1,
-    const double& f2,
-    const double& f3,
-    double f )
+FloatType mathUtil::monotonicCatmullRom( const FloatType& f0,
+    const FloatType& f1,
+    const FloatType& f2,
+    const FloatType& f3,
+    FloatType f )
 {
-    double d1 = (f2 - f0) / 2.0;
-    double d2 = (f3 - f1) / 2.0;
-    double D1 = f2 - f1;
+    FloatType d1 = (f2 - f0) / (FloatType)2.0;
+    FloatType d2 = (f3 - f1) / (FloatType)2.0;
+    FloatType D1 = f2 - f1;
 
     if (std::fabs(D1) < eps() )
     {
@@ -174,10 +174,10 @@ double mathUtil::monotonicCatmullRom( const double& f0,
         d2 = 0;
     }
 
-    double a3 = d1 + d2 - 2 * D1;
-    double a2 = 3 * D1 - 2 * d1 - d2;
-    double a1 = d1;
-    double a0 = f1;
+    FloatType a3 = d1 + d2 - 2 * D1;
+    FloatType a2 = 3 * D1 - 2 * d1 - d2;
+    FloatType a1 = d1;
+    FloatType a0 = f1;
 
     return a3 * cubic(f) + a2 * square(f) + a1 * f + a0;
 }
@@ -186,30 +186,30 @@ vector3 mathUtil::monotonicCatmullRom( const vector3& v0,
     const vector3& v1,
     const vector3& v2,
     const vector3& v3,
-    double f )
+    FloatType f )
 {
-    static const double two = 2.0;
-    static const double three = 3.0;
+    static const FloatType two = 2.0;
+    static const FloatType three = 3.0;
 
     vector3 d1 = (v2 - v0) / two;
     vector3 d2 = (v3 - v1) / two;
     vector3 D1 = v2 - v1;
 
-    if (std::fabs(D1.x) < std::numeric_limits<double>::epsilon() ||
+    if (std::fabs(D1.x) < std::numeric_limits<FloatType>::epsilon() ||
         sign(D1.x) != sign(d1.x) ||
         sign(D1.x) != sign(d2.x))
     {
         d1.x = d2.x = 0;
     }
 
-    if (std::fabs(D1.y) < std::numeric_limits<double>::epsilon() ||
+    if (std::fabs(D1.y) < std::numeric_limits<FloatType>::epsilon() ||
         sign(D1.y) != sign(d1.y) ||
         sign(D1.y) != sign(d2.y))
     {
         d1.y = d2.y = 0;
     }
 
-    if (std::fabs(D1.z) < std::numeric_limits<double>::epsilon() ||
+    if (std::fabs(D1.z) < std::numeric_limits<FloatType>::epsilon() ||
         sign(D1.z) != sign(d1.z) ||
         sign(D1.z) != sign(d2.z))
     {
@@ -224,7 +224,7 @@ vector3 mathUtil::monotonicCatmullRom( const vector3& v0,
     return a3 * (f * f * f) + a2 * (f * f) + a1 * f + a0;
 }
 
-double mathUtil::clamp(double val, double low, double high)
+FloatType mathUtil::clamp(FloatType val, FloatType low, FloatType high)
 {
     if (val < low)
     {
@@ -267,7 +267,7 @@ void mathUtil::extrapolateToRegion( const dataBuffer3 &input, const markers3& va
     for (unsigned int iter = 0; iter < numberOfIterations; ++iter)
     {
         valid0.forEachIndex([&](size_t i, size_t j, size_t k) {
-            double sum = 0.0;//zero<T>();
+            FloatType sum = 0.0;//zero<T>();
             unsigned int count = 0;
 
             if (!valid0(i, j, k))
@@ -312,7 +312,7 @@ void mathUtil::extrapolateToRegion( const dataBuffer3 &input, const markers3& va
                 {
                     output(i, j, k)
                         = sum
-                        / (double)(count);
+                        / (FloatType)(count);
                     valid1(i, j, k) = 1;
                 }
             }
@@ -386,7 +386,7 @@ void mathUtil::extrapolateToRegion( const vecDataBuffer3 &input, const markers3&
                 {
                     output(i, j, k)
                         = sum
-                        / (double)(count);
+                        / (FloatType)(count);
                     valid1(i, j, k) = 1;
                 }
             }
@@ -401,13 +401,13 @@ void mathUtil::extrapolateToRegion( const vecDataBuffer3 &input, const markers3&
 }
 
 void mathUtil::getBarycentric(
-    double x,
+    FloatType x,
     SSIZE_T iLow,
     SSIZE_T iHigh,
     SSIZE_T* i,
-    double* f)
+    FloatType* f)
 {
-    double s = std::floor(x);
+    FloatType s = std::floor(x);
     *i = static_cast<SSIZE_T>(s);
 
     SSIZE_T offset = -iLow;
@@ -438,14 +438,14 @@ void mathUtil::getBarycentric(
 }
 
 
-double mathUtil::lerp(const double& a, const double& b, double c)
+FloatType mathUtil::lerp(const FloatType& a, const FloatType& b, FloatType c)
 {
-    return (1.0 - c) * a + c * b;
+    return ((FloatType)1.0 - c) * a + c * b;
 }
 
 
-double mathUtil::bilerp( const double& a00, const double& a10, const double& a01, const double& a11,
-    double c0, double c1 )
+FloatType mathUtil::bilerp( const FloatType& a00, const FloatType& a10, const FloatType& a01, const FloatType& a11,
+    FloatType c0, FloatType c1 )
 {
     return lerp(
         lerp(a00, a10, c0),
@@ -454,18 +454,18 @@ double mathUtil::bilerp( const double& a00, const double& a10, const double& a01
 }
 
 
-double mathUtil::trilerp(
-    const double& a000,
-    const double& a100,
-    const double& a010,
-    const double& a110,
-    const double& a001,
-    const double& a101,
-    const double& a011,
-    const double& a111,
-    double c0,
-    double c1,
-    double c2)
+FloatType mathUtil::trilerp(
+    const FloatType& a000,
+    const FloatType& a100,
+    const FloatType& a010,
+    const FloatType& a110,
+    const FloatType& a001,
+    const FloatType& a101,
+    const FloatType& a011,
+    const FloatType& a111,
+    FloatType c0,
+    FloatType c1,
+    FloatType c2)
 {
     return lerp(
         bilerp(a000, a100, a010, a110, c0, c1),
@@ -473,12 +473,12 @@ double mathUtil::trilerp(
         c2);
 }
 
-double mathUtil::absmax( double x, double y )
+FloatType mathUtil::absmax( FloatType x, FloatType y )
 {
     return (x*x > y*y) ? x : y;
 }
 
-double mathUtil::smearedHeavisideSdf( double phi )
+FloatType mathUtil::smearedHeavisideSdf( FloatType phi )
 {
     if (phi > 1.5)
     {
@@ -492,19 +492,19 @@ double mathUtil::smearedHeavisideSdf( double phi )
         }
         else
         {
-            return 0.5 + phi / 3.0 +
-                0.5 * invPi() * std::sin( pi() * phi / 1.5);
+            return (FloatType)0.5 + phi / (FloatType)3.0 +
+                (FloatType)0.5 * invPi() * std::sin( pi() * phi / (FloatType)1.5);
         }
     }
 }
 
-vector3 mathUtil::uniformSampleSphere( double u1, double u2 )
+vector3 mathUtil::uniformSampleSphere( FloatType u1, FloatType u2 )
 {
-    double y = 1 - 2 * u1;
-    double r = std::sqrt(std::max<double>(0, 1 - y * y));
-    double phi = (2.0f * pi()) * u2;
-    double x = r * std::cos(phi);
-    double z = r * std::sin(phi);
+    FloatType y = 1 - 2 * u1;
+    FloatType r = std::sqrt(std::max<FloatType>(0, 1 - y * y));
+    FloatType phi = (2.0f * pi()) * u2;
+    FloatType x = r * std::cos(phi);
+    FloatType z = r * std::sin(phi);
     return vector3(x, y, z);
 }
 

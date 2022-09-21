@@ -13,7 +13,7 @@ class bccLatticePointGenerator : public pointGenerator3
 {
     void forEachPoint(
         const boundingBox3& boundingBox,
-        double spacing,
+        FloatType spacing,
         const std::function<bool(const vector3&)>& callback) const override;
 };
 

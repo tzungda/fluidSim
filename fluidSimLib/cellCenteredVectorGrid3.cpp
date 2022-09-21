@@ -10,15 +10,15 @@ cellCenteredVectorGrid3::cellCenteredVectorGrid3(
     size_t resolutionX,
     size_t resolutionY,
     size_t resolutionZ,
-    double gridSpacingX,
-    double gridSpacingY,
-    double gridSpacingZ,
-    double originX,
-    double originY,
-    double originZ,
-    double initialValueU,
-    double initialValueV,
-    double initialValueW)
+    FloatType gridSpacingX,
+    FloatType gridSpacingY,
+    FloatType gridSpacingZ,
+    FloatType originX,
+    FloatType originY,
+    FloatType originZ,
+    FloatType initialValueU,
+    FloatType initialValueV,
+    FloatType initialValueW)
 {
     resize(
         size3( resolutionX, resolutionY, resolutionZ ),

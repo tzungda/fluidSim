@@ -62,7 +62,7 @@ boundingBox3 gridSystemData3::boundingBox() const
     return mVelocity->boundingBox();
 }
 
-size_t gridSystemData3::addScalarGrid3Data(const scalarGrid3Ptr scalarGrid3Data, double initValue)
+size_t gridSystemData3::addScalarGrid3Data(const scalarGrid3Ptr scalarGrid3Data, FloatType initValue)
 {
     size_t attrIdx = mScalarGrid3DataList.size();
     scalarGrid3Data->fill( initValue );
@@ -80,7 +80,7 @@ size_t gridSystemData3::addVectorGrid3Data(const vectorGrid3Ptr vectorGrid3Data,
     return attrIdx;
 }
 
-size_t gridSystemData3::addAdvectableScalarData(const scalarGrid3Ptr& scalarGrid3Data, double initialVal)
+size_t gridSystemData3::addAdvectableScalarData(const scalarGrid3Ptr& scalarGrid3Data, FloatType initialVal)
 {
     size_t attrIdx = this->mAdvectableScalarDataList.size();
     scalarGrid3Data->fill( initialVal );

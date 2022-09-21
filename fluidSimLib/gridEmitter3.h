@@ -7,28 +7,30 @@
 #include <utility>
 #include <functional>
 
+#include "common.h"
+
 class gridEmitter3
 {
 public:
-    typedef std::function<void(gridEmitter3*, double, double)>
+    typedef std::function<void(gridEmitter3*, FloatType, FloatType)>
         OnBeginUpdateCallback;
 
     gridEmitter3();
 
     virtual ~gridEmitter3();
 
-    void update(double currentTimeInSeconds, double timeIntervalInSeconds);
+    void update(FloatType currentTimeInSeconds, FloatType timeIntervalInSeconds);
 
     void setOnBeginUpdateCallback(const OnBeginUpdateCallback& callback);
 
 protected:
     virtual void onUpdate(
-        double currentTimeInSeconds,
-        double timeIntervalInSeconds) = 0;
+        FloatType currentTimeInSeconds,
+        FloatType timeIntervalInSeconds) = 0;
 
     void callOnBeginUpdateCallback(
-        double currentTimeInSeconds,
-        double timeIntervalInSeconds);
+        FloatType currentTimeInSeconds,
+        FloatType timeIntervalInSeconds);
 
 private:
     OnBeginUpdateCallback mOnBeginUpdateCallback;

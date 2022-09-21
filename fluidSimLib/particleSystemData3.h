@@ -11,7 +11,7 @@
 class particleSystemData3
 {
 public:
-    typedef std::vector<double> ScalarData;
+    typedef std::vector<FloatType> ScalarData;
     typedef std::vector<vector3> VectorData;
 
    
@@ -28,17 +28,17 @@ public:
     //! Returns the number of particles.
     size_t numberOfParticles() const;
 
-    size_t addScalarData(double initialVal = 0.0);
+    size_t addScalarData(FloatType initialVal = 0.0);
 
     size_t addVectorData(const vector3& initialVal = vector3());
 
-    double radius() const;
+    FloatType radius() const;
 
-    virtual void setRadius(double newRadius);
+    virtual void setRadius(FloatType newRadius);
 
-    double mass() const;
+    FloatType mass() const;
 
-    virtual void setMass(double newMass);
+    virtual void setMass(FloatType newMass);
 
     const std::vector<vector3>& positions() const;
 
@@ -52,9 +52,9 @@ public:
 
     std::vector<vector3>& forces();
 
-    const std::vector<double>& scalarDataAt(size_t idx) const;
+    const std::vector<FloatType>& scalarDataAt(size_t idx) const;
 
-    std::vector<double>& scalarDataAt(size_t idx);
+    std::vector<FloatType>& scalarDataAt(size_t idx);
 
     const std::vector<vector3>& vectorDataAt(size_t idx) const;
 
@@ -83,10 +83,10 @@ public:
     const std::vector<std::vector<size_t>>& neighborLists() const;
 
 
-    void buildNeighborSearcher(double maxSearchRadius);
+    void buildNeighborSearcher(FloatType maxSearchRadius);
 
     //! Builds neighbor lists with given search radius.
-    void buildNeighborLists(double maxSearchRadius);
+    void buildNeighborLists(FloatType maxSearchRadius);
 
     void set(const particleSystemData3& other);
 
@@ -95,8 +95,8 @@ public:
 
 
 private:
-    double mRadius = 1e-3;
-    double mMass = 1e-3;
+    FloatType mRadius = (FloatType)1e-3;
+    FloatType mMass = (FloatType)1e-3;
     size_t mNumberOfParticles = 0;
     size_t mPositionIdx;
     size_t mVelocityIdx;

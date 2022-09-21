@@ -24,8 +24,8 @@ void particleEmitter3::setTarget(const particleSystemData3Ptr& particles)
 }
 
 void particleEmitter3::update(
-    double currentTimeInSeconds,
-    double timeIntervalInSeconds)
+    FloatType currentTimeInSeconds,
+    FloatType timeIntervalInSeconds)
 {
     if (mOnBeginUpdateCallback)
     {

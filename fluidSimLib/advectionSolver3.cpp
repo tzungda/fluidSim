@@ -14,7 +14,7 @@ advectionSolver3::~advectionSolver3()
 void advectionSolver3::advect(
     const scalarGrid3& input,
     const vectorField3& flow,
-    double dt,
+    FloatType dt,
     scalarGrid3* output,
     const scalarField3& boundarySdf )
 {
@@ -23,7 +23,7 @@ void advectionSolver3::advect(
 void advectionSolver3::advect(
     const extendVectorGrid3& input,
     const vectorField3& flow,
-    double dt,
+    FloatType dt,
     extendVectorGrid3* output,
     const scalarField3& boundarySdf )
 {
@@ -32,7 +32,7 @@ void advectionSolver3::advect(
 void advectionSolver3::advect(
     const faceCenteredGrid3& input,
     const vectorField3& flow,
-    double dt, faceCenteredGrid3* output,
+    FloatType dt, faceCenteredGrid3* output,
     const scalarField3& boundarySdf )
 {
 }

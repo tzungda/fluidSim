@@ -12,7 +12,7 @@ scalarGrid3::~scalarGrid3()
 
 
 void scalarGrid3::resize(const size3& resolution, const vector3 &gridSpacing,
-    const vector3& origin, double initValue)
+    const vector3& origin, FloatType initValue)
 {
     setSize(resolution, gridSpacing, origin);
 
@@ -25,7 +25,7 @@ scalarGrid3::DataPositionFunc scalarGrid3::dataPosition() const
 {
     vector3 o = dataOrigin();
     return [this, o](size_t i, size_t j, size_t k) -> vector3 {
-        return o + gridSpacing() * vector3({ (double)i, (double)j, (double)k });
+        return o + gridSpacing() * vector3({ (FloatType)i, (FloatType)j, (FloatType)k });
     };
 }
 
@@ -33,12 +33,12 @@ vector3 scalarGrid3::gradientByIndex(size_t i, size_t j, size_t k) const
 {
     const size3 s = mData.size();
 
-    double left = mData((i > 0) ? i - 1 : i, j, k);
-    double right = mData((i + 1 < s.x) ? i + 1 : i, j, k);
-    double down = mData(i, (j > 0) ? j - 1 : j, k);
-    double up = mData(i, (j + 1 < s.y) ? j + 1 : j, k);
-    double back = mData(i, j, (k > 0) ? k - 1 : k);
-    double front = mData(i, j, (k + 1 < s.z) ? k + 1 : k);
+    FloatType left = mData((i > 0) ? i - 1 : i, j, k);
+    FloatType right = mData((i + 1 < s.x) ? i + 1 : i, j, k);
+    FloatType down = mData(i, (j > 0) ? j - 1 : j, k);
+    FloatType up = mData(i, (j + 1 < s.y) ? j + 1 : j, k);
+    FloatType back = mData(i, j, (k > 0) ? k - 1 : k);
+    FloatType front = mData(i, j, (k + 1 < s.z) ? k + 1 : k);
 
     return 0.5 * vector3(right - left, up - down, front - back) / gridSpacing();
 }
@@ -46,7 +46,7 @@ vector3 scalarGrid3::gradientByIndex(size_t i, size_t j, size_t k) const
 vector3 scalarGrid3::gradientAtPoint(const vector3& x) const
 {
     std::array<size3, 8> indices;
-    std::array<double, 8> weights;
+    std::array<FloatType, 8> weights;
     this->mLinearSampler.getCoordinatesAndWeights(x, &indices, &weights);
 
     vector3 result;
@@ -57,18 +57,18 @@ vector3 scalarGrid3::gradientAtPoint(const vector3& x) const
     return result;
 }
 
-double scalarGrid3::laplacianByIndex(size_t i, size_t j, size_t k) const
+FloatType scalarGrid3::laplacianByIndex(size_t i, size_t j, size_t k) const
 {
-    const double center = mData(i, j, k);
+    const FloatType center = mData(i, j, k);
     const size3 s = mData.size();
     const vector3& gs = gridSpacing();
 
-    double dleft = 0.0;
-    double dright = 0.0;
-    double ddown = 0.0;
-    double dup = 0.0;
-    double dback = 0.0;
-    double dfront = 0.0;
+    FloatType dleft = 0.0;
+    FloatType dright = 0.0;
+    FloatType ddown = 0.0;
+    FloatType dup = 0.0;
+    FloatType dback = 0.0;
+    FloatType dfront = 0.0;
 
     if (i > 0)
         dleft = center - mData(i - 1, j, k);
@@ -114,12 +114,12 @@ const dataBuffer3& scalarGrid3::data() const
 }
 
 
-double& scalarGrid3::operator()(size_t i, size_t j, size_t k)
+FloatType& scalarGrid3::operator()(size_t i, size_t j, size_t k)
 {
     return mData(i, j, k);
 }
 
-const double& scalarGrid3::operator()(size_t i, size_t j, size_t k) const
+const FloatType& scalarGrid3::operator()(size_t i, size_t j, size_t k) const
 {
     return mData(i, j, k);
 }
@@ -133,17 +133,17 @@ void scalarGrid3::resetSampler()
     mSampler = mLinearSampler.functor();
 }
 
-double scalarGrid3::sample(const vector3 &x) const
+FloatType scalarGrid3::sample(const vector3 &x) const
 {
     return mSampler(x);
 }
 
-std::function<double(const vector3&)> scalarGrid3::sampler() const
+std::function<FloatType(const vector3&)> scalarGrid3::sampler() const
 {
     return mSampler;
 }
 
-void scalarGrid3::fill(double value)
+void scalarGrid3::fill(FloatType value)
 {
     for (size_t i = 0; i < mData.width(); ++i)
     {
@@ -157,7 +157,7 @@ void scalarGrid3::fill(double value)
     }
 }
 
-void scalarGrid3::fill(const std::function<double(const vector3&)>& func)
+void scalarGrid3::fill(const std::function<FloatType(const vector3&)>& func)
 {
     DataPositionFunc pos = dataPosition();
     for (size_t i = 0; i < mData.width(); ++i)
@@ -190,14 +190,14 @@ void scalarGrid3::setScalarGrid(const scalarGrid3& other)
     resetSampler();
 }
 
-void scalarGrid3::getData(std::vector<double>* data) const
+void scalarGrid3::getData(std::vector<FloatType>* data) const
 {
     size_t size = dataSize().x * dataSize().y * dataSize().z;
     data->resize(size);
     std::copy(mData.begin(), mData.end(), data->begin());
 }
 
-void scalarGrid3::setData(const std::vector<double>& data)
+void scalarGrid3::setData(const std::vector<FloatType>& data)
 {
     std::copy(data.begin(), data.end(), mData.begin());
 }

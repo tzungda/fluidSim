@@ -25,8 +25,8 @@ private:
     void onSetTarget(const particleSystemData3Ptr& particles) override;
 
     void onUpdate(
-        double currentTimeInSeconds,
-        double timeIntervalInSecond) override;
+        FloatType currentTimeInSeconds,
+        FloatType timeIntervalInSecond) override;
 };
 
 typedef std::shared_ptr< particleEmitterSet3 > particleEmitterSet3Ptr;

@@ -11,8 +11,8 @@ gridEmitter3::~gridEmitter3()
 }
 
 void gridEmitter3::update(
-    double currentTimeInSeconds,
-    double timeIntervalInSeconds) 
+    FloatType currentTimeInSeconds,
+    FloatType timeIntervalInSeconds) 
 {
     if (mOnBeginUpdateCallback) 
     {
@@ -30,8 +30,8 @@ void gridEmitter3::setOnBeginUpdateCallback(
 }
 
 void gridEmitter3::callOnBeginUpdateCallback(
-    double currentTimeInSeconds,
-    double timeIntervalInSeconds) 
+    FloatType currentTimeInSeconds,
+    FloatType timeIntervalInSeconds) 
 {
     mOnBeginUpdateCallback(this, currentTimeInSeconds, timeIntervalInSeconds);
 }

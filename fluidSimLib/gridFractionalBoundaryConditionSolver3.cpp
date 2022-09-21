@@ -47,10 +47,10 @@ void gridFractionalBoundaryConditionSolver3::constrainVelocity(
     velocity->forEachUIndex([&](size_t i, size_t j, size_t k) {
 #endif
         vector3 pt = uPos(i, j, k);
-        double phi0 = mColliderSdf.sample(pt - vector3(0.5 * h.x, 0.0, 0.0));
-        double phi1 = mColliderSdf.sample(pt + vector3(0.5 * h.x, 0.0, 0.0));
-        double frac = mathUtil::fractionInsideSdf(phi0, phi1);
-        frac = 1.0 - mathUtil::clamp(frac, 0.0, 1.0);
+        FloatType phi0 = mColliderSdf.sample(pt - vector3((FloatType)0.5 * h.x, 0.0, 0.0));
+        FloatType phi1 = mColliderSdf.sample(pt + vector3((FloatType)0.5 * h.x, 0.0, 0.0));
+        FloatType frac = mathUtil::fractionInsideSdf(phi0, phi1);
+        frac = (FloatType)1.0 - mathUtil::clamp(frac, 0.0, (FloatType)1.0);
 
         if (frac > 0.0) {
             uMarker(i, j, k) = 1;
@@ -67,10 +67,10 @@ void gridFractionalBoundaryConditionSolver3::constrainVelocity(
     velocity->forEachVIndex([&](size_t i, size_t j, size_t k) {
 #endif
         vector3 pt = vPos(i, j, k);
-        double phi0 = mColliderSdf.sample(pt - vector3(0.0, 0.5 * h.y, 0.0));
-        double phi1 = mColliderSdf.sample(pt + vector3(0.0, 0.5 * h.y, 0.0));
-        double frac = mathUtil::fractionInsideSdf(phi0, phi1);
-        frac = 1.0 - mathUtil::clamp(frac, 0.0, 1.0);
+        FloatType phi0 = mColliderSdf.sample(pt - vector3(0.0, (FloatType)0.5 * h.y, 0.0));
+        FloatType phi1 = mColliderSdf.sample(pt + vector3(0.0, (FloatType)0.5 * h.y, 0.0));
+        FloatType frac = mathUtil::fractionInsideSdf(phi0, phi1);
+        frac = (FloatType)1.0 - mathUtil::clamp(frac, 0.0, (FloatType)1.0);
 
         if (frac > 0.0) {
             vMarker(i, j, k) = 1;
@@ -87,10 +87,10 @@ void gridFractionalBoundaryConditionSolver3::constrainVelocity(
     velocity->forEachWIndex([&](size_t i, size_t j, size_t k) {
 #endif
         vector3 pt = wPos(i, j, k);
-        double phi0 = mColliderSdf.sample(pt - vector3(0.0, 0.0, 0.5 * h.z));
-        double phi1 = mColliderSdf.sample(pt + vector3(0.0, 0.0, 0.5 * h.z));
-        double frac = mathUtil::fractionInsideSdf(phi0, phi1);
-        frac = 1.0 - mathUtil::clamp(frac, 0.0, 1.0);
+        FloatType phi0 = mColliderSdf.sample(pt - vector3(0.0, 0.0, (FloatType)0.5 * h.z));
+        FloatType phi1 = mColliderSdf.sample(pt + vector3(0.0, 0.0, (FloatType)0.5 * h.z));
+        FloatType frac = mathUtil::fractionInsideSdf(phi0, phi1);
+        frac = (FloatType)1.0 - mathUtil::clamp(frac, 0.0, (FloatType)1.0);
 
         if (frac > 0.0) {
             wMarker(i, j, k) = 1;

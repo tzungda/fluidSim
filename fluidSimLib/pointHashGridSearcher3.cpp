@@ -8,7 +8,7 @@
 
 pointHashGridSearcher3::pointHashGridSearcher3(
     const size3& resolution,
-    double gridSpacing) :
+    FloatType gridSpacing) :
     pointHashGridSearcher3(
         resolution.x,
         resolution.y,
@@ -20,7 +20,7 @@ pointHashGridSearcher3::pointHashGridSearcher3(
     size_t resolutionX,
     size_t resolutionY,
     size_t resolutionZ,
-    double gridSpacing) :
+    FloatType gridSpacing) :
     mGridSpacing(gridSpacing) {
     mResolution.x = std::max(static_cast<SSIZE_T>(resolutionX), (SSIZE_T)1);
     mResolution.y = std::max(static_cast<SSIZE_T>(resolutionY), (SSIZE_T)1);
@@ -55,7 +55,7 @@ void pointHashGridSearcher3::build(
 
 void pointHashGridSearcher3::forEachNearbyPoint(
     const vector3& origin,
-    double radius,
+    FloatType radius,
     const std::function<void(size_t, const vector3&)>& callback) const {
     if (mBuckets.empty()) {
         return;
@@ -64,7 +64,7 @@ void pointHashGridSearcher3::forEachNearbyPoint(
     size_t nearbyKeys[8];
     getNearbyKeys(origin, nearbyKeys);
 
-    const double queryRadiusSquared = radius * radius;
+    const FloatType queryRadiusSquared = radius * radius;
 
     for (int i = 0; i < 8; i++) {
         const auto& bucket = mBuckets[nearbyKeys[i]];
@@ -72,7 +72,7 @@ void pointHashGridSearcher3::forEachNearbyPoint(
 
         for (size_t j = 0; j < numberOfPointsInBucket; ++j) {
             size_t pointIndex = bucket[j];
-            double rSquared = (mPoints[pointIndex] - origin).lengthSquared();
+            FloatType rSquared = (mPoints[pointIndex] - origin).lengthSquared();
             if (rSquared <= queryRadiusSquared) {
                 callback(pointIndex, mPoints[pointIndex]);
             }
@@ -82,7 +82,7 @@ void pointHashGridSearcher3::forEachNearbyPoint(
 
 bool pointHashGridSearcher3::hasNearbyPoint(
     const vector3& origin,
-    double radius) const {
+    FloatType radius) const {
     if (mBuckets.empty()) {
         return false;
     }
@@ -90,7 +90,7 @@ bool pointHashGridSearcher3::hasNearbyPoint(
     size_t nearbyKeys[8];
     getNearbyKeys(origin, nearbyKeys);
 
-    const double queryRadiusSquared = radius * radius;
+    const FloatType queryRadiusSquared = radius * radius;
 
     for (int i = 0; i < 8; i++) {
         const auto& bucket = mBuckets[nearbyKeys[i]];
@@ -98,7 +98,7 @@ bool pointHashGridSearcher3::hasNearbyPoint(
 
         for (size_t j = 0; j < numberOfPointsInBucket; ++j) {
             size_t pointIndex = bucket[j];
-            double rSquared = (mPoints[pointIndex] - origin).lengthSquared();
+            FloatType rSquared = (mPoints[pointIndex] - origin).lengthSquared();
             if (rSquared <= queryRadiusSquared) {
                 return true;
             }

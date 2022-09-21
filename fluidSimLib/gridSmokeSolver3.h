@@ -16,29 +16,29 @@ public:
 
     virtual ~gridSmokeSolver3();
 
-    double smokeDiffusionCoefficient() const;
+    FloatType smokeDiffusionCoefficient() const;
 
-    void setSmokeDiffusionCoefficient(double newValue);
+    void setSmokeDiffusionCoefficient(FloatType newValue);
 
-    double temperatureDiffusionCoefficient() const;
+    FloatType temperatureDiffusionCoefficient() const;
 
-    void setTemperatureDiffusionCoefficient(double newValue);
+    void setTemperatureDiffusionCoefficient(FloatType newValue);
 
-    double buoyancySmokeDensityFactor() const;
+    FloatType buoyancySmokeDensityFactor() const;
 
-    void setBuoyancySmokeDensityFactor(double newValue);
+    void setBuoyancySmokeDensityFactor(FloatType newValue);
 
-    double buoyancyTemperatureFactor() const;
+    FloatType buoyancyTemperatureFactor() const;
 
-    void setBuoyancyTemperatureFactor(double newValue);
+    void setBuoyancyTemperatureFactor(FloatType newValue);
 
-    double smokeDecayFactor() const;
+    FloatType smokeDecayFactor() const;
 
-    void setSmokeDecayFactor(double newValue);
+    void setSmokeDecayFactor(FloatType newValue);
 
-    double smokeTemperatureDecayFactor() const;
+    FloatType smokeTemperatureDecayFactor() const;
 
-    void setTemperatureDecayFactor(double newValue);
+    void setTemperatureDecayFactor(FloatType newValue);
 
     scalarGrid3Ptr smokeDensity() const;
 
@@ -46,23 +46,23 @@ public:
 
 
 protected:
-    void onEndAdvanceTimeStep(double timeIntervalInSeconds) override;
+    void onEndAdvanceTimeStep(FloatType timeIntervalInSeconds) override;
 
-    void computeExternalForces(double timeIntervalInSeconds) override;
+    void computeExternalForces(FloatType timeIntervalInSeconds) override;
 
 private:
     size_t mSmokeDensityDataId;
     size_t mTemperatureDataId;
-    double mSmokeDiffusionCoefficient = 0.0;
-    double mTemperatureDiffusionCoefficient = 0.0;
-    double mBuoyancySmokeDensityFactor = -0.000625;
-    double mBuoyancyTemperatureFactor = 5.0;
-    double mSmokeDecayFactor = 0.001;
-    double mTemperatureDecayFactor = 0.001;
+    FloatType mSmokeDiffusionCoefficient = 0.0;
+    FloatType mTemperatureDiffusionCoefficient = 0.0;
+    FloatType mBuoyancySmokeDensityFactor = (FloatType)-0.000625;
+    FloatType mBuoyancyTemperatureFactor = (FloatType)5.0;
+    FloatType mSmokeDecayFactor = (FloatType)0.001;
+    FloatType mTemperatureDecayFactor = (FloatType)0.001;
 
-    void computeDiffusion(double timeIntervalInSeconds);
+    void computeDiffusion(FloatType timeIntervalInSeconds);
 
-    void computeBuoyancyForce(double timeIntervalInSeconds);
+    void computeBuoyancyForce(FloatType timeIntervalInSeconds);
 };
 
 typedef std::shared_ptr<gridSmokeSolver3> gridSmokeSolver3Ptr;

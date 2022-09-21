@@ -38,10 +38,10 @@ protected:
     void onInitialize() override;
 
     //! Invoked before a simulation time-step begins.
-    void onBeginAdvanceTimeStep(double timeIntervalInSeconds) override;
+    void onBeginAdvanceTimeStep(FloatType timeIntervalInSeconds) override;
 
     //! Computes the advection term of the fluid solver.
-    void computeAdvection(double timeIntervalInSeconds) override;
+    void computeAdvection(FloatType timeIntervalInSeconds) override;
 
     //! Returns the signed-distance field of the fluid.
     scalarField3Ptr fluidSdf() const override;
@@ -53,7 +53,7 @@ protected:
     virtual void transferFromGridsToParticles();
 
     //! Moves particles.
-    virtual void moveParticles(double timeIntervalInSeconds);
+    virtual void moveParticles(FloatType timeIntervalInSeconds);
 
 private:
     size_t mSignedDistanceFieldId;
@@ -68,7 +68,7 @@ private:
 
     void buildSignedDistanceField();
 
-    void updateParticleEmitter(double timeIntervalInSeconds);
+    void updateParticleEmitter(FloatType timeIntervalInSeconds);
 };
 
 typedef std::shared_ptr<picSolver3> picSolver3Ptr;

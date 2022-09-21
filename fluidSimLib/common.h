@@ -5,7 +5,7 @@
 #include <basetsd.h>
 
 /////float type/////
-#define SINGLE_FLOAT
+//#define SINGLE_FLOAT
 //
 #ifdef SINGLE_FLOAT
 #define FloatType float

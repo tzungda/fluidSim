@@ -13,7 +13,7 @@ public:
 
 protected:
 
-    std::function<double(const vector3&)>
+    std::function<FloatType(const vector3&)>
         getScalarSamplerFunc(const scalarGrid3& source) const override;
 
 
