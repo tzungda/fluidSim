@@ -37,15 +37,15 @@ void simAnimation::onUpdate(const animFrame& f)
 }
 
 
-void simAnimation::advanceTimeStep( double timeIntervalInSeconds )
+void simAnimation::advanceTimeStep( FloatType timeIntervalInSeconds )
 {
     mCurrentTime = mCurrentFrame.timeInSeconds();
 
     if ( mIsUsingFixedSubTimeSteps )
     {
         // perform fixed time-stepping
-        const double actualTimeInterval
-            = timeIntervalInSeconds / static_cast<double>(mNumberOfFixedSubTimeSteps);
+        const FloatType actualTimeInterval
+            = timeIntervalInSeconds / static_cast<FloatType>(mNumberOfFixedSubTimeSteps);
 
         for (unsigned int i = 0; i < mNumberOfFixedSubTimeSteps; ++i)
         {
@@ -57,12 +57,12 @@ void simAnimation::advanceTimeStep( double timeIntervalInSeconds )
     else
     {
         // perform adaptive time-stepping
-        double remainingTime = timeIntervalInSeconds;
-        while (remainingTime > std::numeric_limits<double>::epsilon())
+        FloatType remainingTime = timeIntervalInSeconds;
+        while (remainingTime > std::numeric_limits<FloatType>::epsilon())
         {
             unsigned int numSteps = numberOfSubTimeSteps(remainingTime);
-            double actualTimeInterval
-                = remainingTime / static_cast<double>(numSteps);
+            FloatType actualTimeInterval
+                = remainingTime / static_cast<FloatType>(numSteps);
 
             onAdvanceTimeStep(actualTimeInterval);
             remainingTime -= actualTimeInterval;
@@ -92,7 +92,7 @@ void simAnimation::setNumberOfFixedSubTimeSteps(unsigned int numberOfSteps)
 }
 
 unsigned int simAnimation::numberOfSubTimeSteps(
-    double timeIntervalInSeconds) const
+    FloatType timeIntervalInSeconds) const
 {
     return mNumberOfFixedSubTimeSteps;
 }
@@ -113,7 +113,7 @@ void simAnimation::setCurrentFrame(const animFrame& animFrame)
     mCurrentFrame = animFrame;
 }
 
-double simAnimation::currentTimeInSeconds() const
+FloatType simAnimation::currentTimeInSeconds() const
 {
     return mCurrentTime;
 }

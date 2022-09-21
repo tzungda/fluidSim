@@ -21,7 +21,7 @@ public:
 
     virtual vector3 dataOrigin() const = 0;
 
-    double divergenceByIndex(size_t i, size_t j, size_t k) const;
+    FloatType divergenceByIndex(size_t i, size_t j, size_t k) const;
 
     vector3 curlByIndex(size_t i, size_t j, size_t k) const;
 
@@ -44,8 +44,8 @@ protected:
     void swapExtendVectorGrid(extendVectorGrid3* other);
     void setExtendVectorGrid(const extendVectorGrid3& other);
 
-    void getData(std::vector<double>* data) const override;
-    void setData(const std::vector<double>& data) override;
+    void getData(std::vector<FloatType>* data) const override;
+    void setData(const std::vector<FloatType>& data) override;
 
 private:
     void onResize(

@@ -2,23 +2,25 @@
 #ifndef animFrame_H
 #define animFrame_H
 
+#include "common.h"
+
 struct animFrame
 {
     animFrame()
     {
         index = 0;
-        timeIntervalInSeconds = 1.0 / 60.0;
+        timeIntervalInSeconds = (FloatType)1.0 / (FloatType)60.0;
     }
 
-    animFrame(unsigned int newIndex, double newTimeInvervalInSeconds)
+    animFrame(unsigned int newIndex, FloatType newTimeInvervalInSeconds)
     {
         index = newIndex;
         timeIntervalInSeconds = newTimeInvervalInSeconds;
     }
 
-    double timeInSeconds() const
+    FloatType timeInSeconds() const
     {
-        return timeIntervalInSeconds * (double)index;
+        return timeIntervalInSeconds * (FloatType)index;
     }
 
     void advance()
@@ -39,7 +41,7 @@ struct animFrame
 
 
     unsigned int index;
-    double timeIntervalInSeconds;
+    FloatType timeIntervalInSeconds;
 };
 
 #endif

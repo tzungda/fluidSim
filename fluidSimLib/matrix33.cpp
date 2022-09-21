@@ -9,18 +9,18 @@ matrix33::matrix33()
     m[6] = 0.0, m[7] = 0.0, m[8] = 1.0;
 }
 
-matrix33::matrix33( double m00, double m01, double m02,
-    double m10, double m11, double m12,
-    double m20, double m21, double m22 )
+matrix33::matrix33( FloatType m00, FloatType m01, FloatType m02,
+    FloatType m10, FloatType m11, FloatType m12,
+    FloatType m20, FloatType m21, FloatType m22 )
 {
     set( m00, m01, m02,
          m10, m11, m12,
          m20, m21, m22 );
 }
 
-void matrix33::set( double m00, double m01, double m02,
-    double m10, double m11, double m12,
-    double m20, double m21, double m22 )
+void matrix33::set( FloatType m00, FloatType m01, FloatType m02,
+    FloatType m10, FloatType m11, FloatType m12,
+    FloatType m20, FloatType m21, FloatType m22 )
 {
     m[0] = m00;
     m[1] = m01;
@@ -33,7 +33,7 @@ void matrix33::set( double m00, double m01, double m02,
     m[8] = m22;
 }
 
-double matrix33::trace() const
+FloatType matrix33::trace() const
 {
     return m[0] + m[4] + m[8];
 }
@@ -99,12 +99,12 @@ matrix33 matrix33::rmul(const matrix33& mtx ) const
     return mtx.mul(*this);
 }
 
-double& matrix33::operator()(size_t i, size_t j)
+FloatType& matrix33::operator()(size_t i, size_t j)
 {
     return m[3 * i + j];
 }
 
-const double& matrix33::operator()(size_t i, size_t j) const
+const FloatType& matrix33::operator()(size_t i, size_t j) const
 {
     return m[3 * i + j];
 }

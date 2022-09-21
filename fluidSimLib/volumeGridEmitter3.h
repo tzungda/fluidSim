@@ -11,10 +11,10 @@ class volumeGridEmitter3 : public gridEmitter3
 {
 public:
 
-    typedef std::function<double(double, const vector3&, double)>
+    typedef std::function<FloatType(FloatType, const vector3&, FloatType)>
         scalarMapper;
 
-    typedef std::function<vector3(double, const vector3&, const vector3&)>
+    typedef std::function<vector3(FloatType, const vector3&, const vector3&)>
         vectorMapper;
 
     explicit volumeGridEmitter3(
@@ -27,8 +27,8 @@ public:
 
     void addStepFunctionTarget(
         const scalarGrid3Ptr& scalarGridTarget,
-        double minValue,
-        double maxValue);
+        FloatType minValue,
+        FloatType maxValue);
 
     void addTarget(
         const scalarGrid3Ptr& scalarGridTarget,
@@ -54,8 +54,8 @@ private:
     std::vector<vectorTarget> mCustomVectorTargets;
 
     void onUpdate(
-        double currentTimeInSeconds,
-        double timeIntervalInSeconds) override;
+        FloatType currentTimeInSeconds,
+        FloatType timeIntervalInSeconds) override;
 
     void emit();
 };

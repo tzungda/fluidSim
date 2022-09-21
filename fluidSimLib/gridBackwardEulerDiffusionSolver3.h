@@ -23,8 +23,8 @@ public:
    
     void solve(
         const scalarGrid3& source,
-        double diffusionCoefficient,
-        double timeIntervalInSeconds,
+        FloatType diffusionCoefficient,
+        FloatType timeIntervalInSeconds,
         scalarGrid3* dest,
         const scalarField3& boundarySdf
         = constantScalarField3(mathUtil::maxFloat()),
@@ -34,8 +34,8 @@ public:
    
     void solve(
         const extendVectorGrid3& source,
-        double diffusionCoefficient,
-        double timeIntervalInSeconds,
+        FloatType diffusionCoefficient,
+        FloatType timeIntervalInSeconds,
         extendVectorGrid3* dest,
         const scalarField3& boundarySdf
         = constantScalarField3(mathUtil::maxFloat()),
@@ -45,8 +45,8 @@ public:
    
     void solve(
         const faceCenteredGrid3& source,
-        double diffusionCoefficient,
-        double timeIntervalInSeconds,
+        FloatType diffusionCoefficient,
+        FloatType timeIntervalInSeconds,
         faceCenteredGrid3* dest,
         const scalarField3& boundarySdf
         = constantScalarField3(mathUtil::maxFloat()),

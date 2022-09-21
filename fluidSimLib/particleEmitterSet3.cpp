@@ -28,8 +28,8 @@ void particleEmitterSet3::onSetTarget(const particleSystemData3Ptr& particles)
 }
 
 void particleEmitterSet3::onUpdate(
-    double currentTimeInSeconds,
-    double timeIntervalInSeconds)
+    FloatType currentTimeInSeconds,
+    FloatType timeIntervalInSeconds)
 {
     for (auto& emitter : mEmitters)
     {

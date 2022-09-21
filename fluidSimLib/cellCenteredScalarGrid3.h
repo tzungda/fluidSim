@@ -10,7 +10,7 @@ public:
     cellCenteredScalarGrid3();
 
     cellCenteredScalarGrid3(const size3& resolution, const vector3& gridSpacing = vector3(1.0, 1.0, 1.0),
-        const vector3& origin = vector3(), double initValue = 0.0);
+        const vector3& origin = vector3(), FloatType initValue = 0.0);
     cellCenteredScalarGrid3(const cellCenteredScalarGrid3& other);
 
     virtual ~cellCenteredScalarGrid3();

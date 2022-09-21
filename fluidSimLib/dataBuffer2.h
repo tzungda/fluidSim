@@ -4,28 +4,29 @@
 
 #include <vector>
 #include "size2.h"
+#include "common.h"
 
 class dataBuffer2
 {
 private:
     size2 mSize;
-    std::vector<double> mData;
+    std::vector<FloatType> mData;
 
 public:
     dataBuffer2();
 
-    dataBuffer2( const size2& size, const double initValue = 0.0 );
+    dataBuffer2( const size2& size, const FloatType initValue = 0.0 );
 
-    dataBuffer2( size_t width, size_t height, const double initValue = 0.0 );
+    dataBuffer2( size_t width, size_t height, const FloatType initValue = 0.0 );
 
 public:
-    void resize( const size2& size, const double initValue = 0.0 );
+    void resize( const size2& size, const FloatType initValue = 0.0 );
 
-    void resize( size_t width, size_t height, const double initValue = 0.0 );
+    void resize( size_t width, size_t height, const FloatType initValue = 0.0 );
 
-    const double valueByIndex( size_t i, size_t j ) const;
+    const FloatType valueByIndex( size_t i, size_t j ) const;
 
-    double& valueByIndex( size_t i, size_t j );
+    FloatType& valueByIndex( size_t i, size_t j );
 
     template <typename Callback>
     void forEachIndex(Callback func) const
@@ -51,7 +52,7 @@ public:
         }
     }
 
-    void set( double value );
+    void set( FloatType value );
     void set( const dataBuffer2& value );
 
     size2 size( ) const;
@@ -60,17 +61,17 @@ public:
 
     size_t height( ) const;
 
-    double *data( );
+    FloatType *data( );
 
-    std::vector<double>::iterator begin();
-    std::vector<double>::const_iterator begin() const;
-    std::vector<double>::iterator end();
-    std::vector<double>::const_iterator end() const;
+    std::vector<FloatType>::iterator begin();
+    std::vector<FloatType>::const_iterator begin() const;
+    std::vector<FloatType>::iterator end();
+    std::vector<FloatType>::const_iterator end() const;
 
     void swap( dataBuffer2& other );
 
-    double& operator()(size_t i, size_t j);
-    const double& operator()( size_t i, size_t j ) const;
+    FloatType& operator()(size_t i, size_t j);
+    const FloatType& operator()( size_t i, size_t j ) const;
 };
 
 #endif

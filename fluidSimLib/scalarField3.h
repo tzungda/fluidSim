@@ -16,13 +16,13 @@ public:
 
     virtual ~scalarField3();
 
-    virtual double sample(const vector3 &x) const = 0;
+    virtual FloatType sample(const vector3 &x) const = 0;
 
     virtual vector3 gradient(const vector3& x) const;
 
-    virtual double laplacian(const vector3& x) const;
+    virtual FloatType laplacian(const vector3& x) const;
 
-    virtual std::function<double(const vector3&)> sampler() const;
+    virtual std::function<FloatType(const vector3&)> sampler() const;
 };
 
 typedef std::shared_ptr<scalarField3> scalarField3Ptr;
@@ -31,11 +31,11 @@ typedef std::shared_ptr<scalarField3> scalarField3Ptr;
 class constantScalarField3 : public scalarField3
 {
 public:
-    constantScalarField3(double value);
+    constantScalarField3(FloatType value);
 
-    double sample(const vector3& x) const override;
+    FloatType sample(const vector3& x) const override;
 private:
-    double mValue;
+    FloatType mValue;
 };
 
 typedef std::shared_ptr<constantScalarField3> constantScalarField3Ptr;

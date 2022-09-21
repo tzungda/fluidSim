@@ -12,7 +12,7 @@ ray3::ray3(const vector3 &newOrigin, const vector3& newDirection)
     direction = newDirection;
 }
 
-vector3 ray3::pointAt(double t) const
+vector3 ray3::pointAt(FloatType t) const
 {
     return origin + t * direction;
 }

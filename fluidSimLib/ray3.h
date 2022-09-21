@@ -14,7 +14,7 @@ public:
 
     ray3(const vector3 &newOrigin, const vector3& newDirection);
 
-    vector3 pointAt(double t) const;
+    vector3 pointAt(FloatType t) const;
 };
 
 #endif

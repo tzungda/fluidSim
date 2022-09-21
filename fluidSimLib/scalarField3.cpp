@@ -15,25 +15,25 @@ vector3 scalarField3::gradient(const vector3&) const
     return vector3();
 }
 
-double scalarField3::laplacian(const vector3&) const
+FloatType scalarField3::laplacian(const vector3&) const
 {
     return 0.0;
 }
 
-std::function<double(const vector3&)> scalarField3::sampler() const
+std::function<FloatType(const vector3&)> scalarField3::sampler() const
 {
     const scalarField3* self = this;
-    return [self](const vector3& x) -> double {
+    return [self](const vector3& x) -> FloatType {
         return self->sample(x);
     };
 }
 
-constantScalarField3::constantScalarField3(double value): mValue( value )
+constantScalarField3::constantScalarField3(FloatType value): mValue( value )
 {
 }
 
 
-double constantScalarField3::sample(const vector3& x) const
+FloatType constantScalarField3::sample(const vector3& x) const
 {
     return mValue;
 }

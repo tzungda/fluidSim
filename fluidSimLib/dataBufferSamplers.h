@@ -24,13 +24,13 @@ public:
     LinearBufferSampler(const LinearBufferSampler& other);
 
     // return sampled value at the given point
-    double operator()(const vector3& pt) const;
+    FloatType operator()(const vector3& pt) const;
 
     // return the indices of points and their sampling weight for given point.
-    void getCoordinatesAndWeights(const vector3& pt, std::array<size3, 8>* indices, std::array<double, 8>* weights) const;
+    void getCoordinatesAndWeights(const vector3& pt, std::array<size3, 8>* indices, std::array<FloatType, 8>* weights) const;
 
     //! Returns a funtion object that wraps this instance.
-    std::function<double(const vector3&)> functor() const;
+    std::function<FloatType(const vector3&)> functor() const;
 };
 
 //==========================================================================
@@ -53,7 +53,7 @@ public:
     vector3 operator()(const vector3& pt) const;
 
     // return the indices of points and their sampling weight for given point.
-    void getCoordinatesAndWeights(const vector3& pt, std::array<size3, 8>* indices, std::array<double, 8>* weights) const;
+    void getCoordinatesAndWeights(const vector3& pt, std::array<size3, 8>* indices, std::array<FloatType, 8>* weights) const;
 
     //! Returns a funtion object that wraps this instance.
     std::function<vector3(const vector3&)> functor() const;
@@ -97,10 +97,10 @@ public:
     cubicBufferSamplerScalar(const cubicBufferSamplerScalar& other);
 
     //! Returns sampled value at point \p pt.
-    double operator()(const vector3& pt) const;
+    FloatType operator()(const vector3& pt) const;
 
     //! Returns a funtion object that wraps this instance.
-    std::function<double(const vector3&)> functor() const;
+    std::function<FloatType(const vector3&)> functor() const;
 
 };
 

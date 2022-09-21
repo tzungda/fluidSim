@@ -11,7 +11,7 @@ public:
     vector3 center;
 
     //! Radius of the sphere.
-    double radius = 1.0;
+    FloatType radius = 1.0;
 
     //! Constructs a sphere with center at (0, 0, 0) and radius of 1.
     sphere3(
@@ -21,7 +21,7 @@ public:
     //! Constructs a sphere with \p center and \p radius.
     sphere3(
         const vector3& center,
-        double radius,
+        FloatType radius,
         const transform3& transform = transform3(),
         bool isNormalFlipped = false);
 
@@ -31,7 +31,7 @@ public:
 private:
     vector3 closestPointLocal(const vector3& otherPoint) const override;
 
-    double closestDistanceLocal(const vector3& otherPoint) const override;
+    FloatType closestDistanceLocal(const vector3& otherPoint) const override;
 
     bool intersectsLocal(const ray3& ray) const override;
 

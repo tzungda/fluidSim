@@ -11,7 +11,7 @@
 class collider3
 {
 public:
-    typedef std::function<void(collider3*, double, double)>
+    typedef std::function<void(collider3*, FloatType, FloatType)>
         onBeginUpdateCallback;
 
     collider3();
@@ -21,25 +21,25 @@ public:
     virtual vector3 velocityAt(const vector3& point) const = 0;
 
     void resolveCollision(
-        double radius,
-        double restitutionCoefficient,
+        FloatType radius,
+        FloatType restitutionCoefficient,
         vector3* position,
         vector3* velocity);
 
-    double frictionCoefficient() const;
+    FloatType frictionCoefficient() const;
 
-    void setFrictionCoefficient(double newFrictionCoeffient);
+    void setFrictionCoefficient(FloatType newFrictionCoeffient);
 
     const surface3Ptr& surface() const;
 
-    void update(double currentTimeInSeconds, double timeIntervalInSeconds);
+    void update(FloatType currentTimeInSeconds, FloatType timeIntervalInSeconds);
 
     void setOnBeginUpdateCallback(const onBeginUpdateCallback& callback);
 
 protected:
     //! Internal query result structure.
     struct colliderQueryResult final {
-        double distance;
+        FloatType distance;
         vector3 point;
         vector3 normal;
         vector3 velocity;
@@ -55,11 +55,11 @@ protected:
     bool isPenetrating(
         const colliderQueryResult& colliderPoint,
         const vector3& position,
-        double radius);
+        FloatType radius);
 
 private:
     surface3Ptr mSurface;
-    double mFrictionCoeffient = 0.0;
+    FloatType mFrictionCoeffient = 0.0;
     onBeginUpdateCallback mOnUpdateCallback;
 };
 

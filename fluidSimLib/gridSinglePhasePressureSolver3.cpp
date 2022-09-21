@@ -8,7 +8,7 @@ const char kFluid = 0;
 const char kAir = 1;
 const char kBoundary = 2;
 
-const double kDefaultTolerance = 1e-6f;
+const FloatType kDefaultTolerance = 1e-6f;
 
 gridSinglePhasePressureSolver3::gridSinglePhasePressureSolver3() 
 {
@@ -21,7 +21,7 @@ gridSinglePhasePressureSolver3::~gridSinglePhasePressureSolver3()
 
 void gridSinglePhasePressureSolver3::solve(
     const faceCenteredGrid3& input,
-    double timeIntervalInSeconds,
+    FloatType timeIntervalInSeconds,
     faceCenteredGrid3* output,
     const scalarField3& boundarySdf,
     const vectorField3& boundaryVelocity,

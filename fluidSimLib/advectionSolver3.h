@@ -18,22 +18,22 @@ virtual ~advectionSolver3();
 virtual void advect(
         const scalarGrid3& input,
         const vectorField3& flow,
-        double dt,
+        FloatType dt,
         scalarGrid3* output,
-        const scalarField3& boundarySdf = constantScalarField3(std::numeric_limits<double>::max()) );
+        const scalarField3& boundarySdf = constantScalarField3(std::numeric_limits<FloatType>::max()) );
 
 virtual void advect(
         const extendVectorGrid3& input,
         const vectorField3& flow,
-        double dt,
+        FloatType dt,
         extendVectorGrid3* output,
-        const scalarField3& boundarySdf = constantScalarField3(std::numeric_limits<double>::max()) );
+        const scalarField3& boundarySdf = constantScalarField3(std::numeric_limits<FloatType>::max()) );
 
 virtual void advect(
         const faceCenteredGrid3& input,
         const vectorField3& flow,
-        double dt, faceCenteredGrid3* output,
-        const scalarField3& boundarySdf = constantScalarField3(std::numeric_limits<double>::max()) );
+        FloatType dt, faceCenteredGrid3* output,
+        const scalarField3& boundarySdf = constantScalarField3(std::numeric_limits<FloatType>::max()) );
    
 };
 

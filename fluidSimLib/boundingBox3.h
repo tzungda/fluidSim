@@ -11,10 +11,10 @@ struct boundingBoxRayIntersection3
     bool isIntersecting = false;
 
 
-    double tNear = std::numeric_limits<double>::max();
+    FloatType tNear = std::numeric_limits<FloatType>::max();
 
 
-    double tFar = std::numeric_limits<double>::max();
+    FloatType tFar = std::numeric_limits<FloatType>::max();
 };
 
 class boundingBox3
@@ -30,9 +30,9 @@ public:
 
     vector3 corner(size_t idx) const;
 
-    double width( ) const;
-    double height( ) const;
-    double depth( ) const;
+    FloatType width( ) const;
+    FloatType height( ) const;
+    FloatType depth( ) const;
     vector3 midPoint( ) const;
 
     bool contains(const vector3& point) const;

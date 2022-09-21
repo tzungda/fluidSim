@@ -39,21 +39,21 @@ public:
 
     void set(const faceCenteredGrid3& other);
 
-    double &u(size_t i, size_t j, size_t k);
-    double &v(size_t i, size_t j, size_t k);
-    double &w(size_t i, size_t j, size_t k);
+    FloatType &u(size_t i, size_t j, size_t k);
+    FloatType &v(size_t i, size_t j, size_t k);
+    FloatType &w(size_t i, size_t j, size_t k);
 
-    const double &u(size_t i, size_t j, size_t k) const;
-    const double &v(size_t i, size_t j, size_t k) const;
-    const double &w(size_t i, size_t j, size_t k) const;
+    const FloatType &u(size_t i, size_t j, size_t k) const;
+    const FloatType &v(size_t i, size_t j, size_t k) const;
+    const FloatType &w(size_t i, size_t j, size_t k) const;
 
-    double &u( const size3& pt );
-    double &v( const size3& pt );
-    double &w( const size3& pt );
+    FloatType &u( const size3& pt );
+    FloatType &v( const size3& pt );
+    FloatType &w( const size3& pt );
 
-    const double &u( const size3& pt ) const;
-    const double &v( const size3& pt ) const;
-    const double &w( const size3& pt ) const;
+    const FloatType &u( const size3& pt ) const;
+    const FloatType &v( const size3& pt ) const;
+    const FloatType &w( const size3& pt ) const;
 
     vector3 uPosition(size_t i, size_t j, size_t k) const;
     vector3 vPosition(size_t i, size_t j, size_t k) const;
@@ -94,7 +94,7 @@ public:
         const std::function<void(size_t, size_t, size_t)>& func) const;
 #endif
 
-    double divergenceAtCellCenterByIndex(size_t i, size_t j, size_t k) const;
+    FloatType divergenceAtCellCenterByIndex(size_t i, size_t j, size_t k) const;
 
     vector3 valueAtCellCenterByIndex(size_t i, size_t j, size_t k) const;
     vector3 curlAtCellCenterByIndex(size_t i, size_t j, size_t k) const;
@@ -107,8 +107,8 @@ public:
 
 protected:
     void onResize(const size3& resolution, const vector3& gridSpacing, const vector3& origin, const vector3& initValue) override;
-    void getData(std::vector<double>* data) const override;
-    void setData(const std::vector<double>& data) override;
+    void getData(std::vector<FloatType>* data) const override;
+    void setData(const std::vector<FloatType>& data) override;
 };
 
 typedef std::shared_ptr<faceCenteredGrid3> faceCenteredGrid3Ptr;
