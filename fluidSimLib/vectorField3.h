@@ -18,7 +18,7 @@ public:
     virtual vector3 sample(const vector3 &x) const = 0;
 
 
-    virtual double divergence(const vector3& x) const;
+    virtual FloatType divergence(const vector3& x) const;
 
 
     virtual vector3 curl(const vector3& x) const;

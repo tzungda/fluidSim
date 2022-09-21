@@ -24,7 +24,7 @@ public:
 protected:
     vector3 closestPointLocal(const vector3& otherPoint) const override;
 
-    double closestDistanceLocal(const vector3& otherPoint) const override;
+    FloatType closestDistanceLocal(const vector3& otherPoint) const override;
 
     bool intersectsLocal(const ray3& ray) const override;
 
@@ -33,7 +33,7 @@ protected:
     vector3 closestNormalLocal(
         const vector3& otherPoint) const override;
 
-    double signedDistanceLocal(const vector3& otherPoint) const override;
+    FloatType signedDistanceLocal(const vector3& otherPoint) const override;
 
     surfaceRayIntersection3 closestIntersectionLocal(
         const ray3& ray) const override;

@@ -31,7 +31,7 @@ bool surface3::intersects(const ray3& ray) const
     return intersectsLocal(transform.toLocal(ray));
 }
 
-double surface3::closestDistance(const vector3& otherPoint) const
+FloatType surface3::closestDistance(const vector3& otherPoint) const
 {
     return closestDistanceLocal(transform.toLocal(otherPoint));
 }
@@ -41,7 +41,7 @@ surfaceRayIntersection3 surface3::closestIntersection(const ray3& ray) const
     surfaceRayIntersection3 result = closestIntersectionLocal(transform.toLocal(ray));
     result.point = transform.toWorld(result.point);
     result.normal = transform.toWorldDirection(result.normal);
-    result.normal *= (isNormalFlipped) ? -1.0 : 1.0;
+    result.normal *= (isNormalFlipped) ? (FloatType)-1.0 : (FloatType)1.0;
     return result;
 }
 
@@ -49,7 +49,7 @@ vector3 surface3::closestNormal(const vector3& otherPoint) const
 {
     vector3 result = transform.toWorldDirection(
         closestNormalLocal(transform.toLocal(otherPoint)));
-    result *= (isNormalFlipped) ? -1.0 : 1.0;
+    result *= (isNormalFlipped) ? (FloatType)-1.0 : (FloatType)1.0;
     return result;
 }
 
@@ -59,7 +59,7 @@ bool surface3::intersectsLocal(const ray3& rayLocal) const
     return result.isIntersecting;
 }
 
-double surface3::closestDistanceLocal(const vector3& otherPointLocal) const
+FloatType surface3::closestDistanceLocal(const vector3& otherPointLocal) const
 {
     return otherPointLocal.distanceTo(closestPointLocal(otherPointLocal));
 }

@@ -26,7 +26,7 @@ public:
     void setNumberOfFixedSubTimeSteps(unsigned int numberOfSteps);
 
     virtual unsigned int numberOfSubTimeSteps(
-        double timeIntervalInSeconds) const;
+        FloatType timeIntervalInSeconds) const;
 
     //! Advances a single animFrame.
     void advanceSingleFrame();
@@ -35,10 +35,10 @@ public:
 
     void setCurrentFrame(const animFrame& animFrame);
 
-    double currentTimeInSeconds() const;
+    FloatType currentTimeInSeconds() const;
 
 
-    virtual void onAdvanceTimeStep(double timeIntervalInSeconds) = 0;
+    virtual void onAdvanceTimeStep(FloatType timeIntervalInSeconds) = 0;
 
     virtual void onInitialize();
 
@@ -47,10 +47,10 @@ private:
     bool mIsUsingFixedSubTimeSteps = true;
     unsigned int mNumberOfFixedSubTimeSteps = 1;
     bool mHasInitialized = false;
-    double mCurrentTime = 0.0;
+    FloatType mCurrentTime = 0.0;
 
     void onUpdate(const animFrame& f);
-    void advanceTimeStep( double timeIntervalInSeconds );
+    void advanceTimeStep( FloatType timeIntervalInSeconds );
     void initialize();
 };
 
