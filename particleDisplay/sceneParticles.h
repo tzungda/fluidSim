@@ -21,7 +21,7 @@
 #include <volumeParticleEmitter3.h>
 #include <particleEmitterSet3.h>
 #include <gridPointGenerator3.h>
-#include <frame.h>
+#include <animFrame.h>
 #include <common.h>
 //
 
@@ -99,7 +99,7 @@ public:
 
         printf( "\nfluid sim updating frame: %d\n", frameNumber );
 
-        frame f(0, (FloatType)1.0 / mFPS);
+        animFrame f(0, (FloatType)1.0 / mFPS);
         f.index = (SizeType)frameNumber;
         mSolver->update( f );
 
