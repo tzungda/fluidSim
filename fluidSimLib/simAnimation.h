@@ -2,7 +2,7 @@
 #ifndef simAnimation_H
 #define simAnimation_H
 
-#include "frame.h"
+#include "animFrame.h"
 
 class simAnimation
 {
@@ -12,7 +12,7 @@ public:
 
     virtual ~simAnimation();
 
-    void update( const frame& f )
+    void update( const animFrame& f )
     {
         onUpdate( f );
     }
@@ -28,12 +28,12 @@ public:
     virtual unsigned int numberOfSubTimeSteps(
         double timeIntervalInSeconds) const;
 
-    //! Advances a single frame.
+    //! Advances a single animFrame.
     void advanceSingleFrame();
 
-    frame currentFrame() const;
+    animFrame currentFrame() const;
 
-    void setCurrentFrame(const frame& frame);
+    void setCurrentFrame(const animFrame& animFrame);
 
     double currentTimeInSeconds() const;
 
@@ -43,13 +43,13 @@ public:
     virtual void onInitialize();
 
 private:
-    frame mCurrentFrame;
+    animFrame mCurrentFrame;
     bool mIsUsingFixedSubTimeSteps = true;
     unsigned int mNumberOfFixedSubTimeSteps = 1;
     bool mHasInitialized = false;
     double mCurrentTime = 0.0;
 
-    void onUpdate(const frame& f);
+    void onUpdate(const animFrame& f);
     void advanceTimeStep( double timeIntervalInSeconds );
     void initialize();
 };

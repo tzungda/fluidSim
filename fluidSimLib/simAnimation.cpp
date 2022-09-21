@@ -17,7 +17,7 @@ simAnimation::~simAnimation()
 }
 
 
-void simAnimation::onUpdate(const frame& f)
+void simAnimation::onUpdate(const animFrame& f)
 {
     if (f.index > mCurrentFrame.index)
     {
@@ -103,14 +103,14 @@ void simAnimation::advanceSingleFrame()
     update(mCurrentFrame);
 }
 
-frame simAnimation::currentFrame() const
+animFrame simAnimation::currentFrame() const
 {
     return mCurrentFrame;
 }
 
-void simAnimation::setCurrentFrame(const frame& frame)
+void simAnimation::setCurrentFrame(const animFrame& animFrame)
 {
-    mCurrentFrame = frame;
+    mCurrentFrame = animFrame;
 }
 
 double simAnimation::currentTimeInSeconds() const
