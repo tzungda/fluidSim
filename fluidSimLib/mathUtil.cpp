@@ -266,7 +266,11 @@ void mathUtil::extrapolateToRegion( const dataBuffer3 &input, const markers3& va
 
     for (unsigned int iter = 0; iter < numberOfIterations; ++iter)
     {
+#ifdef _OPENMP
+        valid0.forEachIndexOpenMP([&](size_t i, size_t j, size_t k) {
+#else
         valid0.forEachIndex([&](size_t i, size_t j, size_t k) {
+#endif
             FloatType sum = 0.0;//zero<T>();
             unsigned int count = 0;
 
