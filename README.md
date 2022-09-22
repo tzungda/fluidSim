@@ -12,7 +12,7 @@ Fluid grid-based and hybrid solvers with a simple OpenGL viewport to display it
 4. Open the particleDisplay solution and compile.
 
 ## Next
-Rewrite part of the computation to CUDA, OpenMP or TBB.
+Rewrite part of the computation to CUDA or TBB.
 
 ## Images
 ![alt text](https://github.com/tzungda/fluidSim/blob/main/outputImages/outputImage.0006.png)
@@ -23,3 +23,5 @@ Rewrite part of the computation to CUDA, OpenMP or TBB.
 ![alt text](https://github.com/tzungda/fluidSim/blob/main/outputImages/outputImage.0051.png)
 ![alt text](https://github.com/tzungda/fluidSim/blob/main/outputImages/outputImage.0067.png)
 
+## History
+2022/09/21: Improved performance with OpenMP
