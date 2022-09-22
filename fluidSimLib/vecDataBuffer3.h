@@ -71,6 +71,8 @@ public:
     void swap( vecDataBuffer3& other );
 
     void set( const vecDataBuffer3& other );
+    void set( const vector3& value );
+    void setZero( );
 
     vector3& operator()(size_t i, size_t j, size_t k);
     const vector3& operator()(size_t i, size_t j, size_t k) const;

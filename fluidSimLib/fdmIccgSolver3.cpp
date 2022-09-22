@@ -15,19 +15,23 @@ void fdmIccgSolver3::Preconditioner::build(const fdmMatrix3& matrix)
     y.resize(size, 0.0);
 
     matrix.forEachIndex([&](size_t i, size_t j, size_t k) {
-        FloatType denom
-            = matrix(i, j, k).center
-            - ((i > 0) ?
-                mathUtil::square( matrix(i - 1, j, k).right ) * d(i - 1, j, k) : (FloatType)0.0)
-            - ((j > 0) ?
-                mathUtil::square( matrix(i, j - 1, k).up )    * d(i, j - 1, k) : (FloatType)0.0)
-            - ((k > 0) ?
-                mathUtil::square( matrix(i, j, k - 1).front ) * d(i, j, k - 1) : (FloatType)0.0);
 
-        if (std::fabs(denom) > 0.0) {
-            d(i, j, k) = (FloatType)1.0 / denom;
-        } else {
-            d(i, j, k) = 0.0;
+        if ( matrix( i, j, k ).marker == 1 )
+        {
+            FloatType denom
+                = matrix(i, j, k).center
+                - ((i > 0) ?
+                    mathUtil::square( matrix(i - 1, j, k).right ) * d(i - 1, j, k) : (FloatType)0.0)
+                - ((j > 0) ?
+                    mathUtil::square( matrix(i, j - 1, k).up )    * d(i, j - 1, k) : (FloatType)0.0)
+                - ((k > 0) ?
+                    mathUtil::square( matrix(i, j, k - 1).front ) * d(i, j, k - 1) : (FloatType)0.0);
+
+            if (std::fabs(denom) > 0.0) {
+                d(i, j, k) = (FloatType)1.0 / denom;
+            } else {
+                d(i, j, k) = 0.0;
+            }
         }
         });
 }
@@ -43,12 +47,15 @@ void fdmIccgSolver3::Preconditioner::solve(
 
     b.forEachIndex([&](size_t i, size_t j, size_t k) 
     {
-        y(i, j, k)
-            = (b(i, j, k)
-                - ((i > 0) ? (*A)(i - 1, j, k).right * y(i - 1, j, k) : (FloatType)0.0)
-                - ((j > 0) ? (*A)(i, j - 1, k).up    * y(i, j - 1, k) : (FloatType)0.0)
-                - ((k > 0) ? (*A)(i, j, k - 1).front * y(i, j, k - 1) : (FloatType)0.0))
-            * d(i, j, k);
+        if ((*A)(i, j, k).marker == 1 )
+        {
+            y(i, j, k)
+                = (b(i, j, k)
+                    - ((i > 0) ? (*A)(i - 1, j, k).right * y(i - 1, j, k) : (FloatType)0.0)
+                    - ((j > 0) ? (*A)(i, j - 1, k).up    * y(i, j - 1, k) : (FloatType)0.0)
+                    - ((k > 0) ? (*A)(i, j, k - 1).front * y(i, j, k - 1) : (FloatType)0.0))
+                * d(i, j, k);
+        }
         });
 
     for (SSIZE_T k = sz - 1; k >= 0; --k) 
@@ -57,15 +64,18 @@ void fdmIccgSolver3::Preconditioner::solve(
         {
             for (SSIZE_T i = sx - 1; i >= 0; --i) 
             {
-                (*x)(i, j, k)
-                    = (y(i, j, k)
-                        - ((i + 1 < sx) ?
-                            (*A)(i, j, k).right * (*x)(i + 1, j, k) : (FloatType)0.0)
-                        - ((j + 1 < sy) ?
-                            (*A)(i, j, k).up    * (*x)(i, j + 1, k) : (FloatType)0.0)
-                        - ((k + 1 < sz) ?
-                            (*A)(i, j, k).front * (*x)(i, j, k + 1) : (FloatType)0.0))
-                    * d(i, j, k);
+                if ((*A)(i, j, k).marker == 1 )
+                {
+                    (*x)(i, j, k)
+                        = (y(i, j, k)
+                            - ((i + 1 < sx) ?
+                                (*A)(i, j, k).right * (*x)(i + 1, j, k) : (FloatType)0.0)
+                            - ((j + 1 < sy) ?
+                                (*A)(i, j, k).up    * (*x)(i, j + 1, k) : (FloatType)0.0)
+                            - ((k + 1 < sz) ?
+                                (*A)(i, j, k).front * (*x)(i, j, k + 1) : (FloatType)0.0))
+                        * d(i, j, k);
+                }
             }
         }
     }

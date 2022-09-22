@@ -67,6 +67,11 @@ void cellCenteredVectorGrid3::set(const cellCenteredVectorGrid3& other)
     setExtendVectorGrid(other);
 }
 
+void cellCenteredVectorGrid3::fillZero()
+{
+    mData.setZero();
+}
+
 cellCenteredVectorGrid3& cellCenteredVectorGrid3::operator=(
     const cellCenteredVectorGrid3& other)
 {
@@ -76,7 +81,9 @@ cellCenteredVectorGrid3& cellCenteredVectorGrid3::operator=(
 
 void cellCenteredVectorGrid3::fill(const vector3& value) 
 {
-    size3 size = dataSize();
+    mData.set( value );
+
+    /*size3 size = dataSize();
     for ( size_t i = 0; i < size.x; ++i )
     {
         for ( size_t j = 0; j < size.y; ++j )
@@ -86,7 +93,7 @@ void cellCenteredVectorGrid3::fill(const vector3& value)
                 (*this)( i, j , k ) = value;
             }
         }
-    }
+    }*/
 
 }
 

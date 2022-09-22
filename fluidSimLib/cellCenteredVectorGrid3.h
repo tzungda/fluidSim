@@ -47,6 +47,8 @@ public:
 
     void set(const cellCenteredVectorGrid3& other);
 
+    void fillZero();
+
     cellCenteredVectorGrid3& operator=(const cellCenteredVectorGrid3& other);
 
 };

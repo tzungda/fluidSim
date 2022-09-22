@@ -183,7 +183,11 @@ void gridBackwardEulerDiffusionSolver3::buildMarkers(
 {
     mMarkers.resize(size);
 
+#ifdef _OPENMP
+    mMarkers.forEachIndexOpenMP([&](size_t i, size_t j, size_t k) {
+#else
     mMarkers.forEachIndex([&](size_t i, size_t j, size_t k) {
+#endif
         if (mathUtil::isInsideSdf(boundarySdf.sample(pos(i, j, k)))) {
             mMarkers(i, j, k) = kBoundary;
         } else if (mathUtil::isInsideSdf(fluidSdf.sample(pos(i, j, k)))) {

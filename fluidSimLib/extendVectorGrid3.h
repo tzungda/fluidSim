@@ -9,9 +9,11 @@
 class extendVectorGrid3 : public vectorGrid3 // the CollocatedVectorGrid3 class of the book
 {
 private:
-    vecDataBuffer3 mData;
     LinearVecBufferSampler mLinearSampler;
     std::function<vector3(const vector3&) > mSampler;
+
+protected:
+    vecDataBuffer3 mData;
 
 public:
     extendVectorGrid3();

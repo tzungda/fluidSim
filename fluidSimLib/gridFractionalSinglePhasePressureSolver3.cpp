@@ -183,6 +183,8 @@ void gridFractionalSinglePhasePressureSolver3::buildSystem(
 
         if ( mathUtil::isInsideSdf(centerPhi))
         {
+            row.marker = 1;
+
             FloatType term = 0.0;
 
             if (i + 1 < size.x)

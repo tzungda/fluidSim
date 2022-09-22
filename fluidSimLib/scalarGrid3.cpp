@@ -145,7 +145,8 @@ std::function<FloatType(const vector3&)> scalarGrid3::sampler() const
 
 void scalarGrid3::fill(FloatType value)
 {
-    for (size_t i = 0; i < mData.width(); ++i)
+    mData.set( value );
+    /*for (size_t i = 0; i < mData.width(); ++i)
     {
         for (size_t j = 0; j < mData.height(); ++j)
         {
@@ -154,7 +155,7 @@ void scalarGrid3::fill(FloatType value)
                 mData(i, j, k) = value;
             }
         }
-    }
+    }*/
 }
 
 void scalarGrid3::fill(const std::function<FloatType(const vector3&)>& func)

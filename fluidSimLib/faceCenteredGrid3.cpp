@@ -342,6 +342,13 @@ vector3 faceCenteredGrid3::curlAtCellCenterByIndex( size_t i, size_t j, size_t k
         (FloatType)0.5 * ( fy_x_upper - fy_x_lower )/gs.x - (FloatType)0.5 * ( fx_y_upper - fx_y_lower )/gs.y );
 }
 
+void faceCenteredGrid3::fillZero()
+{
+    mDataU.setZero();
+    mDataV.setZero();
+    mDataW.setZero();
+}
+
 void faceCenteredGrid3::onResize( const size3& resolution, const vector3& gridSpacing, const vector3& origin, const vector3& initValue )
 {
     mDataU.resize( resolution + size3( 1, 0, 0 ), initValue.x );

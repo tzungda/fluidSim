@@ -57,10 +57,7 @@ FloatType& dataBuffer3::valueByIndex( size_t i, size_t j, size_t k )
 
 void dataBuffer3::set( FloatType value )
 {
-    for ( FloatType &v: mData )
-    {
-        v = value;
-    }
+    std::fill( mData.begin(), mData.end(), value );
 }
 
 void dataBuffer3::set( const dataBuffer3& other )

@@ -87,7 +87,8 @@ void picSolver3::transferFromParticlesToGrids() {
     size_t numberOfParticles = mParticles->numberOfParticles();
 
     // Clear velocity to zero
-    flow->fill(vector3());
+    flow->fillZero();
+    //flow->fill(vector3());
 
     // Weighted-average velocity
     //auto u = flow->uAccessor();

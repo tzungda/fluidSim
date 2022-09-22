@@ -20,6 +20,8 @@ struct fdmMatrixRow3 {
     FloatType up = 0.0;
     //! OFf-diagonal element where column refers to (i, j, k+1) grid point.
     FloatType front = 0.0;
+
+    char marker = -1;
 };
 
 class fdmMatrix3

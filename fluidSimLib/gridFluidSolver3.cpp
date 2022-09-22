@@ -466,7 +466,7 @@ void gridFluidSolver3::beginAdvanceTimeStep(FloatType timeIntervalInSeconds)
     else
     {
         mColliderSdf.fill(mathUtil::maxFloat());
-        mColliderVel.fill({ 0, 0, 0 });
+        mColliderVel.fillZero();//({ 0, 0, 0 });
     }
 
     // update boundary condition solver

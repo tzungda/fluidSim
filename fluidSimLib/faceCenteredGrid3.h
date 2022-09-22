@@ -99,6 +99,8 @@ public:
     vector3 valueAtCellCenterByIndex(size_t i, size_t j, size_t k) const;
     vector3 curlAtCellCenterByIndex(size_t i, size_t j, size_t k) const;
 
+    void fillZero();
+
     std::shared_ptr<vectorGrid3> clone() const override;
     vector3 sample(const vector3& x) const override;
     void fill(const vector3& value) override;

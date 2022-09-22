@@ -95,6 +95,16 @@ void vecDataBuffer3::set( const vecDataBuffer3& other )
 }
 
 
+void vecDataBuffer3::set( const vector3& value )
+{
+    std::fill( mData.begin(), mData.end(), value );
+}
+
+void vecDataBuffer3::setZero( )
+{
+    memset( &mData[0], 0, sizeof( vector3 ) * mData.size() );
+}
+
 vector3& vecDataBuffer3::operator()(size_t i, size_t j, size_t k)
 {
     return mData[i + mSize.x * (j + mSize.y * k)];
