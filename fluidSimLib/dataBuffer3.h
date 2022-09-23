@@ -113,6 +113,8 @@ public:
     size_t depth( ) const;
 
     FloatType *data( );
+    const FloatType *data( ) const;
+    size_t dataLength( ) const;
 
     std::vector<FloatType>::iterator begin();
     std::vector<FloatType>::const_iterator begin() const;

@@ -97,6 +97,16 @@ FloatType *dataBuffer3::data( )
     return mData.data();
 }
 
+const FloatType *dataBuffer3::data( ) const
+{
+    return mData.data();
+}
+
+size_t dataBuffer3::dataLength( ) const
+{
+    return mData.size();
+}
+
 std::vector<FloatType>::iterator dataBuffer3::begin()
 {
     return mData.begin();

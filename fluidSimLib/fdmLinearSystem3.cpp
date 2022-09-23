@@ -33,11 +33,18 @@ void fdmBlas3::set(const fdmMatrix3& m, fdmMatrix3* result)
 
 FloatType fdmBlas3::dot(const dataBuffer3& a, const dataBuffer3& b)
 {
-    size3 size = a.size();
+    //size3 size = a.size();
 
     FloatType result = 0.0;
+    size_t len = a.dataLength();
+    const FloatType *ptrA = a.data();
+    const FloatType *ptrB = b.data();
+    for ( size_t i = 0; i < len; ++i )
+    {
+        result += (*ptrA++) * (*ptrB++);
+    }
 
-    for (size_t k = 0; k < size.z; ++k)
+    /*for (size_t k = 0; k < size.z; ++k)
     {
         for (size_t j = 0; j < size.y; ++j)
         {
@@ -46,7 +53,7 @@ FloatType fdmBlas3::dot(const dataBuffer3& a, const dataBuffer3& b)
                 result += a(i, j, k) * b(i, j, k);
             }
         }
-    }
+    }*/
 
     return result;
 }
@@ -82,8 +89,6 @@ void fdmBlas3::mvm(
 #else
     m.forEachIndex([&](size_t i, size_t j, size_t k) {
 #endif
-        if ( m(i, j, k).marker == 1 )
-        {
         (*result)(i, j, k)
             = m(i, j, k).center * v(i, j, k)
             + ((i > 0) ? m(i - 1, j, k).right * v(i - 1, j, k) : (FloatType)0.0)
@@ -92,7 +97,6 @@ void fdmBlas3::mvm(
             + ((j + 1 < size.y) ? m(i, j, k).up * v(i, j + 1, k) : (FloatType)0.0)
             + ((k > 0) ? m(i, j, k - 1).front * v(i, j, k - 1) : (FloatType)0.0)
             + ((k + 1 < size.z) ? m(i, j, k).front * v(i, j, k + 1) : (FloatType)0.0);
-        }
     });
     }
 
@@ -109,8 +113,6 @@ void fdmBlas3::residual(
 #else
     a.forEachIndex([&](size_t i, size_t j, size_t k) {
 #endif
-        if ( a(i, j, k).marker == 1 )
-        {
         (*result)(i, j, k)
             = b(i, j, k)
             - a(i, j, k).center * x(i, j, k)
@@ -120,7 +122,6 @@ void fdmBlas3::residual(
             - ((j + 1 < size.y) ? a(i, j, k).up * x(i, j + 1, k) : (FloatType)0.0)
             - ((k > 0) ? a(i, j, k - 1).front * x(i, j, k - 1) : (FloatType)0.0)
             - ((k + 1 < size.z) ? a(i, j, k).front * x(i, j, k + 1) : (FloatType)0.0);
-        }
     });
     }
 
