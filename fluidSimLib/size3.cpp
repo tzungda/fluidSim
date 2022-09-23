@@ -24,12 +24,12 @@ size3& size3::operator=(const size3& v)
 bool size3::operator!=(const size3& v) const
 {
     if (x != v.x)
-        return false;
+        return true;
     if (y != v.y)
-        return false;
+        return true;
     if (z != v.z)
-        return false;
-    return true;
+        return true;
+    return false;
 }
 
 
