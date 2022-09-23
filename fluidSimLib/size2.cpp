@@ -24,11 +24,11 @@ size2& size2::operator=(const size2& v)
 bool size2::operator!=(const size2& v) const
 {
     if (x != v.x)
-        return false;
+        return true;
     if (y != v.y)
-        return false;
+        return true;
 
-    return true;
+    return false;
 }
 
 
