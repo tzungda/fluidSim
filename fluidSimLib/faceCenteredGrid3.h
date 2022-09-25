@@ -74,6 +74,9 @@ public:
     dataBuffer3& wData();
     const dataBuffer3& wData() const;
 
+    dataBuffer3& dataByIndex( int i );
+    const dataBuffer3& dataByIndex( int i ) const;
+
     vector3 uOrigin() const { return mDataOriginU; }
     vector3 vOrigin() const { return mDataOriginV; }
     vector3 wOrigin() const { return mDataOriginW; }

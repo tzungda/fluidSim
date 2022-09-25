@@ -64,6 +64,8 @@ private:
     markers3 mMarkersV;
     markers3 mMarkersW;
 
+    const markers3& markersByIndex( int i ) const;
+
     void extrapolateVelocityToAir();
 
     void buildSignedDistanceField();

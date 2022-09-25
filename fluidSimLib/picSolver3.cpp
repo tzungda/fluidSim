@@ -293,15 +293,42 @@ void picSolver3::moveParticles(FloatType timeIntervalInSeconds)
     }
 }
 
+const markers3& picSolver3::markersByIndex( int i ) const
+{
+    switch( i )
+    {
+    case 0:
+    {
+        return mMarkersU;
+    }
+    case 1:
+    {
+        return mMarkersV;
+    }
+    default:
+    {
+        break;
+    }
+    }
+    return mMarkersW;
+}
+
 void picSolver3::extrapolateVelocityToAir()
 {
     const faceCenteredGrid3Ptr& vel = gridSystemData()->velocity();
 
 
     unsigned int depth = static_cast<unsigned int>(std::ceil(maxCfl()));
-    mathUtil::extrapolateToRegion(vel->uData(), mMarkersU, depth, vel->uData());
-    mathUtil::extrapolateToRegion(vel->vData(), mMarkersV, depth, vel->vData());
-    mathUtil::extrapolateToRegion(vel->wData(), mMarkersW, depth, vel->wData());
+#ifdef _OPENMP
+#pragma omp parallel for
+#endif
+    for ( int i = 0; i < 3; ++i )
+    {
+        mathUtil::extrapolateToRegion( vel->dataByIndex(i), markersByIndex(i), depth, vel->dataByIndex(i) );
+    }
+    //mathUtil::extrapolateToRegion(vel->uData(), mMarkersU, depth, vel->uData());
+    //mathUtil::extrapolateToRegion(vel->vData(), mMarkersV, depth, vel->vData());
+    //mathUtil::extrapolateToRegion(vel->wData(), mMarkersW, depth, vel->wData());
 }
 
 void picSolver3::buildSignedDistanceField() {

@@ -252,6 +252,46 @@ const dataBuffer3& faceCenteredGrid3::wData() const
     return mDataW;
 }
 
+dataBuffer3& faceCenteredGrid3::dataByIndex( int i )
+{
+    switch( i )
+    {
+    case 0:
+    {
+        return mDataU;
+    }
+    case 1:
+    {
+        return mDataV;
+    }
+    default:
+    {
+        break;
+    }
+    }
+    return mDataW;
+}
+
+const dataBuffer3& faceCenteredGrid3::dataByIndex( int i ) const
+{
+    switch( i )
+    {
+    case 0:
+    {
+        return mDataU;
+    }
+    case 1:
+    {
+        return mDataV;
+    }
+    default:
+    {
+        break;
+    }
+    }
+    return mDataW;
+}
+
 void faceCenteredGrid3::forEachUIndex(
     const std::function<void(size_t, size_t, size_t)>& func) const
 {

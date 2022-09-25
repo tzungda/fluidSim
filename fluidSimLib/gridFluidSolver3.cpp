@@ -385,6 +385,8 @@ void gridFluidSolver3::extrapolateIntoCollider(faceCenteredGrid3* grid)
     markers3 vMarker(grid->vData().size());
     markers3 wMarker(grid->wData().size());
 
+    markers3* markers[] = { &uMarker, &vMarker, &wMarker };
+
     uMarker.forEachIndex([&](size_t i, size_t j, size_t k) {
         if (mathUtil::isInsideSdf(mColliderSdf.sample(uPos(i, j, k)))) {
             uMarker(i, j, k) = 0;
@@ -413,9 +415,13 @@ void gridFluidSolver3::extrapolateIntoCollider(faceCenteredGrid3* grid)
     });
 
     unsigned int depth = static_cast<unsigned int>(std::ceil(mMaxCfl));
-    mathUtil::extrapolateToRegion(grid->uData(), uMarker, depth, grid->uData());
-    mathUtil::extrapolateToRegion(grid->vData(), vMarker, depth, grid->vData());
-    mathUtil::extrapolateToRegion(grid->wData(), wMarker, depth, grid->wData());
+    for ( int i = 0; i < 3; ++i )
+    {
+        mathUtil::extrapolateToRegion(grid->dataByIndex(i), *markers[i], depth, grid->dataByIndex(i));
+    }
+    //mathUtil::extrapolateToRegion(grid->uData(), uMarker, depth, grid->uData());
+    //mathUtil::extrapolateToRegion(grid->vData(), vMarker, depth, grid->vData());
+    //mathUtil::extrapolateToRegion(grid->wData(), wMarker, depth, grid->wData());
 
 }
 

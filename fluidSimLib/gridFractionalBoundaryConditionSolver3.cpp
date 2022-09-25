@@ -38,6 +38,8 @@ void gridFractionalBoundaryConditionSolver3::constrainVelocity(
     markers3 vMarker( velocity->vData().size(), 1 );
     markers3 wMarker( velocity->wData().size(), 1 );
 
+    markers3* markers[] = { &uMarker, &vMarker, &wMarker };
+
     vector3 h = velocity->gridSpacing();
 
     // Assign collider's velocity first and initialize markers
@@ -102,12 +104,17 @@ void gridFractionalBoundaryConditionSolver3::constrainVelocity(
     });
 
     // free-slip: extrapolate fluid velocity into the collider
-    mathUtil::extrapolateToRegion(
-        velocity->uData(), uMarker, extrapolationDepth, velocity->uData() );
-    mathUtil::extrapolateToRegion(
-        velocity->vData(), vMarker, extrapolationDepth, velocity->vData() );
-    mathUtil::extrapolateToRegion(
-        velocity->wData(), wMarker, extrapolationDepth, velocity->wData() );
+    for ( int i = 0; i < 3; ++i )
+    {
+        mathUtil::extrapolateToRegion(
+                velocity->dataByIndex(i), *markers[i], extrapolationDepth, velocity->dataByIndex(i) );
+    }
+    //mathUtil::extrapolateToRegion(
+    //    velocity->uData(), uMarker, extrapolationDepth, velocity->uData() );
+    //mathUtil::extrapolateToRegion(
+    //    velocity->vData(), vMarker, extrapolationDepth, velocity->vData() );
+    //mathUtil::extrapolateToRegion(
+    //    velocity->wData(), wMarker, extrapolationDepth, velocity->wData() );
 
     // no-flux: project the extrapolated velocity to the collider's surface
     // normal
