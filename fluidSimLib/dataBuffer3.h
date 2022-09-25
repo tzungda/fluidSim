@@ -106,6 +106,8 @@ public:
 
     size3 size( ) const;
 
+    size_t xyz( ) const;
+
     size_t width( ) const;
 
     size_t height( ) const;
@@ -122,6 +124,9 @@ public:
     std::vector<FloatType>::const_iterator end() const;
 
     void swap( dataBuffer3& other );
+
+    const FloatType* iBuffer( size_t j, size_t k, size_t i = 0) const;
+    FloatType* iBuffer( size_t j, size_t k, size_t i = 0) ;
 
     FloatType& operator()(size_t i, size_t j, size_t k);
     const FloatType& operator()( size_t i, size_t j, size_t k ) const;

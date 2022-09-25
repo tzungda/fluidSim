@@ -105,6 +105,11 @@ char *markers3::data( )
     return mData.data();
 }
 
+const char *markers3::data( ) const
+{
+    return mData.data();
+}
+
 void markers3::swap( markers3& other )
 {
     std::swap(other.mData, mData);

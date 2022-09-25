@@ -89,6 +89,11 @@ size3 dataBuffer3::size( ) const
     return mSize;
 }
 
+size_t dataBuffer3::xyz( ) const
+{
+    return mSize.x*mSize.y*mSize.z;
+}
+
 size_t dataBuffer3::width( ) const
 {
     return mSize.x;

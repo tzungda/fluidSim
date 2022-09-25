@@ -77,6 +77,7 @@ public:
     size_t depth( ) const;
 
     char *data( );
+    const char *data( ) const;
 
     void swap( markers3& other );
 

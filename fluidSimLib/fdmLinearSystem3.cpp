@@ -73,13 +73,13 @@ void fdmBlas3::axpy(
     size3 size = x.size();
 
 #ifdef SELFDEFINED_USE_TBB
-    tbb::parallel_for( tbb::blocked_range3d<size_t>(0, size.z, 0, size.y, 0, size.z),
+    tbb::parallel_for( tbb::blocked_range3d<size_t>(0, size.z, 0, size.y, 0, size.x),
         [&result, &a, &x, &y]( const tbb::blocked_range3d<size_t> &r ) {
-        for( size_t k=r.cols().begin(), k_end=r.cols().end(); k<k_end; k++)
+        for( size_t k=r.pages().begin(), k_end=r.pages().end(); k<k_end; k++)
         {
             for( size_t j=r.rows().begin(), j_end=r.rows().end(); j<j_end; j++)
             {
-                for( size_t i=r.pages().begin(), i_end=r.pages().end(); i<i_end; i++ )
+                for( size_t i=r.cols().begin(), i_end=r.cols().end(); i<i_end; i++ )
                 {
                     (*result)(i, j, k) = a * x(i, j, k) + y(i, j, k);
                 }
@@ -107,13 +107,13 @@ void fdmBlas3::mvm(
     size3 size = m.size();
 
 #ifdef SELFDEFINED_USE_TBB
-    tbb::parallel_for( tbb::blocked_range3d<size_t>(0, size.z, 0, size.y, 0, size.z),
+    tbb::parallel_for( tbb::blocked_range3d<size_t>(0, size.z, 0, size.y, 0, size.x),
         [&result, &m, &v, &size]( const tbb::blocked_range3d<size_t> &r ) {
-        for( size_t k=r.cols().begin(), k_end=r.cols().end(); k<k_end; k++)
+        for( size_t k=r.pages().begin(), k_end=r.pages().end(); k<k_end; k++)
         {
             for( size_t j=r.rows().begin(), j_end=r.rows().end(); j<j_end; j++)
             {
-                for( size_t i=r.pages().begin(), i_end=r.pages().end(); i<i_end; i++ )
+                for( size_t i=r.cols().begin(), i_end=r.cols().end(); i<i_end; i++ )
                 {
                     //printf("Hello World %d\n", i+j+k);
                     (*result)(i, j, k)
@@ -155,15 +155,14 @@ void fdmBlas3::residual(
     size3 size = a.size();
 
 #ifdef SELFDEFINED_USE_TBB
-    tbb::parallel_for( tbb::blocked_range3d<size_t>(0, size.z, 0, size.y, 0, size.z),
+    tbb::parallel_for( tbb::blocked_range3d<size_t>(0, size.z, 0, size.y, 0, size.x),
         [&result, &a, &x, &b, &size]( const tbb::blocked_range3d<size_t> &r ) {
-        for( size_t k=r.cols().begin(), k_end=r.cols().end(); k<k_end; k++)
+        for( size_t k=r.pages().begin(), k_end=r.pages().end(); k<k_end; k++)
         {
             for( size_t j=r.rows().begin(), j_end=r.rows().end(); j<j_end; j++)
             {
-                for( size_t i=r.pages().begin(), i_end=r.pages().end(); i<i_end; i++ )
+                for( size_t i=r.cols().begin(), i_end=r.cols().end(); i<i_end; i++ )
                 {
-                    //printf("Hello World %d\n", i+j+k);
                     (*result)(i, j, k)
                         = b(i, j, k)
                         - a(i, j, k).center * x(i, j, k)

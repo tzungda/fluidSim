@@ -3,6 +3,11 @@
 #include "gridBackwardEulerDiffusionSolver3.h"
 #include "fdmIccgSolver3.h"
 
+#ifdef SELFDEFINED_USE_TBB
+#include <tbb/parallel_for.h>
+#include <tbb/blocked_range3d.h>
+#endif
+
 const char kFluid = 0;
 const char kAir = 1;
 const char kBoundary = 2;
@@ -183,6 +188,54 @@ void gridBackwardEulerDiffusionSolver3::buildMarkers(
 {
     mMarkers.resize(size);
 
+#ifdef SELFDEFINED_USE_TBB
+
+    size3 s = mMarkers.size();
+    tbb::parallel_for( tbb::blocked_range3d<size_t>(0, s.z, 0, s.y, 0, s.x),
+        [this, &boundarySdf, &fluidSdf, &pos]( const tbb::blocked_range3d<size_t> &r ) {
+        for( size_t k=r.pages().begin(), k_end=r.pages().end(); k<k_end; k++)
+        {
+            for( size_t j=r.rows().begin(), j_end=r.rows().end(); j<j_end; j++)
+            {
+                for( size_t i=r.cols().begin(), i_end=r.cols().end(); i<i_end; i++ )
+                {
+                    if (mathUtil::isInsideSdf(boundarySdf.sample(pos(i, j, k)))) 
+                    {
+                        mMarkers(i, j, k) = kBoundary;
+                    } 
+                    else if (mathUtil::isInsideSdf(fluidSdf.sample(pos(i, j, k)))) 
+                    {
+                        mMarkers(i, j, k) = kFluid;
+                    } 
+                    else 
+                    {
+                        mMarkers(i, j, k) = kAir;
+                    }
+                }
+            }
+        }
+    });
+    /*
+    size_t len = size.x * size.y * size.z;
+    tbb::parallel_for(
+        tbb::blocked_range<size_t>( 0, len ),
+        [this, &boundarySdf, &fluidSdf, &pos](const tbb::blocked_range<size_t>& r)
+    {
+        for (size_t i=r.begin();i<r.end();++i) 
+        {
+            if (mathUtil::isInsideSdf(boundarySdf.sample(pos(i, j, k)))) {
+                mMarkers(i, j, k) = kBoundary;
+            } else if (mathUtil::isInsideSdf(fluidSdf.sample(pos(i, j, k)))) {
+                mMarkers(i, j, k) = kFluid;
+            } else {
+                mMarkers(i, j, k) = kAir;
+            }
+        }
+    }
+    );
+    */
+
+#else
 #ifdef _OPENMP
     mMarkers.forEachIndexOpenMP([&](size_t i, size_t j, size_t k) {
 #else
@@ -196,6 +249,7 @@ void gridBackwardEulerDiffusionSolver3::buildMarkers(
             mMarkers(i, j, k) = kAir;
         }
         });
+#endif
 }
 
 void gridBackwardEulerDiffusionSolver3::buildMatrix(

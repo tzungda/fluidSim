@@ -4,6 +4,10 @@
 #include "fdmIccgSolver3.h"
 #include "gridFractionalBoundaryConditionSolver3.h"
 
+#ifdef SELFDEFINED_USE_TBB
+#include <tbb/parallel_for.h>
+#include <tbb/blocked_range3d.h>
+#endif
 
 const FloatType kDefaultTolerance = (FloatType)1e-6;
 const FloatType kMinWeight = (FloatType)0.01;
@@ -73,11 +77,42 @@ void gridFractionalSinglePhasePressureSolver3::buildWeights(
 
     vector3 h = input.gridSpacing();
 
-#ifdef _OPENMP
-    mWeightsU.forEachIndexOpenMP([&](size_t i, size_t j, size_t k)
+#ifdef SELFDEFINED_USE_TBB
+    tbb::parallel_for( tbb::blocked_range3d<size_t>(0, uSize.z, 0, uSize.y, 0, uSize.x),
+        [this, &uPos, &boundarySdf, &boundaryVelocity, &h ]( const tbb::blocked_range3d<size_t> &r ) {
+        for( size_t k=r.pages().begin(), k_end=r.pages().end(); k<k_end; k++)
+        {
+            for( size_t j=r.rows().begin(), j_end=r.rows().end(); j<j_end; j++)
+            {
+                for( size_t i=r.cols().begin(), i_end=r.cols().end(); i<i_end; i++ )
+                {
+                    vector3 pt = uPos(i, j, k);
+                    FloatType phi0 =
+                        boundarySdf.sample(pt + vector3(0.0, (FloatType)-0.5 * h.y, (FloatType)-0.5 * h.z));
+                    FloatType phi1 =
+                        boundarySdf.sample(pt + vector3(0.0, (FloatType)0.5 * h.y, (FloatType)-0.5 * h.z));
+                    FloatType phi2 =
+                        boundarySdf.sample(pt + vector3(0.0, (FloatType)-0.5 * h.y, (FloatType)0.5 * h.z));
+                    FloatType phi3 =
+                        boundarySdf.sample(pt + vector3(0.0, (FloatType)0.5 * h.y, (FloatType)0.5 * h.z));
+                    FloatType frac = mathUtil::fractionInside(phi0, phi1, phi2, phi3);
+                    FloatType weight = mathUtil::clamp((FloatType)1.0 - frac, 0.0, (FloatType)1.0);
+
+                    // clamp non-zero weight to kMinWeight. Having nearly-zero element
+                    // in the matrix can be an issue.
+                    if (weight < kMinWeight && weight > 0.0)
+                    {
+                        weight = kMinWeight;
+                    }
+
+                    mWeightsU(i, j, k) = weight;
+                    mBoundaryU(i, j, k) = boundaryVelocity.sample(pt).x;
+                }
+            }
+        }
+    });
 #else
     mWeightsU.forEachIndex([&](size_t i, size_t j, size_t k)
-#endif
     {
         vector3 pt = uPos(i, j, k);
         FloatType phi0 =
@@ -101,12 +136,44 @@ void gridFractionalSinglePhasePressureSolver3::buildWeights(
         mWeightsU(i, j, k) = weight;
         mBoundaryU(i, j, k) = boundaryVelocity.sample(pt).x;
     });
+#endif
 
-#ifdef _OPENMP
-    mWeightsV.forEachIndexOpenMP([&](size_t i, size_t j, size_t k)
+#ifdef SELFDEFINED_USE_TBB
+    tbb::parallel_for( tbb::blocked_range3d<size_t>(0, vSize.z, 0, vSize.y, 0, vSize.x),
+        [this, &vPos, &boundarySdf, &boundaryVelocity, &h ]( const tbb::blocked_range3d<size_t> &r ) {
+        for( size_t k=r.pages().begin(), k_end=r.pages().end(); k<k_end; k++)
+        {
+            for( size_t j=r.rows().begin(), j_end=r.rows().end(); j<j_end; j++)
+            {
+                for( size_t i=r.cols().begin(), i_end=r.cols().end(); i<i_end; i++ )
+                {
+                    vector3 pt = vPos(i, j, k);
+                    FloatType phi0 =
+                        boundarySdf.sample(pt + vector3((FloatType)-0.5 * h.x, 0.0, (FloatType)-0.5 * h.z));
+                    FloatType phi1 =
+                        boundarySdf.sample(pt + vector3((FloatType)-0.5 * h.x, 0.0, (FloatType)0.5 * h.z));
+                    FloatType phi2 =
+                        boundarySdf.sample(pt + vector3((FloatType)0.5 * h.x, 0.0, (FloatType)-0.5 * h.z));
+                    FloatType phi3 =
+                        boundarySdf.sample(pt + vector3((FloatType)0.5 * h.x, 0.0, (FloatType)0.5 * h.z));
+                    FloatType frac = mathUtil::fractionInside(phi0, phi1, phi2, phi3);
+                    FloatType weight = mathUtil::clamp((FloatType)1.0 - frac, 0.0, (FloatType)1.0);
+
+                    // clamp non-zero weight to kMinWeight. Having nearly-zero element
+                    // in the matrix can be an issue.
+                    if (weight < kMinWeight && weight > 0.0)
+                    {
+                        weight = kMinWeight;
+                    }
+
+                    mWeightsV(i, j, k) = weight;
+                    mBoundaryV(i, j, k) = boundaryVelocity.sample(pt).y;
+                }
+            }
+        }
+    });
 #else
     mWeightsV.forEachIndex([&](size_t i, size_t j, size_t k)
-#endif
     {
         vector3 pt = vPos(i, j, k);
         FloatType phi0 =
@@ -130,12 +197,43 @@ void gridFractionalSinglePhasePressureSolver3::buildWeights(
         mWeightsV(i, j, k) = weight;
         mBoundaryV(i, j, k) = boundaryVelocity.sample(pt).y;
     });
+#endif
 
-#ifdef _OPENMP
-    mWeightsW.forEachIndexOpenMP([&](size_t i, size_t j, size_t k)
+#ifdef SELFDEFINED_USE_TBB
+    tbb::parallel_for( tbb::blocked_range3d<size_t>(0, wSize.z, 0, wSize.y, 0, wSize.x),
+        [this, &wPos, &boundarySdf, &boundaryVelocity, &h ]( const tbb::blocked_range3d<size_t> &r ) {
+        for( size_t k=r.pages().begin(), k_end=r.pages().end(); k<k_end; k++)
+        {
+            for( size_t j=r.rows().begin(), j_end=r.rows().end(); j<j_end; j++)
+            {
+                for( size_t i=r.cols().begin(), i_end=r.cols().end(); i<i_end; i++ )
+                {
+                    vector3 pt = wPos(i, j, k);
+                    FloatType phi0 =
+                        boundarySdf.sample(pt + vector3((FloatType)-0.5 * h.x, (FloatType)-0.5 * h.y, 0.0));
+                    FloatType phi1 =
+                        boundarySdf.sample(pt + vector3((FloatType)-0.5 * h.x, (FloatType)0.5 * h.y, 0.0));
+                    FloatType phi2 =
+                        boundarySdf.sample(pt + vector3((FloatType)0.5 * h.x, (FloatType)-0.5 * h.y, 0.0));
+                    FloatType phi3 =
+                        boundarySdf.sample(pt + vector3((FloatType)0.5 * h.x, (FloatType)0.5 * h.y, 0.0));
+                    FloatType frac = mathUtil::fractionInside(phi0, phi1, phi2, phi3);
+                    FloatType weight = mathUtil::clamp((FloatType)1.0 - frac, 0.0, (FloatType)1.0);
+
+                    // clamp non-zero weight to kMinWeight. Having nearly-zero element
+                    // in the matrix can be an issue.
+                    if (weight < kMinWeight && weight > 0.0) {
+                        weight = kMinWeight;
+                    }
+
+                    mWeightsW(i, j, k) = weight;
+                    mBoundaryW(i, j, k) = boundaryVelocity.sample(pt).z;
+                }
+            }
+        }
+    });
 #else
     mWeightsW.forEachIndex([&](size_t i, size_t j, size_t k)
-#endif
     {
         vector3 pt = wPos(i, j, k);
         FloatType phi0 =
@@ -158,6 +256,7 @@ void gridFractionalSinglePhasePressureSolver3::buildWeights(
         mWeightsW(i, j, k) = weight;
         mBoundaryW(i, j, k) = boundaryVelocity.sample(pt).z;
     });
+#endif
 }
 
 void gridFractionalSinglePhasePressureSolver3::buildSystem(
@@ -343,11 +442,57 @@ void gridFractionalSinglePhasePressureSolver3::applyPressureGradient(
 
     vector3 invH = 1.0 / input.gridSpacing();
 
-#ifdef _OPENMP
-    mSystem.x.forEachIndexOpenMP([&](size_t i, size_t j, size_t k) {
+#ifdef SELFDEFINED_USE_TBB
+    size3 s = mSystem.x.size();
+    tbb::parallel_for( tbb::blocked_range3d<size_t>(0, s.z, 0, s.y, 0, s.x),
+        [this, &size, output, &input, &invH ]( const tbb::blocked_range3d<size_t> &r ) {
+        for( size_t k=r.pages().begin(), k_end=r.pages().end(); k<k_end; k++)
+        {
+            for( size_t j=r.rows().begin(), j_end=r.rows().end(); j<j_end; j++)
+            {
+                for( size_t i=r.cols().begin(), i_end=r.cols().end(); i<i_end; i++ )
+                {
+                    FloatType centerPhi = mFluidSdf(i, j, k);
+
+                    if (i + 1 < size.x && mWeightsU(i + 1, j, k) > 0.0 &&
+                        (mathUtil::isInsideSdf(centerPhi) || mathUtil::isInsideSdf(mFluidSdf(i + 1, j, k))))
+                    {
+                        FloatType rightPhi = mFluidSdf(i + 1, j, k);
+                        FloatType theta = mathUtil::fractionInsideSdf(centerPhi, rightPhi);
+                        theta = std::max<FloatType>(theta, (FloatType)0.01);
+                        //
+                        output->u( i + 1, j, k ) = input.u( i + 1, j, k ) +
+                            invH.x / theta * (mSystem.x(i + 1, j, k) - mSystem.x(i, j, k));
+                    }
+
+                    if (j + 1 < size.y && mWeightsV(i, j + 1, k) > 0.0 &&
+                        (mathUtil::isInsideSdf(centerPhi) || mathUtil::isInsideSdf(mFluidSdf(i, j + 1, k))))
+                    {
+                        FloatType upPhi = mFluidSdf(i, j + 1, k);
+                        FloatType theta = mathUtil::fractionInsideSdf(centerPhi, upPhi);
+                        theta = std::max<FloatType>(theta, (FloatType)0.01);
+                        //
+                        output->v( i, j + 1, k ) = input.v( i, j + 1, k ) +
+                            invH.y / theta * (mSystem.x(i, j + 1, k) - mSystem.x(i, j, k));
+                    }
+
+                    if (k + 1 < size.z && mWeightsW(i, j, k + 1) > 0.0 &&
+                        (mathUtil::isInsideSdf(centerPhi) || mathUtil::isInsideSdf(mFluidSdf(i, j, k + 1))))
+                    {
+                        FloatType frontPhi = mFluidSdf(i, j, k + 1);
+                        FloatType theta = mathUtil::fractionInsideSdf(centerPhi, frontPhi);
+                        theta = std::max<FloatType>(theta, (FloatType)0.01);
+                        //
+                        output->w( i, j, k + 1 ) = input.w( i, j, k + 1 ) +
+                            invH.z / theta * (mSystem.x(i, j, k + 1) - mSystem.x(i, j, k));
+                    }
+                }
+            }
+        }
+    });
 #else
-    mSystem.x.forEachIndex([&](size_t i, size_t j, size_t k) {
-#endif
+    mSystem.x.forEachIndex([&](size_t i, size_t j, size_t k) 
+    {
         FloatType centerPhi = mFluidSdf(i, j, k);
 
         if (i + 1 < size.x && mWeightsU(i + 1, j, k) > 0.0 &&
@@ -383,6 +528,7 @@ void gridFractionalSinglePhasePressureSolver3::applyPressureGradient(
                 invH.z / theta * (mSystem.x(i, j, k + 1) - mSystem.x(i, j, k));
         }
     });
-    }
+#endif
+}
 
 

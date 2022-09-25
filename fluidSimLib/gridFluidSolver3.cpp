@@ -10,6 +10,11 @@
 #include "surfaceToImplicit3.h"
 #include "timer.h"
 
+#ifdef SELFDEFINED_USE_TBB
+#include <tbb/parallel_for.h>
+#include <tbb/blocked_range3d.h>
+#endif
+
 gridFluidSolver3::gridFluidSolver3() :gridFluidSolver3({ 1, 1, 1 }, { 1, 1, 1 }, { 0, 0, 0 })
 {
     mClosedDomainBoundaryFlag = kDirectionAll;
@@ -138,40 +143,66 @@ void gridFluidSolver3::computeGravity(FloatType timeIntervalInSeconds)
 
         if (std::abs(mGravity.x) > mathUtil::eps())
         {
-#ifdef _OPENMP
-            vel->forEachUIndexOpenMP([&](size_t i, size_t j, size_t k) {
+#ifdef SELFDEFINED_USE_TBB
+            size_t len = mGrids->velocity()->uData().dataLength();
+            tbb::parallel_for(
+                tbb::blocked_range<size_t>( 0, len ),
+                [this, &timeIntervalInSeconds](const tbb::blocked_range<size_t>& r)
+            {
+                for (size_t i=r.begin();i<r.end();++i) 
+                    mGrids->velocity()->uData().data()[i] += timeIntervalInSeconds * mGravity.x;
+            }
+            );
 #else
             vel->forEachUIndex([&](size_t i, size_t j, size_t k) {
-#endif
                 mGrids->velocity()->u(i, j, k) += timeIntervalInSeconds * mGravity.x;
             });
-            }
+#endif
+        }
 
         if (std::abs(mGravity.y) > mathUtil::eps())
         {
-#ifdef _OPENMP
-            vel->forEachVIndexOpenMP([&](size_t i, size_t j, size_t k) {
+#ifdef SELFDEFINED_USE_TBB
+            size_t len = mGrids->velocity()->vData().dataLength();
+            tbb::parallel_for(
+                tbb::blocked_range<size_t>( 0, len ),
+                [this, &timeIntervalInSeconds](const tbb::blocked_range<size_t>& r)
+            {
+                for (size_t i=r.begin();i<r.end();++i) 
+                    mGrids->velocity()->vData().data()[i] += timeIntervalInSeconds * mGravity.y;
+            }
+            );
 #else
             vel->forEachVIndex([&](size_t i, size_t j, size_t k) {
-#endif
                 mGrids->velocity()->v(i, j, k) += timeIntervalInSeconds * mGravity.y;
             });
-            }
+#endif
+        }
 
         if (std::abs(mGravity.z) > mathUtil::eps())
         {
-#ifdef _OPENMP
-            vel->forEachWIndexOpenMP([&](size_t i, size_t j, size_t k) {
+#ifdef SELFDEFINED_USE_TBB
+            size_t len = mGrids->velocity()->wData().dataLength();
+            tbb::parallel_for(
+                tbb::blocked_range<size_t>( 0, len ),
+                [this, &timeIntervalInSeconds](const tbb::blocked_range<size_t>& r)
+            {
+                for (size_t i=r.begin();i<r.end();++i) 
+                    mGrids->velocity()->wData().data()[i] += timeIntervalInSeconds * mGravity.z;
+            }
+            );
 #else
             vel->forEachWIndex([&](size_t i, size_t j, size_t k) {
-#endif
+
                 mGrids->velocity()->w(i, j, k) += timeIntervalInSeconds * mGravity.z;
             });
             }
+#endif
+        }
 
         applyBoundaryCondition();
-        }
-        }
+    }
+}
 
 void gridFluidSolver3::resizeGrid(
     const size3& newSize,
@@ -415,10 +446,24 @@ void gridFluidSolver3::extrapolateIntoCollider(faceCenteredGrid3* grid)
     });
 
     unsigned int depth = static_cast<unsigned int>(std::ceil(mMaxCfl));
+
+#ifdef SELFDEFINED_USE_TBB
+    tbb::parallel_for(
+        tbb::blocked_range<size_t>( 0, 3 ),
+        [grid, &markers, &depth](const tbb::blocked_range<size_t>& r)
+    {
+        for (size_t i=r.begin();i<r.end();++i) 
+        {
+            mathUtil::extrapolateToRegion(grid->dataByIndex(i), *markers[i], (unsigned int)depth, grid->dataByIndex(i));
+        }
+    }
+    );
+#else
     for ( int i = 0; i < 3; ++i )
     {
         mathUtil::extrapolateToRegion(grid->dataByIndex(i), *markers[i], depth, grid->dataByIndex(i));
     }
+#endif
     //mathUtil::extrapolateToRegion(grid->uData(), uMarker, depth, grid->uData());
     //mathUtil::extrapolateToRegion(grid->vData(), vMarker, depth, grid->vData());
     //mathUtil::extrapolateToRegion(grid->wData(), wMarker, depth, grid->wData());

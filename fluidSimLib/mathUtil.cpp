@@ -255,6 +255,10 @@ void mathUtil::extrapolateToRegion( const dataBuffer3 &input, const markers3& va
     markers3 valid0(size);
     markers3 valid1(size);
 
+    size_t len = size.x * size.y * size.z;
+    memcpy( valid0.data(), valid.data(), sizeof( char )*len );
+    memcpy( output.data(), input.data(), sizeof( char )*len );
+    /*
 #ifdef _OPENMP
     valid0.forEachIndexOpenMP([&](size_t i, size_t j, size_t k) {
 #else
@@ -263,14 +267,11 @@ void mathUtil::extrapolateToRegion( const dataBuffer3 &input, const markers3& va
         valid0(i, j, k) = valid(i, j, k);
         output(i, j, k) = input(i, j, k);
     });
+    */
 
     for (unsigned int iter = 0; iter < numberOfIterations; ++iter)
     {
-#ifdef _OPENMP
-        valid0.forEachIndexOpenMP([&](size_t i, size_t j, size_t k) {
-#else
         valid0.forEachIndex([&](size_t i, size_t j, size_t k) {
-#endif
             FloatType sum = 0.0;//zero<T>();
             unsigned int count = 0;
 
