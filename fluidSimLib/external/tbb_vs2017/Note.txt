@@ -1,0 +1,3 @@
+# version: tbb2018_20180822oss_win
+- lib dir: \lib\intel64\vc14
+- bin dir: \bin\intel64\vc14
