@@ -93,11 +93,14 @@ public:
     size_t depth( ) const;
 
     fdmMatrixRow3 *data( );
+    const fdmMatrixRow3 *data( ) const;
 
     void swap( fdmMatrix3& other );
 
     fdmMatrixRow3& operator()(size_t i, size_t j, size_t k);
     const fdmMatrixRow3& operator()( size_t i, size_t j, size_t k ) const;
+
+    const fdmMatrixRow3* iBuffer( size_t j, size_t k, size_t i = 0 ) const;
 };
 
 #endif

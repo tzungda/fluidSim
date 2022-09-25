@@ -4,7 +4,7 @@
 #include <basetsd.h>
 #include "fdmIccgSolver3.h"
 #include "mathUtil.h"
-
+#include "timer.h"
 
 void fdmIccgSolver3::Preconditioner::build(const fdmMatrix3& matrix) 
 {
@@ -36,6 +36,7 @@ void fdmIccgSolver3::Preconditioner::build(const fdmMatrix3& matrix)
         });
 }
 
+
 void fdmIccgSolver3::Preconditioner::solve(
     const dataBuffer3& b,
     dataBuffer3* x) 
@@ -45,6 +46,55 @@ void fdmIccgSolver3::Preconditioner::solve(
     SSIZE_T sy = static_cast<SSIZE_T>(size.y);
     SSIZE_T sz = static_cast<SSIZE_T>(size.z);
 
+    
+    if ( size != mSolveCache.size )
+    {
+        mSolveCache.size = size;
+        size_t len = sx * sy * sz;
+        mSolveCache.indices.resize( len );
+        int ind = 0;
+        for ( int k = 0; k < sz; ++k) 
+        {
+            for ( int j = 0; j < sy; ++j) 
+            {
+                for ( int i = 0; i < sx; ++i) 
+                {
+                    mSolveCache.indices[ind] = size3( i, j, k );
+                    ind++;
+                }
+            }
+        }
+    }
+
+
+    //--------------------------------------------------------------------------
+    FloatType *ptrY = y.data();
+    const FloatType *ptrD = d.data();
+    const FloatType *ptrB = b.data();
+    size3 *ptrInd = &mSolveCache.indices[0];
+    const fdmMatrixRow3* ptrA = A->data();
+    for ( int i = 0; i < mSolveCache.indices.size(); ++i )
+    {
+        const size3& idx = *ptrInd;
+        if ( (*ptrA).marker == 1 )
+        {
+            (*ptrY)
+                = ( (*ptrB)
+                    - (( idx.x > 0) ? (*A)( idx.x - 1, idx.y, idx.z).right * y( idx.x - 1, idx.y, idx.z) : (FloatType)0.0)
+                    - (( idx.y > 0) ? (*A)( idx.x, idx.y - 1, idx.z).up    * y( idx.x, idx.y - 1, idx.z) : (FloatType)0.0)
+                    - (( idx.z > 0) ? (*A)( idx.x, idx.y, idx.z - 1).front * y( idx.x, idx.y, idx.z - 1) : (FloatType)0.0))
+                * (*ptrD);
+        }
+        ptrB++;
+        ptrA++;
+        ptrD++;
+        ptrY++;
+        ptrInd++;
+    }
+    
+    
+    /*
+    // original code
     b.forEachIndex([&](size_t i, size_t j, size_t k) 
     {
         if ((*A)(i, j, k).marker == 1 )
@@ -57,7 +107,41 @@ void fdmIccgSolver3::Preconditioner::solve(
                 * d(i, j, k);
         }
         });
-
+    */
+    
+    
+    int len = (int)mSolveCache.indices.size();
+    ptrY = &y.data()[len-1];
+    ptrD = &d.data()[len-1];
+    FloatType *ptrX = &x->data()[len-1];
+    ptrInd = &mSolveCache.indices[len-1];
+    ptrA = &A->data()[len-1];
+    for ( int i = len-1; i >= 0; --i )
+    {
+        const size3& idx = *ptrInd;
+        if ( (*ptrA).marker == 1 )
+        {
+            (*ptrX)
+                = ( (*ptrY)
+                    - ((idx.x + 1 < sx) ?
+                    (*ptrA).right * (*x)( idx.x + 1, idx.y, idx.z) : (FloatType)0.0)
+                    - ((idx.y + 1 < sy) ?
+                    (*ptrA).up    * (*x)( idx.x, idx.y + 1, idx.z) : (FloatType)0.0)
+                    - ((idx.z + 1 < sz) ?
+                    (*ptrA).front * (*x)( idx.x, idx.y, idx.z + 1) : (FloatType)0.0))
+                * (*ptrD);
+        }
+        ptrA--;
+        ptrD--;
+        ptrX--;
+        ptrY--;
+        ptrInd--;
+    }
+    
+    //--------------------------------------------------------------------------
+    
+    // original code
+    /*
     for (SSIZE_T k = sz - 1; k >= 0; --k) 
     {
         for (SSIZE_T j = sy - 1; j >= 0; --j) 
@@ -79,6 +163,8 @@ void fdmIccgSolver3::Preconditioner::solve(
             }
         }
     }
+    */
+        
 }
 
 fdmIccgSolver3::fdmIccgSolver3(
@@ -176,7 +262,10 @@ void fdmIccgSolver3::pcg( const  fdmMatrix3& A,
     fdmBlas3::residual(A, *x, b, r);
 
     // d = M^-1r
-    M->solve(*r, d);
+    {
+        timer t("    M->solve(*r, d)" );
+        M->solve(*r, d);
+    }
 
     // sigmaNew = r.d
     FloatType sigmaNew = fdmBlas3::dot(*r, *d);

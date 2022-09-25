@@ -1,6 +1,11 @@
 //---fdmMatrix3.cpp
 
 #include <algorithm>
+
+#ifdef _OPENMP
+#include <omp.h>
+#endif
+
 #include "fdmMatrix3.h"
 
 fdmMatrix3::fdmMatrix3()
@@ -29,18 +34,30 @@ void fdmMatrix3::resize( const size3& size, const fdmMatrixRow3& initValue )
     fdmMatrix3 tempBuffer;
     tempBuffer.mData.resize(size.x * size.y * size.z, initValue );
     tempBuffer.mSize = size;
-    size_t iMin = std::min(size.x, mSize.x);
-    size_t jMin = std::min(size.y, mSize.y);
-    size_t kMin = std::min(size.z, mSize.z);
-    for (size_t k = 0; k < kMin; ++k)
+
+    if ( size != mSize )
     {
-        for (size_t j = 0; j < jMin; ++j)
+        size_t iMin = std::min(size.x, mSize.x);
+        size_t jMin = std::min(size.y, mSize.y);
+        size_t kMin = std::min(size.z, mSize.z);
+#ifdef _OPENMP
+#pragma omp parallel for
+#endif
+        for ( int k = 0; k < (int)kMin; ++k)
         {
-            for (size_t i = 0; i < iMin; ++i) 
+            for ( int j = 0; j < (int)jMin; ++j)
             {
-                tempBuffer(i, j, k) = valueByIndex(i, j, k);
+                for ( int i = 0; i < (int)iMin; ++i) 
+                {
+                    tempBuffer(i, j, k) = valueByIndex(i, j, k);
+                }
             }
         }
+    }
+    else
+    {
+        if ( tempBuffer.mData.size() > 0 && mData.size() > 0 )
+            memcpy( &tempBuffer.mData[0], &mData[0], sizeof( fdmMatrixRow3 )*mData.size() );
     }
 
     swap(tempBuffer);
@@ -102,6 +119,11 @@ fdmMatrixRow3 *fdmMatrix3::data( )
     return mData.data();
 }
 
+const fdmMatrixRow3* fdmMatrix3::data( ) const
+{
+    return mData.data();
+}
+
 void fdmMatrix3::swap( fdmMatrix3& other )
 {
     std::swap(other.mData, mData);
@@ -119,4 +141,9 @@ const fdmMatrixRow3& fdmMatrix3::operator()( size_t i, size_t j, size_t k ) cons
     return mData[i + mSize.x * (j + mSize.y * k)];
 }
 
+
+const fdmMatrixRow3* fdmMatrix3::iBuffer( size_t j, size_t k, size_t i ) const
+{
+    return &mData[i + mSize.x * (j + mSize.y * k)];
+}
 

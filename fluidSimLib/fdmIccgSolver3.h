@@ -4,6 +4,12 @@
 
 #include "fdmLinearSystemSolver3.h"
 
+struct solveCache
+{
+    size3 size;
+    std::vector<size3> indices;
+};
+
 class fdmIccgSolver3: public fdmLinearSystemSolver3
 {
 public:
@@ -23,13 +29,17 @@ public:
 
     FloatType lastResidual() const;
 
-   
+    
 
 private:
     struct Preconditioner final {
         const fdmMatrix3 *A;
         dataBuffer3 d;
         dataBuffer3 y;
+
+        //-----
+        solveCache mSolveCache;
+        //-----
 
         void build( const fdmMatrix3& matrix);
 
