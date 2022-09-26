@@ -7,7 +7,7 @@ Fluid grid-based and hybrid solvers with a simple OpenGL viewport to display it
 
 - Visual Studio 2017
 
-## Third-party libraried 
+## Third-party librarie 
 - [oneTBB](https://github.com/oneapi-src/oneTBB)
 - [GLFW](https://www.glfw.org/)
 - [glm](https://github.com/g-truc/glm)
