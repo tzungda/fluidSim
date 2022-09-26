@@ -24,5 +24,6 @@ Rewrite part of the computation to CUDA.
 ![alt text](https://github.com/tzungda/fluidSim/blob/main/outputImages/outputImage.0067.png)
 
 ## History
-2022/09/21: Improved performance with OpenMP
-2022/09/26: Parallelized the loops in gridFractionalSinglePhasePressureSolver3 and fdmLinearSystem3 with [oneTBB](https://github.com/oneapi-src/oneTBB).
+###2022/09/21: Improved performance with OpenMP
+
+###2022/09/26: Parallelized the loops in gridFractionalSinglePhasePressureSolver3 and fdmLinearSystem3 with [oneTBB](https://github.com/oneapi-src/oneTBB).
