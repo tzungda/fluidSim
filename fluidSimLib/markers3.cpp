@@ -1,6 +1,11 @@
 //---markers3.cpp
 
 #include <algorithm>
+
+#ifdef _OPENMP
+#include <omp.h>
+#endif
+
 #include "markers3.h"
 
 markers3::markers3()
@@ -131,4 +136,5 @@ const char& markers3::operator()( const size3& pt ) const
 {
     return mData[pt.x + mSize.x * (pt.y + mSize.y * pt.z)];
 }
+
 
