@@ -140,7 +140,7 @@ vector3 LinearVecBufferSampler::operator()( const vector3& pt ) const
     FloatType cx, cy, cz;
 
     vector3 tmp( pt.x - mOrigin.x, pt.y - mOrigin.y, pt.z - mOrigin.z );
-    vector3 normalizedX( tmp.x / mGridSpacing.x, tmp.y / mGridSpacing.y, tmp.z / mGridSpacing.z );
+    vector3 normalizedX( tmp.x * mInvGridSpacing.x, tmp.y * mInvGridSpacing.y, tmp.z * mInvGridSpacing.z );
 
     SSIZE_T isize = mDataBuffer->size().x;
     SSIZE_T jsize = mDataBuffer->size().y;
@@ -278,7 +278,7 @@ vector3 cubicBufferSamplerVec::operator()(const vector3& x) const {
     FloatType fx, fy, fz;
 
     SSIZE_T kZeroSSize = 0;
-    vector3 normalizedX = (x - mOrigin) / mGridSpacing;
+    vector3 normalizedX( (x.x - mOrigin.x)*mInvGridSpacing.x, (x.y - mOrigin.y)*mInvGridSpacing.y, (x.z - mOrigin.z)*mInvGridSpacing.z );// = (x - mOrigin) / mGridSpacing;
 
     mathUtil::getBarycentric(normalizedX.x, 0, iSize - 1, &i, &fx);
     mathUtil::getBarycentric(normalizedX.y, 0, jSize - 1, &j, &fy);
@@ -305,11 +305,11 @@ vector3 cubicBufferSamplerVec::operator()(const vector3& x) const {
 
     vector3 kValues[4];
 
-    for (int kk = 0; kk < 4; ++kk) 
+    for (int kk = 0; kk < 4; ++kk)
     {
         vector3 jValues[4];
 
-        for (int jj = 0; jj < 4; ++jj) 
+        for (int jj = 0; jj < 4; ++jj)
         {
             jValues[jj] = mathUtil::monotonicCatmullRom(
                 (*mDataBuffer)(is[0], js[jj], ks[kk]),
@@ -364,27 +364,27 @@ FloatType cubicBufferSamplerScalar::operator()(const vector3& pt) const
     FloatType fx, fy, fz;
 
     SSIZE_T kZeroSSize = 0;
-    vector3 normalizedX = (pt - mOrigin) / mGridSpacing;
+    vector3 normalizedX( (pt.x - mOrigin.x)*mInvGridSpacing.x, (pt.y - mOrigin.y)*mInvGridSpacing.y, (pt.z - mOrigin.z)*mInvGridSpacing.z ); //(pt - mOrigin) / mGridSpacing;
 
     mathUtil::getBarycentric(normalizedX.x, 0, iSize - 1, &i, &fx);
     mathUtil::getBarycentric(normalizedX.y, 0, jSize - 1, &j, &fy);
     mathUtil::getBarycentric(normalizedX.z, 0, kSize - 1, &k, &fz);
 
-    SSIZE_T is[4] = 
+    SSIZE_T is[4] =
     {
         std::max(i - 1, kZeroSSize),
         i,
         std::min(i + 1, iSize - 1),
         std::min(i + 2, iSize - 1)
     };
-    SSIZE_T js[4] = 
+    SSIZE_T js[4] =
     {
         std::max(j - 1, kZeroSSize),
         j,
         std::min(j + 1, jSize - 1),
         std::min(j + 2, jSize - 1)
     };
-    SSIZE_T ks[4] = 
+    SSIZE_T ks[4] =
     {
         std::max(k - 1, kZeroSSize),
         k,
@@ -394,11 +394,11 @@ FloatType cubicBufferSamplerScalar::operator()(const vector3& pt) const
 
     FloatType kValues[4];
 
-    for (int kk = 0; kk < 4; ++kk) 
+    for (int kk = 0; kk < 4; ++kk)
     {
         FloatType jValues[4];
 
-        for (int jj = 0; jj < 4; ++jj) 
+        for (int jj = 0; jj < 4; ++jj)
         {
             jValues[jj] = mathUtil::monotonicCatmullRom(
                 (*mDataBuffer)(is[0], js[jj], ks[kk]),
