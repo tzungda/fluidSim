@@ -145,7 +145,7 @@ void dataBuffer3::swap( dataBuffer3& other )
     std::swap(other.mSize, mSize);
 }
 
-
+/*
 const FloatType* dataBuffer3::iBuffer( size_t j, size_t k, size_t i) const
 {
     return &mData[ i + mSize.x * (j + mSize.y * k)];
@@ -155,7 +155,7 @@ FloatType* dataBuffer3::iBuffer( size_t j, size_t k, size_t i )
 {
     return &mData[i + mSize.x * (j + mSize.y * k)];
 }
-
+*/
 
 FloatType& dataBuffer3::operator()(size_t i, size_t j, size_t k)
 {
