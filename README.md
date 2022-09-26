@@ -9,9 +9,7 @@ Fluid grid-based and hybrid solvers with a simple OpenGL viewport to display it
 
 ## Third-party libraried 
 [oneTBB](https://github.com/oneapi-src/oneTBB)
-
 [GLFW](https://www.glfw.org/)
-
 [glm](https://github.com/g-truc/glm)
 
 ## Build steps:
@@ -34,6 +32,6 @@ Rewrite part of the computation to CUDA.
 ![alt text](https://github.com/tzungda/fluidSim/blob/main/outputImages/outputImage.0067.png)
 
 ## History
--2022/09/21: Improved performance with OpenMP
+- 2022/09/21: Improved performance with OpenMP
 
--2022/09/26: Parallelized the loops in gridFractionalSinglePhasePressureSolver3 and fdmLinearSystem3 with [oneTBB](https://github.com/oneapi-src/oneTBB).
+- 2022/09/26: Parallelized the loops in gridFractionalSinglePhasePressureSolver3 and fdmLinearSystem3 with [oneTBB](https://github.com/oneapi-src/oneTBB).
