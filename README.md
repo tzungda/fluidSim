@@ -8,9 +8,9 @@ Fluid grid-based and hybrid solvers with a simple OpenGL viewport to display it
 - Visual Studio 2017
 
 ## Third-party libraried 
-[oneTBB](https://github.com/oneapi-src/oneTBB)
-[GLFW](https://www.glfw.org/)
-[glm](https://github.com/g-truc/glm)
+- [oneTBB](https://github.com/oneapi-src/oneTBB)
+- [GLFW](https://www.glfw.org/)
+- [glm](https://github.com/g-truc/glm)
 
 ## Build steps:
 1. Unzip the libs([GLFW](https://www.glfw.org/) and [glm](https://github.com/g-truc/glm)) in /particleDisplay/external
@@ -33,5 +33,4 @@ Rewrite part of the computation to CUDA.
 
 ## History
 - 2022/09/21: Improved performance with OpenMP
-
 - 2022/09/26: Parallelized the loops in gridFractionalSinglePhasePressureSolver3 and fdmLinearSystem3 with [oneTBB](https://github.com/oneapi-src/oneTBB).
