@@ -343,7 +343,11 @@ void gridFluidSolver3::extrapolateIntoCollider(scalarGrid3* grid)
 {
     markers3 marker(grid->dataSize());
     auto pos = grid->dataPosition();
+#ifdef _OPENMP
+    marker.forEachIndexOpenMP([&](size_t i, size_t j, size_t k) {
+#else
     marker.forEachIndex([&](size_t i, size_t j, size_t k) {
+#endif
         if (mathUtil::isInsideSdf(mColliderSdf.sample(pos(i, j, k)))) {
             marker(i, j, k) = 0;
         }
