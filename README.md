@@ -9,7 +9,9 @@ Fluid grid-based and hybrid solvers with a simple OpenGL viewport to display it
 
 ## Third-party libraried 
 [oneTBB](https://github.com/oneapi-src/oneTBB)
+
 [GLFW](https://www.glfw.org/)
+
 [glm](https://github.com/g-truc/glm)
 
 ## Build steps:
