@@ -155,8 +155,8 @@ FloatType mathUtil::monotonicCatmullRom( const FloatType& f0,
     const FloatType& f3,
     FloatType f )
 {
-    FloatType d1 = (f2 - f0) / (FloatType)2.0;
-    FloatType d2 = (f3 - f1) / (FloatType)2.0;
+    FloatType d1 = (f2 - f0) * (FloatType)0.5;
+    FloatType d2 = (f3 - f1) * (FloatType)0.5;
     FloatType D1 = f2 - f1;
 
     if (std::fabs(D1) < eps() )
@@ -511,4 +511,5 @@ vector3 mathUtil::uniformSampleSphere( FloatType u1, FloatType u2 )
     FloatType z = r * std::sin(phi);
     return vector3(x, y, z);
 }
+
 
