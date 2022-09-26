@@ -271,6 +271,181 @@ void gridFractionalSinglePhasePressureSolver3::buildSystem(
     vector3 invHSqr = invH * invH;
 
     // Build linear system
+#ifdef SELFDEFINED_USE_TBB
+    size3 s = mSystem.A.size();
+    tbb::parallel_for( tbb::blocked_range3d<size_t>(0, s.z, 0, s.y, 0, s.x),
+        [this, &input, &size, &invHSqr, &invH ]( const tbb::blocked_range3d<size_t> &r ) {
+        for( size_t k=r.pages().begin(), k_end=r.pages().end(); k<k_end; k++)
+        {
+            for( size_t j=r.rows().begin(), j_end=r.rows().end(); j<j_end; j++)
+            {
+                for( size_t i=r.cols().begin(), i_end=r.cols().end(); i<i_end; i++ )
+                {
+                    auto& row = mSystem.A(i, j, k);
+
+                    // initialize
+                    row.center = row.right = row.up = row.front = 0.0;
+                    mSystem.b(i, j, k) = 0.0;
+
+                    FloatType centerPhi = mFluidSdf(i, j, k);
+
+                    if ( mathUtil::isInsideSdf(centerPhi))
+                    {
+                        row.marker = 1;
+
+                        FloatType term = 0.0;
+
+                        if (i + 1 < size.x)
+                        {
+                            term = mWeightsU(i + 1, j, k) * invHSqr.x;
+                            FloatType rightPhi = mFluidSdf(i + 1, j, k);
+                            if ( mathUtil::isInsideSdf(rightPhi)) {
+                                row.center += term;
+                                row.right -= term;
+                            }
+                            else
+                            {
+                                FloatType theta = mathUtil::fractionInsideSdf(centerPhi, rightPhi);
+                                theta = std::max<FloatType>(theta, (FloatType)0.01);
+                                row.center += term / theta;
+                            }
+                            mSystem.b(i, j, k) +=
+                                mWeightsU(i + 1, j, k) * input.u(i + 1, j, k) * invH.x;
+                        }
+                        else
+                        {
+                            mSystem.b(i, j, k) += input.u(i + 1, j, k) * invH.x;
+                        }
+
+                        if (i > 0)
+                        {
+                            term = mWeightsU(i, j, k) * invHSqr.x;
+                            FloatType leftPhi = mFluidSdf(i - 1, j, k);
+                            if (mathUtil::isInsideSdf(leftPhi))
+                            {
+                                row.center += term;
+                            }
+                            else
+                            {
+                                FloatType theta = mathUtil::fractionInsideSdf(centerPhi, leftPhi);
+                                theta = std::max<FloatType>(theta, (FloatType)0.01);
+                                row.center += term / theta;
+                            }
+                            mSystem.b(i, j, k) -=
+                                mWeightsU(i, j, k) * input.u(i, j, k) * invH.x;
+                        }
+                        else
+                        {
+                            mSystem.b(i, j, k) -= input.u(i, j, k) * invH.x;
+                        }
+
+                        if (j + 1 < size.y)
+                        {
+                            term = mWeightsV(i, j + 1, k) * invHSqr.y;
+                            FloatType upPhi = mFluidSdf(i, j + 1, k);
+                            if (mathUtil::isInsideSdf(upPhi))
+                            {
+                                row.center += term;
+                                row.up -= term;
+                            }
+                            else
+                            {
+                                FloatType theta = mathUtil::fractionInsideSdf(centerPhi, upPhi);
+                                theta = std::max<FloatType>(theta, (FloatType)0.01);
+                                row.center += term / theta;
+                            }
+                            mSystem.b(i, j, k) +=
+                                mWeightsV(i, j + 1, k) * input.v(i, j + 1, k) * invH.y;
+                        }
+                        else
+                        {
+                            mSystem.b(i, j, k) += input.v(i, j + 1, k) * invH.y;
+                        }
+
+                        if (j > 0)
+                        {
+                            term = mWeightsV(i, j, k) * invHSqr.y;
+                            FloatType downPhi = mFluidSdf(i, j - 1, k);
+                            if (mathUtil::isInsideSdf(downPhi))
+                            {
+                                row.center += term;
+                            }
+                            else
+                            {
+                                FloatType theta = mathUtil::fractionInsideSdf(centerPhi, downPhi);
+                                theta = std::max<FloatType>(theta, (FloatType)0.01);
+                                row.center += term / theta;
+                            }
+                            mSystem.b(i, j, k) -=
+                                mWeightsV(i, j, k) * input.v(i, j, k) * invH.y;
+                        }
+                        else
+                        {
+                            mSystem.b(i, j, k) -= input.v(i, j, k) * invH.y;
+                        }
+
+                        if (k + 1 < size.z)
+                        {
+                            term = mWeightsW(i, j, k + 1) * invHSqr.z;
+                            FloatType frontPhi = mFluidSdf(i, j, k + 1);
+                            if (mathUtil::isInsideSdf(frontPhi))
+                            {
+                                row.center += term;
+                                row.front -= term;
+                            }
+                            else
+                            {
+                                FloatType theta = mathUtil::fractionInsideSdf(centerPhi, frontPhi);
+                                theta = std::max<FloatType>(theta, (FloatType)0.01);
+                                row.center += term / theta;
+                            }
+                            mSystem.b(i, j, k) +=
+                                mWeightsW(i, j, k + 1) * input.w(i, j, k + 1) * invH.z;
+                        }
+                        else
+                        {
+                            mSystem.b(i, j, k) += input.w(i, j, k + 1) * invH.z;
+                        }
+
+                        if (k > 0)
+                        {
+                            term = mWeightsW(i, j, k) * invHSqr.z;
+                            FloatType backPhi = mFluidSdf(i, j, k - 1);
+                            if (mathUtil::isInsideSdf(backPhi))
+                            {
+                                row.center += term;
+                            }
+                            else
+                            {
+                                FloatType theta = mathUtil::fractionInsideSdf(centerPhi, backPhi);
+                                theta = std::max<FloatType>(theta, (FloatType)0.01);
+                                row.center += term / theta;
+                            }
+                            mSystem.b(i, j, k) -=
+                                mWeightsW(i, j, k) * input.w(i, j, k) * invH.z;
+                        }
+                        else
+                        {
+                            mSystem.b(i, j, k) -= input.w(i, j, k) * invH.z;
+                        }
+
+                        // Accumulate contributions from the moving boundary
+                        FloatType boundaryContribution
+                            = ((FloatType)1.0 - mWeightsU(i + 1, j, k)) * mBoundaryU(i + 1, j, k) * invH.x
+                            - ((FloatType)1.0 - mWeightsU(i, j, k)) * mBoundaryU(i, j, k) * invH.x
+                            + ((FloatType)1.0 - mWeightsV(i, j + 1, k)) * mBoundaryV(i, j + 1, k) * invH.y
+                            - ((FloatType)1.0 - mWeightsV(i, j, k)) * mBoundaryV(i, j, k) * invH.y
+                            + ((FloatType)1.0 - mWeightsW(i, j, k + 1)) * mBoundaryW(i, j, k + 1) * invH.z
+                            - ((FloatType)1.0 - mWeightsW(i, j, k)) * mBoundaryW(i, j, k) * invH.z;
+                        mSystem.b(i, j, k) += boundaryContribution;
+                    } else {
+                        row.center = 1.0;
+                    }
+                }
+            }
+        }
+    });
+#else
     mSystem.A.forEachIndex([&](size_t i, size_t j, size_t k) {
         auto& row = mSystem.A(i, j, k);
 
@@ -433,6 +608,8 @@ void gridFractionalSinglePhasePressureSolver3::buildSystem(
             row.center = 1.0;
         }
     });
+#endif
+
 }
 
 void gridFractionalSinglePhasePressureSolver3::applyPressureGradient(
