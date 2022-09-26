@@ -12,7 +12,7 @@ Fluid grid-based and hybrid solvers with a simple OpenGL viewport to display it
 4. Open the particleDisplay solution and compile.
 
 ## Next
-Rewrite part of the computation to CUDA or TBB.
+Rewrite part of the computation to CUDA.
 
 ## Images
 ![alt text](https://github.com/tzungda/fluidSim/blob/main/outputImages/outputImage.0006.png)
@@ -25,3 +25,4 @@ Rewrite part of the computation to CUDA or TBB.
 
 ## History
 2022/09/21: Improved performance with OpenMP
+2022/09/26: Parallelized the loops in gridFractionalSinglePhasePressureSolver3 and fdmLinearSystem3 with [oneTBB](https://github.com/oneapi-src/oneTBB).
