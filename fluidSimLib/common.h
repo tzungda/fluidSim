@@ -4,6 +4,8 @@
 
 #include <basetsd.h>
 
+#define SELFDEFINED_USE_TBB
+
 /////float type/////
 //#define SINGLE_FLOAT
 //
