@@ -196,7 +196,6 @@ void gridFluidSolver3::computeGravity(FloatType timeIntervalInSeconds)
 
                 mGrids->velocity()->w(i, j, k) += timeIntervalInSeconds * mGravity.z;
             });
-            }
 #endif
         }
 

@@ -186,7 +186,9 @@ void gridFractionalBoundaryConditionSolver3::constrainVelocity(
     });
 #endif
 
+
     // free-slip: extrapolate fluid velocity into the collider
+#ifdef SELFDEFINED_USE_TBB
     tbb::parallel_for(
         tbb::blocked_range<size_t>( 0, 3 ),
         [velocity, &markers, &extrapolationDepth](const tbb::blocked_range<size_t>& r)
@@ -198,14 +200,14 @@ void gridFractionalBoundaryConditionSolver3::constrainVelocity(
         }
     }
     );
-
-    //mathUtil::extrapolateToRegion(
-    //    velocity->uData(), uMarker, extrapolationDepth, velocity->uData() );
-    //mathUtil::extrapolateToRegion(
-    //    velocity->vData(), vMarker, extrapolationDepth, velocity->vData() );
-    //mathUtil::extrapolateToRegion(
-    //    velocity->wData(), wMarker, extrapolationDepth, velocity->wData() );
-
+#else
+    mathUtil::extrapolateToRegion(
+        velocity->uData(), uMarker, extrapolationDepth, velocity->uData() );
+    mathUtil::extrapolateToRegion(
+        velocity->vData(), vMarker, extrapolationDepth, velocity->vData() );
+    mathUtil::extrapolateToRegion(
+        velocity->wData(), wMarker, extrapolationDepth, velocity->wData() );
+#endif
     // no-flux: project the extrapolated velocity to the collider's surface
     // normal
 

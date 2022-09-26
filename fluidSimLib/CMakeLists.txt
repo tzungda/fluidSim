@@ -19,6 +19,23 @@ set_target_properties(fluidSimLib
         SOVERSION ${fluidSimLib_VERSION_MAJOR}
 )
 
+# tbb 
+#
+# include path
+include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/external/tbb_vs2017/include )
+# lib path
+target_link_directories(${PROJECT_NAME} PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/external/tbb_vs2017/lib/intel64/vc14
+    )
+# input libs
+target_link_libraries(${PROJECT_NAME}
+    tbb.lib
+	tbb_preview.lib
+	tbbmalloc.lib
+	tbbmalloc_proxy.lib
+	tbbproxy.lib
+)
+
 find_package(OpenMP)
 if (OPENMP_FOUND)
     set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
