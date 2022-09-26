@@ -23,6 +23,7 @@
 #include <gridPointGenerator3.h>
 #include <animFrame.h>
 #include <common.h>
+#include <timer.h>
 //
 
 class fluidSim
@@ -67,7 +68,7 @@ public:
 
         // emitter
         sphere3Ptr sphere = std::shared_ptr< sphere3 >(
-            new sphere3( domain.midPoint(), domain.width() * (FloatType)0.25 ),
+            new sphere3( domain.midPoint(), domain.width() * (FloatType)0.3 ),
             [] ( sphere3* obj ){
                 delete obj;
             });
@@ -101,7 +102,10 @@ public:
 
         animFrame f(0, (FloatType)1.0 / mFPS);
         f.index = (SizeType)frameNumber;
-        mSolver->update( f );
+        {
+            timer t( "mSolver->update( f )" );
+            mSolver->update( f );
+        }
 
         printf( "number of particles: %d\n", (int)mSolver->particleSystemData()->positions().size() );
     }
