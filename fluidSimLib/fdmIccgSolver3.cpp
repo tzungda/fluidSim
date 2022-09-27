@@ -6,7 +6,7 @@
 #include "mathUtil.h"
 #include "timer.h"
 
-void fdmIccgSolver3::Preconditioner::build(const fdmMatrix3& matrix) 
+void fdmIccgSolver3::Preconditioner::build(const fdmMatrix3& matrix)
 {
     size3 size = matrix.size();
     A = &matrix;
@@ -39,16 +39,16 @@ void fdmIccgSolver3::Preconditioner::build(const fdmMatrix3& matrix)
 
 void fdmIccgSolver3::Preconditioner::solve(
     const dataBuffer3& b,
-    dataBuffer3* x) 
+    dataBuffer3* x)
 {
     size3 size = b.size();
     SSIZE_T sx = static_cast<SSIZE_T>(size.x);
     SSIZE_T sy = static_cast<SSIZE_T>(size.y);
     SSIZE_T sz = static_cast<SSIZE_T>(size.z);
 
-    
+   
     //--------------------------------------------------------------------------
-    b.forEachIndex([&](size_t i, size_t j, size_t k) 
+    b.forEachIndex([&](size_t i, size_t j, size_t k)
     {
         if ((*A)(i, j, k).marker == 1 )
         {
@@ -60,14 +60,14 @@ void fdmIccgSolver3::Preconditioner::solve(
                 * d(i, j, k);
         }
         });
-    
+   
     //--------------------------------------------------------------------------
-    // 
-    for (SSIZE_T k = sz - 1; k >= 0; --k) 
+    //
+    for (SSIZE_T k = sz - 1; k >= 0; --k)
     {
-        for (SSIZE_T j = sy - 1; j >= 0; --j) 
+        for (SSIZE_T j = sy - 1; j >= 0; --j)
         {
-            for (SSIZE_T i = sx - 1; i >= 0; --i) 
+            for (SSIZE_T i = sx - 1; i >= 0; --i)
             {
                 if ((*A)(i, j, k).marker == 1 )
                 {
@@ -84,9 +84,57 @@ void fdmIccgSolver3::Preconditioner::solve(
             }
         }
     }
-        
+       
 }
 
+//===========================================================================
+void fdmIccgSolver3::DiagonalPreconditioner::build(const fdmMatrix3& matrix)
+{
+    size3 size = matrix.size();
+    diag.resize( size, 0.0 );
+    A = &matrix;
+
+    length = size.x * size.y * size.z;
+#ifdef _OPENMP
+#pragma omp parallel for
+#endif
+    for ( SSIZE_T ind = 0; ind < length; ++ind )
+    {
+        if ( matrix.data()[ind].marker == 1 )
+        {
+            if ( abs( matrix.data()[ind].center ) > mathUtil::eps( ) )
+            {
+                diag.data()[ind] = matrix.data()[ind].center;
+            }
+            else
+            {
+                diag.data()[ind] = 1.0;
+            }
+        }
+        else
+        {
+            diag.data()[ind] = 1.0;
+        }
+    }
+   
+}
+
+
+void fdmIccgSolver3::DiagonalPreconditioner::solve(
+    const dataBuffer3& b,
+    dataBuffer3* x)
+{
+#ifdef _OPENMP
+#pragma omp parallel for
+#endif
+    for ( SSIZE_T ind = 0; ind < length; ++ind )
+    {
+        if ( A->data( )[ind].marker == 1 )
+            x->data()[ind] = b.data()[ind]/diag.data()[ind];
+    }
+}
+
+//===========================================================================
 fdmIccgSolver3::fdmIccgSolver3(
     unsigned int maxNumberOfIterations,
     FloatType tolerance) :
@@ -97,7 +145,7 @@ fdmIccgSolver3::fdmIccgSolver3(
 {
 }
 
-bool fdmIccgSolver3::solve(fdmLinearSystem3* system) 
+bool fdmIccgSolver3::solve(fdmLinearSystem3* system)
 {
     fdmMatrix3& matrix = system->A;
     dataBuffer3& solution = system->x;
@@ -116,43 +164,53 @@ bool fdmIccgSolver3::solve(fdmLinearSystem3* system)
     mQ.setZero();
     mS.setZero();
 
-    mPrecond.build(matrix);
+    {
+        timer t("        mPrecond.build" );
+        //mPrecond.build(matrix);
+        mDiagPrecond.build( matrix );
+    }
 
-    fdmIccgSolver3::pcg(
-        matrix,
-        rhs,
-        mMaxNumberOfIterations,
-        mTolerance,
-        &mPrecond,
-        &solution,
-        &mR,
-        &mD,
-        &mQ,
-        &mS,
-        &mLastNumberOfIterations,
-        &mLastResidualNorm);
+    {
+        timer t("        fdmIccgSolver3::pcg" );
+        fdmIccgSolver3::pcg(
+            matrix,
+            rhs,
+            mMaxNumberOfIterations,
+            mTolerance,
+            &mDiagPrecond,
+            //&mPrecond,
+            &solution,
+            &mR,
+            &mD,
+            &mQ,
+            &mS,
+            &mLastNumberOfIterations,
+            &mLastResidualNorm);
+    }
 
+    printf( "        mLastNumberOfIterations = %d\n", (int)mLastNumberOfIterations );
+    printf( "        mLastResidualNorm = %f\n", (float)mLastResidualNorm );
 
     return mLastResidualNorm <= mTolerance
         || mLastNumberOfIterations < mMaxNumberOfIterations;
 }
 
-unsigned int fdmIccgSolver3::maxNumberOfIterations() const 
+unsigned int fdmIccgSolver3::maxNumberOfIterations() const
 {
     return mMaxNumberOfIterations;
 }
 
-unsigned int fdmIccgSolver3::lastNumberOfIterations() const 
+unsigned int fdmIccgSolver3::lastNumberOfIterations() const
 {
     return mLastNumberOfIterations;
 }
 
-FloatType fdmIccgSolver3::tolerance() const 
+FloatType fdmIccgSolver3::tolerance() const
 {
     return mTolerance;
 }
 
-FloatType fdmIccgSolver3::lastResidual() const 
+FloatType fdmIccgSolver3::lastResidual() const
 {
     return mLastResidualNorm;
 }
@@ -162,7 +220,8 @@ void fdmIccgSolver3::pcg( const  fdmMatrix3& A,
     const dataBuffer3& b,
     unsigned int maxNumberOfIterations,
     FloatType tolerance,
-    Preconditioner* M,
+    //Preconditioner* M,
+    DiagonalPreconditioner *M,
     dataBuffer3* x,
     dataBuffer3* r,
     dataBuffer3* d,
@@ -176,14 +235,17 @@ void fdmIccgSolver3::pcg( const  fdmMatrix3& A,
     fdmBlas3::setZero(q);
     fdmBlas3::setZero(s);
 
-    M->build(A);
+    {
+        timer t("          M->build(A)" );
+        M->build(A);
+    }
 
     // r = b - Ax
     fdmBlas3::residual(A, *x, b, r);
 
     // d = M^-1r
     {
-        timer t("    M->solve(*r, d)" );
+        timer t("          M->solve(*r, d)" );
         M->solve(*r, d);
     }
 
@@ -208,8 +270,8 @@ void fdmIccgSolver3::pcg( const  fdmMatrix3& A,
             // r = b - Ax
             fdmBlas3::residual(A, *x, b, r);
             trigger = false;
-        } 
-        else 
+        }
+        else
         {
             // r = r - alpha*q
             fdmBlas3::axpy(-alpha, *q, *r, r);
@@ -224,7 +286,7 @@ void fdmIccgSolver3::pcg( const  fdmMatrix3& A,
         // sigmaNew = r.s
         sigmaNew = fdmBlas3::dot(*r, *s);
 
-        if (sigmaNew > sigmaOld) 
+        if (sigmaNew > sigmaOld)
         {
             trigger = true;
         }
@@ -241,5 +303,3 @@ void fdmIccgSolver3::pcg( const  fdmMatrix3& A,
     *lastNumberOfIterations = iter;
     *lastResidualNorm = std::sqrt(sigmaNew);
 }
-
-
