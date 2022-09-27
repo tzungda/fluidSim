@@ -24,13 +24,27 @@ public:
 
     FloatType lastResidual() const;
 
-    
+   
 
 private:
     struct Preconditioner final {
         const fdmMatrix3 *A;
         dataBuffer3 d;
         dataBuffer3 y;
+
+        void build( const fdmMatrix3& matrix);
+
+        void solve(
+            const dataBuffer3& b,
+            dataBuffer3* x);
+    };
+
+    struct DiagonalPreconditioner final
+    {
+        const fdmMatrix3 *A;
+        dataBuffer3 diag;
+       
+        SSIZE_T length;
 
         void build( const fdmMatrix3& matrix);
 
@@ -48,14 +62,16 @@ private:
     dataBuffer3 mD;
     dataBuffer3 mQ;
     dataBuffer3 mS;
-    Preconditioner mPrecond;
+    //Preconditioner mPrecond;
+    DiagonalPreconditioner mDiagPrecond;
 
 public:
     static void pcg( const  fdmMatrix3& A,
         const dataBuffer3& b,
         unsigned int maxNumberOfIterations,
         FloatType tolerance,
-        Preconditioner* M,
+        //Preconditioner* M,
+        DiagonalPreconditioner* M,
         dataBuffer3* x,
         dataBuffer3* r,
         dataBuffer3* d,
@@ -68,4 +84,3 @@ public:
 typedef std::shared_ptr<fdmIccgSolver3> fdmIccgSolver3Ptr;
 
 #endif
-
