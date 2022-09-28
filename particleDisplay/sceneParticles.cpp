@@ -60,7 +60,7 @@ void sceneParticles::initScene()
 
     prog.use();
     prog.setUniform("ParticleTex", 0);
-    prog.setUniform("ParticleSize", 0.05f);
+    prog.setUniform("ParticleSize", 0.025f);
 
     flatProg.use();
     flatProg.setUniform("Color", glm::vec4(0.4f, 0.4f, 0.4f, 1.0f));
@@ -100,7 +100,7 @@ void sceneParticles::initBuffers()
     fluidDataPtr = &mFluidSim.velocities()[0];
     for (unsigned int i = 0; i < nParticles; i++) 
     {
-        *ptr++ = (float)(*fluidDataPtr).length();
+        *ptr++ = (float)(*fluidDataPtr).length()* 0.5;
         fluidDataPtr++;
     }
     glBindBuffer(GL_ARRAY_BUFFER, particleVelLen);
@@ -162,7 +162,7 @@ void sceneParticles::render()
     fluidDataPtr = &mFluidSim.velocities()[0];
     for (unsigned int i = 0; i < nParticles; i++) 
     {
-        *ptr++ = (float)(*fluidDataPtr).length();
+        *ptr++ = (float)(*fluidDataPtr).length() * 0.5;
         fluidDataPtr++;
     }
 

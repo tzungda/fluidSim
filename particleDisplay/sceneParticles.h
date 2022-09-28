@@ -67,7 +67,7 @@ public:
 
         // emitter
         sphere3Ptr sphere = std::shared_ptr< sphere3 >(
-            new sphere3( domain.midPoint(), domain.width() * (FloatType)0.25 ),
+            new sphere3( domain.midPoint(), domain.width() * (FloatType)0.3 ),
             [] ( sphere3* obj ){
                 delete obj;
             });
