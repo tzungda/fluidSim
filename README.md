@@ -23,13 +23,8 @@ Fluid grid-based and hybrid solvers with a simple OpenGL viewport to display it
 Rewrite part of the computation to CUDA.
 
 ## Images
-![alt text](https://github.com/tzungda/fluidSim/blob/main/outputImages/outputImage.0006.png)
-![alt text](https://github.com/tzungda/fluidSim/blob/main/outputImages/outputImage.0018.png)
-![alt text](https://github.com/tzungda/fluidSim/blob/main/outputImages/outputImage.0028.png)
-![alt text](https://github.com/tzungda/fluidSim/blob/main/outputImages/outputImage.0038.png)
 ![alt text](https://github.com/tzungda/fluidSim/blob/main/outputImages/outputImage.0045.png)
 ![alt text](https://github.com/tzungda/fluidSim/blob/main/outputImages/outputImage.0051.png)
-![alt text](https://github.com/tzungda/fluidSim/blob/main/outputImages/outputImage.0067.png)
 
 ## History
 - 2022/09/21: Improved performance with OpenMP
