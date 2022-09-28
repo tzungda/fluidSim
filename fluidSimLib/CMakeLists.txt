@@ -29,11 +29,27 @@ target_link_directories(${PROJECT_NAME} PUBLIC
     )
 # input libs
 target_link_libraries(${PROJECT_NAME}
+    debug
+    tbb_debug.lib
+    debug
+    tbb_preview_debug.lib
+    debug
+    tbbmalloc_debug.lib
+    debug
+    tbbmalloc_proxy_debug.lib
+    debug
+    tbbproxy_debug.lib
+
+    optimized
     tbb.lib
-tbb_preview.lib
-tbbmalloc.lib
-tbbmalloc_proxy.lib
-tbbproxy.lib
+    optimized
+    tbb_preview.lib
+    optimized
+    tbbmalloc.lib
+    optimized
+    tbbmalloc_proxy.lib
+    optimized
+    tbbproxy.lib
 )
 
 find_package(OpenMP)
@@ -43,5 +59,5 @@ if (OPENMP_FOUND)
     set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
 endif()
 
-install( TARGETS ${PROJECT_NAME} LIBRARY DESTINATION lib ARCHIVE DESTINATION lib )
+install( TARGETS ${PROJECT_NAME} LIBRARY DESTINATION dll ARCHIVE DESTINATION lib )
 
